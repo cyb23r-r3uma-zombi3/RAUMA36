@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Quy đổi điểm - SKY EDU 2026</title>
+    <meta name="description" content="Quy đổi điểm TSA/HSA 2026 sang thang điểm THPT chính xác - SKY EDU">
+    <meta name="theme-color" content="#050B1A">
+    
+    <!-- FOUC Prevention -->
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#FDF2F8'; scheme = 'light'; pageBg = '#FDF2F8';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 600);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){
+          var b = document.body; if (b) b.classList.add('theme-ready');
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(show); });
+        });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/css/premium-style.css" as="style">
+    <link rel="stylesheet" href="assets/css/premium-style.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <script src="assets/js/theme.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
+    <style>
+        :root {
+            --page-bg: #070D1F;
+            --card-bg: rgba(255, 255, 255, 0.06);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-bright: #FFFFFF;
+            --text-light: #E2E8F0;
+            --text-muted: #94A3B8;
+            --accent: #00D4FF;
+            --accent-violet: #A78BFA;
+            --success: #4ADE80;
+            --warning: #FACC15;
+        }
+
+        .page-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: var(--page-bg);
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150%;
+            height: 100%;
+            background: radial-gradient(ellipse at center top, rgba(0, 212, 255, 0.12) 0%, rgba(59, 130, 246, 0.08) 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+        .floating-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 { width: 400px; height: 400px; background: rgba(0, 212, 255, 0.15); top: 10%; left: 10%; animation-delay: 0s; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(139, 92, 246, 0.12); bottom: 20%; right: 15%; animation-delay: -7s; }
+        .orb-3 { width: 250px; height: 250px; background: rgba(59, 130, 246, 0.1); top: 50%; left: 60%; animation-delay: -14s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 30px) scale(1.02); }
+        }
+
+        .page-wrapper { position: relative; z-index: 1; min-height: 100vh; }
+
+        .main {
+            padding-top: 140px;
+            padding-bottom: 100px;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 24px;
+        }
+
+        .section-badge iconify-icon { font-size: 14px; }
+
+        .section-badge.violet {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 85, 247, 0.1));
+            border-color: rgba(139, 92, 246, 0.25);
+            color: var(--accent-violet);
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--text-bright);
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .section-title-gradient {
+            display: block;
+            background: linear-gradient(135deg, var(--accent), #3B82F6, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-desc {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .section-year {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--success);
+            margin-top: 16px;
+        }
+
+        /* Tab buttons */
+        .tabs-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 48px;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+
+        .tab-btn {
+            position: relative;
+            padding: 16px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-bright);
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            color: var(--text-bright);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.15));
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+        }
+
+        .tab-btn.active.violet {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.15));
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+        }
+
+        .tab-btn iconify-icon { margin-right: 8px; vertical-align: middle; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        /* Converter Card */
+        .converter-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 36px;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+
+        .converter-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .converter-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(59, 130, 246, 0.15));
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .converter-icon.violet {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.15));
+            border-color: rgba(139, 92, 246, 0.25);
+        }
+
+        .converter-icon.green {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.15));
+            border-color: rgba(74, 222, 128, 0.25);
+        }
+
+        .converter-icon iconify-icon { font-size: 32px; color: var(--accent); }
+        .converter-icon.violet iconify-icon { color: var(--accent-violet); }
+        .converter-icon.green iconify-icon { color: var(--success); }
+
+        .converter-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 4px;
+        }
+
+        .converter-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Form elements */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .form-group { margin-bottom: 0; }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-label iconify-icon { color: var(--accent); font-size: 16px; }
+
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-bright);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-control::placeholder { color: var(--text-muted); }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300D4FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 48px;
+        }
+
+        select.form-control option {
+            background: #0A1128;
+            color: var(--text-bright);
+        }
+
+        /* Buttons */
+        .btn-convert {
+            width: 100%;
+            padding: 18px 32px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #050B1A;
+            background: linear-gradient(135deg, var(--accent), #3B82F6);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 24px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .btn-convert:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-convert.violet {
+            background: linear-gradient(135deg, var(--accent-violet), #7C3AED);
+        }
+
+        .btn-convert.violet:hover {
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-convert.green {
+            background: linear-gradient(135deg, var(--success), #22C55E);
+        }
+
+        .btn-convert.green:hover {
+            box-shadow: 0 12px 40px rgba(74, 222, 128, 0.5);
+        }
+
+        .btn-convert iconify-icon { font-size: 20px; }
+
+        /* Result section */
+        .result-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 36px;
+            text-align: center;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.5s;
+            opacity: 0;
+        }
+
+        .result-placeholder {
+            padding: 48px 24px;
+        }
+
+        .result-placeholder iconify-icon {
+            font-size: 72px;
+            color: rgba(0, 212, 255, 0.3);
+            margin-bottom: 20px;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .result-placeholder p {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .result-content {
+            display: none;
+        }
+
+        .result-content.show { display: block; animation: resultReveal 0.6s ease forwards; }
+
+        @keyframes resultReveal {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .result-score {
+            font-size: 96px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .result-score span {
+            font-size: 40px;
+            opacity: 0.7;
+        }
+
+        .result-label {
+            font-size: 20px;
+            color: var(--text-light);
+            margin-bottom: 24px;
+        }
+
+        .result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .result-tag {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .result-tag.highlight {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.15));
+            border-color: rgba(0, 212, 255, 0.4);
+            color: var(--accent);
+        }
+
+        .result-tag.success {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.15));
+            border-color: rgba(74, 222, 128, 0.4);
+            color: var(--success);
+        }
+
+        .result-note {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(250, 204, 21, 0.1);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            border-radius: 12px;
+            font-size: 13px;
+            color: var(--warning);
+            text-align: left;
+        }
+
+        .result-note iconify-icon {
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Info box */
+        .info-box {
+            padding: 20px;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-box.warning {
+            background: rgba(250, 204, 21, 0.05);
+            border-color: rgba(250, 204, 21, 0.15);
+        }
+
+        .info-box-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .info-box.warning .info-box-title { color: var(--warning); }
+
+        .info-box-title iconify-icon { font-size: 18px; }
+
+        .info-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Table */
+        .table-container {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+            opacity: 0;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+        }
+
+        .reference-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .reference-table th {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(139, 92, 246, 0.08));
+            color: var(--accent);
+            font-weight: 700;
+            padding: 16px 20px;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+            border-bottom: 1px solid var(--card-border);
+            white-space: nowrap;
+        }
+
+        .reference-table td {
+            padding: 14px 20px;
+            color: var(--text-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+        }
+
+        .reference-table tr:last-child td { border-bottom: none; }
+        .reference-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.tsa {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(59, 130, 246, 0.15));
+            color: var(--accent);
+        }
+
+        .badge.hsa {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.15));
+            color: var(--accent-violet);
+        }
+
+        .badge.a00 {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.15));
+            color: var(--success);
+        }
+
+        .badge.d01 {
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.2), rgba(234, 179, 8, 0.15));
+            color: var(--warning);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main { padding-top: 90px; }
+            .section-title { font-size: 40px; }
+            .converter-card, .result-card { padding: 28px; }
+        }
+        @media (max-width: 912px) {
+            .section-title { font-size: 36px; }
+            .section-desc { font-size: 16px; margin-bottom: 28px; }
+            .converter-card, .result-card { padding: 24px; }
+            .result-score { font-size: 72px; }
+        }
+        @media (max-width: 768px) {
+            .main { padding-top: 80px; padding-bottom: 60px; }
+            .section-title { font-size: 28px; }
+            .section-desc { font-size: 14px; margin-bottom: 24px; }
+            .tabs-wrapper { flex-direction: column; }
+            .tab-btn { width: 100%; }
+            .form-row { grid-template-columns: 1fr; }
+            .result-score { font-size: 56px; }
+            .result-score span { font-size: 24px; }
+            .converter-card, .result-card { padding: 20px; border-radius: 14px; }
+            .form-group { margin-bottom: 14px; }
+            .form-label { font-size: 13px; }
+            .form-input, .form-select { padding: 10px 12px; font-size: 14px; }
+            .btn-calculate { padding: 12px 20px; font-size: 14px; }
+            .result-details { padding: 14px; }
+            .result-row { padding: 8px 0; font-size: 13px; }
+            .rate-info { font-size: 12px; padding: 10px 12px; }
+        }
+        @media (max-width: 600px) {
+            .main { padding-top: 68px; padding-bottom: 48px; }
+            .section-title { font-size: 24px; }
+            .section-desc { font-size: 13px; margin-bottom: 20px; }
+            .converter-card, .result-card { padding: 16px; border-radius: 12px; }
+            .result-score { font-size: 48px; }
+            .result-score span { font-size: 20px; }
+            .form-group { margin-bottom: 12px; }
+            .form-label { font-size: 12px; }
+            .form-input, .form-select { padding: 9px 10px; font-size: 14px; }
+            .btn-calculate { padding: 10px 18px; font-size: 13px; border-radius: 10px; }
+            .result-details { padding: 12px; border-radius: 10px; }
+            .result-row { padding: 6px 0; font-size: 12px; }
+            .rate-info { font-size: 11px; padding: 8px 10px; border-radius: 8px; }
+        }
+        @media (max-width: 480px) {
+            .main { padding-top: 56px; padding-bottom: 40px; }
+            .section-title { font-size: 20px; }
+            .section-desc { font-size: 12px; margin-bottom: 16px; }
+            .converter-card, .result-card { padding: 14px; border-radius: 10px; }
+            .result-score { font-size: 40px; }
+            .result-score span { font-size: 18px; }
+            .tab-btn { padding: 10px 16px; font-size: 13px; }
+            .form-group { margin-bottom: 10px; }
+            .form-label { font-size: 11px; }
+            .form-input, .form-select { padding: 8px 10px; font-size: 14px; border-radius: 8px; }
+            .btn-calculate { padding: 9px 16px; font-size: 12px; }
+            .result-details { padding: 10px; border-radius: 8px; }
+            .result-row { padding: 5px 0; font-size: 11px; }
+            .rate-info { font-size: 10px; padding: 6px 8px; }
+            .rate-info strong { font-size: 11px; }
+        }
+        @media (max-width: 390px) {
+            .main { padding-top: 50px; }
+            .section-title { font-size: 18px; }
+            .converter-card, .result-card { padding: 12px; }
+            .result-score { font-size: 36px; }
+            .result-score span { font-size: 16px; }
+            .tab-btn { padding: 8px 14px; font-size: 12px; }
+            .form-input, .form-select { padding: 7px 8px; }
+            .btn-calculate { padding: 8px 14px; font-size: 11px; }
+        }
+        @media (max-width: 360px) {
+            .section-title { font-size: 16px; }
+            .result-score { font-size: 32px; }
+            .tab-btn { padding: 7px 12px; font-size: 11px; }
+        }
+        @media (max-width: 768px) and (orientation: landscape) {
+            .tabs-wrapper { flex-direction: row; }
+            .tab-btn { width: auto; }
+        }
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .main { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+        }
+        @media (max-width: 768px) {
+            input[type="number"], input[type="text"], select { font-size: 16px !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-bg"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="page-wrapper">
+        <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher – Think Better</span>
+                    </div>
+                </a>
+
+                <!-- Center Menu -->
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="khoa-hoc-pages/index.html">Khóa học</a></li>
+                        <li><a href="quy-doi-diem.html" class="active">Quy đổi điểm</a></li>
+                        <li><a href="phong-luyen-tsa/index.html">Phòng luyện TSA</a></li>
+                        <li><a href="phong-luyen-hsa/index.html">Phòng luyện HSA</a></li>
+                        <li><a href="thi-thu/index.html">Thi thử</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="nav-actions" id="navActions">
+                    <a href="account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                    <a href="account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-badge">
+                        <iconify-icon icon="lucide:calculator" aria-hidden="true"></iconify-icon>
+                        <span>Công cụ hỗ trợ</span>
+                    </div>
+                    <h1 class="section-title">
+                        <span class="section-title-gradient">Quy đổi điểm thi 2026</span>
+                    </h1>
+                    <p class="section-desc">
+                        Chuyển đổi điểm TSA/HSA sang thang điểm THPT chính xác theo dữ liệu chính thức từ các trường đại học
+                    </p>
+                    <span class="section-year">Dữ liệu năm 2026 - Đã xác minh</span>
+                </div>
+
+                <div class="tabs-wrapper">
+                    <button type="button" class="tab-btn active" onclick="switchTab(0)">
+                        <iconify-icon icon="lucide:brain" aria-hidden="true"></iconify-icon>
+                        Quy đổi HSA
+                    </button>
+                    <button type="button" class="tab-btn" onclick="switchTab(1)">
+                        <iconify-icon icon="lucide:target" aria-hidden="true"></iconify-icon>
+                        Quy đổi TSA
+                    </button>
+                    <button type="button" class="tab-btn" onclick="switchTab(2)">
+                        <iconify-icon icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                        Bảng tham khảo
+                    </button>
+                </div>
+
+                <!-- HSA Tab -->
+                <div class="tab-content active" id="tab-0">
+                    <div class="converter-card">
+                        <div class="converter-header">
+                            <div class="converter-icon violet">
+                                <iconify-icon icon="lucide:brain" aria-hidden="true"></iconify-icon>
+                            </div>
+                            <div>
+                                <h2 class="converter-title">Quy đổi điểm HSA</h2>
+                                <p class="converter-subtitle">Đánh giá năng lực - ĐHQGHN</p>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-box-title">
+                                <iconify-icon icon="lucide:info" aria-hidden="true"></iconify-icon>
+                                Hướng dẫn
+                            </div>
+                            <p>Chọn trường đại học và nhập điểm HSA của bạn. Hệ thống sẽ tự động quy đổi sang thang điểm THPT theo bảng chính thức của từng trường năm 2026.</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <iconify-icon icon="lucide:hash" aria-hidden="true"></iconify-icon>
+                                    Điểm HSA của bạn
+                                </label>
+                                <input type="number" class="form-control" id="hsaScore" placeholder="VD: 85" step="0.01" min="0" max="150">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <iconify-icon icon="lucide:building-2" aria-hidden="true"></iconify-icon>
+                                    Chọn trường đại học
+                                </label>
+                                <select class="form-control" id="hsaSchool">
+                                    <option value="">-- Chọn trường --</option>
+                                    <option value="uet">ĐH Công nghệ - ĐHQGHN (UET)</option>
+                                    <option value="ussh">ĐH KHXH&NV - ĐHQGHN (USSH)</option>
+                                    <option value="vnu-ul">ĐH Luật - ĐHQGHN (VNU-UL)</option>
+                                    <option value="vnu-is">Trường Quốc tế - ĐHQGHN (VNU-IS)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- VNU-IS cần chọn thêm mã xét tuyển -->
+                        <div class="form-row" id="vnuIsGroup" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <iconify-icon icon="lucide:tag" aria-hidden="true"></iconify-icon>
+                                    Mã xét tuyển / Ngành
+                                </label>
+                                <select class="form-control" id="vnuIsCode">
+                                    <option value="table1">Bảng 1 (QHQ01-QHQ14)</option>
+                                    <option value="table2">Bảng 2 (các mã khác)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="info-box warning" id="hsaInfoBox" style="display: none;">
+                            <div class="info-box-title">
+                                <iconify-icon icon="lucide:alert-triangle" aria-hidden="true"></iconify-icon>
+                                Thông tin bảng quy đổi
+                            </div>
+                            <p id="hsaInfoText"></p>
+                        </div>
+
+                        <button type="button" class="btn-convert violet" onclick="convertHSAScore()">
+                            <iconify-icon icon="lucide:zap" aria-hidden="true"></iconify-icon>
+                            Quy đổi điểm HSA
+                        </button>
+                    </div>
+
+                    <div class="result-card" id="hsaResultCard">
+                        <div class="result-placeholder" id="hsaResultPlaceholder">
+                            <iconify-icon icon="lucide:calculator" aria-hidden="true"></iconify-icon>
+                            <p>Nhập thông tin và bấm quy đổi để xem kết quả</p>
+                        </div>
+                        <div class="result-content" id="hsaResultContent">
+                            <div class="result-score" id="hsaResultScore">0<span>/30</span></div>
+                            <p class="result-label">Điểm tương đương THPT</p>
+                            <div class="result-tags" id="hsaResultTags"></div>
+                            <div class="result-note" id="hsaResultNote" style="display: none;">
+                                <iconify-icon icon="lucide:info" aria-hidden="true"></iconify-icon>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TSA Tab -->
+                <div class="tab-content" id="tab-1">
+                    <div class="converter-card">
+                        <div class="converter-header">
+                            <div class="converter-icon green">
+                                <iconify-icon icon="lucide:target" aria-hidden="true"></iconify-icon>
+                            </div>
+                            <div>
+                                <h2 class="converter-title">Quy đổi điểm TSA</h2>
+                                <p class="converter-subtitle">Đánh giá tư duy - ĐH Bách khoa Hà Nội (HUST)</p>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-box-title">
+                                <iconify-icon icon="lucide:info" aria-hidden="true"></iconify-icon>
+                                Hướng dẫn
+                            </div>
+                            <p>Nhập điểm TSA và chọn tổ hợp xét tuyển (A00 hoặc D01). Hệ thống sẽ quy đổi sang thang điểm THPT theo bảng chính thức của ĐH Bách khoa Hà Nội năm 2026.</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <iconify-icon icon="lucide:hash" aria-hidden="true"></iconify-icon>
+                                    Điểm TSA của bạn
+                                </label>
+                                <input type="number" class="form-control" id="tsaScore" placeholder="VD: 75" step="0.01" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <iconify-icon icon="lucide:layers" aria-hidden="true"></iconify-icon>
+                                    Tổ hợp xét tuyển
+                                </label>
+                                <select class="form-control" id="tsaCombo">
+                                    <option value="">-- Chọn tổ hợp --</option>
+                                    <option value="a00">Tổ hợp A00 (Toán, Lý, Hóa)</option>
+                                    <option value="d01">Tổ hợp D01 (Toán, Văn, Anh)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="info-box warning" id="tsaInfoBox" style="display: none;">
+                            <div class="info-box-title">
+                                <iconify-icon icon="lucide:alert-triangle" aria-hidden="true"></iconify-icon>
+                                Thông tin quy đổi
+                            </div>
+                            <p id="tsaInfoText"></p>
+                        </div>
+
+                        <button type="button" class="btn-convert green" onclick="convertTSAScore()">
+                            <iconify-icon icon="lucide:zap" aria-hidden="true"></iconify-icon>
+                            Quy đổi điểm TSA
+                        </button>
+                    </div>
+
+                    <div class="result-card" id="tsaResultCard">
+                        <div class="result-placeholder" id="tsaResultPlaceholder">
+                            <iconify-icon icon="lucide:calculator" aria-hidden="true"></iconify-icon>
+                            <p>Nhập thông tin và bấm quy đổi để xem kết quả</p>
+                        </div>
+                        <div class="result-content" id="tsaResultContent">
+                            <div class="result-score" id="tsaResultScore">0<span>/30</span></div>
+                            <p class="result-label">Điểm tương đương THPT</p>
+                            <div class="result-tags" id="tsaResultTags"></div>
+                            <div class="result-note" id="tsaResultNote" style="display: none;">
+                                <iconify-icon icon="lucide:info" aria-hidden="true"></iconify-icon>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reference Table Tab -->
+                <div class="tab-content" id="tab-2">
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <table class="reference-table">
+                                <thead>
+                                    <tr>
+                                        <th>Trường đại học</th>
+                                        <th>Loại thi</th>
+                                        <th>Tổ hợp</th>
+                                        <th>Phạm vi điểm gốc</th>
+                                        <th>Quy đổi THPT</th>
+                                        <th>Năm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>ĐH Công nghệ - ĐHQGHN (UET)</strong></td>
+                                        <td><span class="badge hsa">HSA</span></td>
+                                        <td><span class="badge a00">A00</span></td>
+                                        <td>65 - 130</td>
+                                        <td>18.83 - 30.00</td>
+                                        <td>2026</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ĐH KHXH&NV - ĐHQGHN (USSH)</strong></td>
+                                        <td><span class="badge hsa">HSA</span></td>
+                                        <td><span class="badge d01">D01</span></td>
+                                        <td>51 - 133</td>
+                                        <td>15.27 - 28.50</td>
+                                        <td>2026</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ĐH Luật - ĐHQGHN (VNU-UL)</strong></td>
+                                        <td><span class="badge hsa">HSA</span></td>
+                                        <td><span class="badge d01">D01</span></td>
+                                        <td>51 - 133</td>
+                                        <td>15.27 - 28.50</td>
+                                        <td>2026</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Trường Quốc tế - ĐHQGHN (VNU-IS)</strong><br><small style="color: var(--text-muted)">Bảng 1 (QHQ01-QHQ14)</small></td>
+                                        <td><span class="badge hsa">HSA</span></td>
+                                        <td><span class="badge a00">A00</span></td>
+                                        <td>35 - 130</td>
+                                        <td>8.68 - 30.00</td>
+                                        <td>2026</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ĐH Bách khoa Hà Nội (HUST)</strong></td>
+                                        <td><span class="badge tsa">TSA</span></td>
+                                        <td><span class="badge a00">A00</span></td>
+                                        <td>44.93 - 100</td>
+                                        <td>20.00 - 30.00</td>
+                                        <td>2026</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ĐH Bách khoa Hà Nội (HUST)</strong></td>
+                                        <td><span class="badge tsa">TSA</span></td>
+                                        <td><span class="badge d01">D01</span></td>
+                                        <td>43.88 - 100</td>
+                                        <td>19.50 - 30.00</td>
+                                        <td>2026</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted); text-align: center;">
+                            <iconify-icon icon="lucide:info" aria-hidden="true" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+                            Dữ liệu được cập nhật theo thông báo tuyển sinh chính thức của từng trường năm 2026
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // =========================================
+        // CONVERSION DATA 2026
+        // =========================================
+
+        // HSA → A00 (UET)
+        const HSA_A00 = {
+            130: 30.00, 129: 29.98, 128: 29.77, 127: 29.75, 126: 29.73, 125: 29.51,
+            124: 29.49, 123: 29.27, 122: 29.25, 121: 29.23, 120: 29.01, 119: 28.98,
+            118: 28.75, 117: 28.51, 116: 28.48, 115: 28.26, 114: 28.23, 113: 28.00,
+            112: 27.77, 111: 27.74, 110: 27.51, 109: 27.48, 108: 27.24, 107: 27.01,
+            106: 26.98, 105: 26.75, 104: 26.52, 103: 26.49, 102: 26.26, 101: 26.02,
+            100: 26.00, 99: 25.77, 98: 25.73, 97: 25.50, 96: 25.35, 95: 25.25,
+            94: 25.02, 93: 24.99, 92: 24.76, 91: 24.62, 90: 24.49, 89: 24.26,
+            88: 24.11, 87: 23.99, 86: 23.77, 85: 23.62, 84: 23.50, 83: 23.27,
+            82: 23.11, 81: 22.98, 80: 22.75, 79: 22.51, 78: 22.33, 77: 22.11,
+            76: 21.98, 75: 21.73, 74: 21.48, 73: 21.23, 72: 20.97, 71: 20.61,
+            70: 20.33, 69: 20.08, 68: 19.76, 67: 19.50, 66: 19.12, 65: 18.83
+        };
+
+        // HSA → D01 (VNU-UL, USSH - partial data)
+        const HSA_D01_PARTIAL = {
+            133: 28.50, 132: 28.49, 131: 28.48, 130: 28.27, 129: 28.26,
+            128: 28.02, 127: 27.77, 126: 27.74, 125: 27.51, 124: 27.48,
+            123: 27.24, 122: 27.01, 121: 26.98, 120: 26.75, 119: 26.52,
+            118: 26.49, 117: 26.26, 116: 26.02, 115: 26.00, 114: 25.77,
+            113: 25.73, 112: 25.50, 111: 25.35, 110: 25.25, 109: 25.02,
+            108: 24.99, 107: 24.76, 106: 24.62, 105: 24.49, 104: 24.26,
+            103: 24.11, 102: 23.99, 101: 23.77, 100: 23.62, 99: 23.50,
+            98: 23.27, 97: 23.11, 96: 22.98, 95: 22.75, 94: 23.49, 93: 23.26,
+            92: 23.23, 91: 23.00, 90: 22.77,
+            89: 22.51, 88: 22.33, 87: 22.11, 86: 21.98, 85: 21.73, 84: 21.48,
+            83: 21.23, 82: 20.97, 81: 20.61, 80: 20.33, 79: 20.08, 78: 19.76,
+            77: 19.50, 76: 19.12, 75: 18.83, 74: 18.51, 73: 18.23, 72: 17.99,
+            71: 17.73, 70: 17.48, 69: 17.23, 68: 16.99, 67: 16.73, 66: 16.48,
+            65: 16.23, 64: 15.99, 63: 15.73, 62: 15.48, 61: 15.26, 60: 15.01,
+            59: 15.00, 58: 14.75, 57: 14.50, 56: 14.25, 55: 16.26, 54: 16.01,
+            53: 15.76, 52: 15.51, 51: 15.27
+        };
+
+        // HSA → Bảng 1 (VNU-IS - QHQ01-QHQ14)
+        const HSA_VNUIS_TABLE1 = {
+            130: 30.00, 129: 29.98, 128: 29.77, 127: 29.75, 126: 29.73, 125: 29.51,
+            124: 29.49, 123: 29.27, 122: 29.25, 121: 29.23, 120: 29.01, 119: 28.98,
+            118: 28.75, 117: 28.51, 116: 28.48, 115: 28.26, 114: 28.23, 113: 28.00,
+            112: 27.77, 111: 27.74, 110: 27.51, 109: 27.48, 108: 27.24, 107: 27.01,
+            106: 26.98, 105: 26.75, 104: 26.52, 103: 26.49, 102: 26.26, 101: 26.02,
+            100: 26.00, 99: 25.77, 98: 25.73, 97: 25.50, 96: 25.35, 95: 25.25,
+            94: 25.02, 93: 24.99, 92: 24.76, 91: 24.62, 90: 24.49, 89: 24.26,
+            88: 24.11, 87: 23.99, 86: 23.77, 85: 23.62, 84: 23.50, 83: 23.27,
+            82: 23.11, 81: 22.98, 80: 22.75, 79: 22.51, 78: 22.33, 77: 22.11,
+            76: 21.98, 75: 21.73, 74: 21.48, 73: 21.23, 72: 20.97, 71: 20.61,
+            70: 20.33, 69: 20.08, 68: 19.76, 67: 19.50, 66: 19.12, 65: 18.83,
+            64: 18.51, 63: 18.23, 62: 17.99, 61: 17.73, 60: 17.48, 59: 17.23,
+            58: 16.99, 57: 16.73, 56: 16.48, 55: 16.23, 54: 15.09, 53: 14.73,
+            52: 14.35, 51: 13.95, 50: 13.61, 49: 13.30, 48: 12.95, 47: 12.59,
+            46: 12.30, 45: 12.04, 44: 11.73, 43: 11.44, 42: 11.09, 41: 10.68,
+            40: 10.26, 39: 10.05, 38: 9.78, 37: 9.10, 36: 8.90, 35: 8.68
+        };
+
+        // School info
+        const SCHOOL_INFO = {
+            uet: {
+                name: 'ĐH Công nghệ - ĐHQGHN (UET)',
+                combo: 'A00',
+                table: HSA_A00,
+                minScore: 65,
+                maxScore: 130,
+                info: 'Bảng quy đổi HSA → THPT A00 của Trường ĐH Công nghệ, ĐHQGHN. Áp dụng cho các ngành sử dụng tổ hợp A00 (Toán, Lý, Hóa).'
+            },
+            ussh: {
+                name: 'ĐH KHXH&NV - ĐHQGHN (USSH)',
+                combo: 'D01',
+                table: HSA_D01_PARTIAL,
+                minScore: 51,
+                maxScore: 133,
+                info: 'Bảng quy đổi HSA → THPT D01 của Trường ĐH KHXH&NV, ĐHQGHN. Áp dụng cho phương thức 401 (bài thi Q21: Tư duy định lượng, Tư duy định tính, Tiếng Anh).'
+            },
+            'vnu-ul': {
+                name: 'ĐH Luật - ĐHQGHN (VNU-UL)',
+                combo: 'D01',
+                table: HSA_D01_PARTIAL,
+                minScore: 51,
+                maxScore: 133,
+                info: 'Bảng quy đổi HSA → THPT D01 của Trường ĐH Luật, ĐHQGHN. Áp dụng cho các ngành xét tuyển theo tổ hợp D01.'
+            },
+            'vnu-is': {
+                name: 'Trường Quốc tế - ĐHQGHN (VNU-IS)',
+                combo: 'A00',
+                table: HSA_VNUIS_TABLE1,
+                minScore: 35,
+                maxScore: 130,
+                info: 'Bảng 1 cho các mã QHQ01-QHQ14. VNU-IS có nhiều bảng quy đổi khác nhau tùy theo mã xét tuyển. Vui lòng kiểm tra mã xét tuyển của bạn.'
+            }
+        };
+
+        // =========================================
+        // CONVERSION FUNCTIONS
+        // =========================================
+
+        function convertHSA(score, schoolKey, tableKey) {
+            const school = SCHOOL_INFO[schoolKey];
+            if (!school) return null;
+
+            const table = tableKey === 'table1' ? HSA_VNUIS_TABLE1 : school.table;
+            const scoreInt = Math.round(score);
+
+            // Direct lookup
+            if (table[scoreInt] !== undefined) {
+                return Math.round(table[scoreInt] * 100) / 100;
+            }
+
+            // Find surrounding values for interpolation
+            const keys = Object.keys(table).map(Number).sort((a, b) => a - b);
+            
+            if (scoreInt < keys[0]) {
+                return table[keys[0]];
+            }
+            if (scoreInt > keys[keys.length - 1]) {
+                return table[keys[keys.length - 1]];
+            }
+
+            // Find bracket
+            let lower = keys[0], upper = keys[0];
+            for (let i = 0; i < keys.length - 1; i++) {
+                if (keys[i] <= scoreInt && keys[i + 1] >= scoreInt) {
+                    lower = keys[i];
+                    upper = keys[i + 1];
+                    break;
+                }
+            }
+
+            // Linear interpolation
+            const lowerVal = table[lower];
+            const upperVal = table[upper];
+            const ratio = (scoreInt - lower) / (upper - lower);
+            const result = lowerVal + ratio * (upperVal - lowerVal);
+
+            return Math.round(result * 100) / 100;
+        }
+
+        // =========================================
+        // UI FUNCTIONS
+        // =========================================
+
+        function switchTab(index) {
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.tab-content').forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+
+        // Show/hide VNU-IS code selector
+        document.getElementById('hsaSchool').addEventListener('change', function() {
+            const vnuIsGroup = document.getElementById('vnuIsGroup');
+            const infoBox = document.getElementById('hsaInfoBox');
+            const infoText = document.getElementById('hsaInfoText');
+
+            if (this.value === 'vnu-is') {
+                vnuIsGroup.style.display = 'flex';
+            } else {
+                vnuIsGroup.style.display = 'none';
+            }
+
+            if (this.value && SCHOOL_INFO[this.value]) {
+                const school = SCHOOL_INFO[this.value];
+                infoBox.style.display = 'block';
+                infoText.textContent = school.info;
+            } else {
+                infoBox.style.display = 'none';
+            }
+        });
+
+        // TSA info
+        document.getElementById('tsaCombo').addEventListener('change', function() {
+            const infoBox = document.getElementById('tsaInfoBox');
+            const infoText = document.getElementById('tsaInfoText');
+
+            if (this.value === 'a00') {
+                infoBox.style.display = 'block';
+                infoText.textContent = 'Quy đổi TSA → THPT A00 (Toán, Lý, Hóa) theo bảng chính thức của ĐH Bách khoa Hà Nội. Điểm TSA được nội suy tuyến tính trong các khoảng của bảng.';
+            } else if (this.value === 'd01') {
+                infoBox.style.display = 'block';
+                infoText.textContent = 'Quy đổi TSA → THPT D01 (Toán, Văn, Anh) theo bảng chính thức của ĐH Bách khoa Hà Nội. Điểm TSA được nội suy tuyến tính trong các khoảng của bảng.';
+            } else {
+                infoBox.style.display = 'none';
+            }
+        });
+
+        // =========================================
+        // TSA → A00 2026 (HUST)
+        // =========================================
+        // Format: [tsaMin, thptMin, thptMax] - khoảng từ tsaMin đến tsaMax (kế tiếp)
+        const TSA_A00_BRACKETS_2026 = [
+            [44.93, 20.00, 24.37],  // khoảng 6: 44.93 → 54.90
+            [54.90, 24.37, 26.23],  // khoảng 5: 54.90 → 61.33
+            [61.33, 26.23, 27.82],  // khoảng 4: 61.33 → 68.17
+            [68.17, 27.82, 28.75],  // khoảng 3: 68.17 → 74.31
+            [74.31, 28.75, 29.53],  // khoảng 2: 74.31 → 81.73
+            [81.73, 29.53, 30.00]   // khoảng 1: 81.73 → 100
+        ];
+
+        // =========================================
+        // TSA → D01 2026 (HUST)
+        // =========================================
+        const TSA_D01_BRACKETS_2026 = [
+            [43.88, 19.50, 23.22],  // khoảng 6: 43.88 → 54.61
+            [54.61, 23.22, 24.96],  // khoảng 5: 54.61 → 61.13
+            [61.13, 24.96, 26.51],  // khoảng 4: 61.13 → 68.05
+            [68.05, 26.51, 27.35],  // khoảng 3: 68.05 → 74.20
+            [74.20, 27.35, 28.23],  // khoảng 2: 74.20 → 81.67
+            [81.67, 28.23, 30.00]   // khoảng 1: 81.67 → 100
+        ];
+
+        /**
+         * Nội suy tuyến tính theo công thức HUST 2026:
+         * THPT = thptMin + ((x - tsaMin) / (tsaMax - tsaMin)) × (thptMax - thptMin)
+         */
+        function interpolateTSA(score, brackets, minValid, maxValid) {
+            // Kiểm tra phạm vi
+            if (score < minValid || score > maxValid) {
+                return null;
+            }
+
+            // Tìm khoảng chứa điểm score
+            for (let i = 0; i < brackets.length; i++) {
+                const tsaMin = brackets[i][0];
+                const thptMin = brackets[i][1];
+                const thptMax = brackets[i][2];
+
+                // Xác định tsaMax (là tsaMin của khoảng tiếp theo, hoặc 100 cho khoảng cuối)
+                let tsaMax;
+                if (i < brackets.length - 1) {
+                    tsaMax = brackets[i + 1][0];
+                } else {
+                    tsaMax = 100;
+                }
+
+                // Kiểm tra xem score có thuộc khoảng này không
+                if (score >= tsaMin && score <= tsaMax) {
+                    // Trường hợp đặc biệt: nếu score = tsaMax (điểm biên giữa các khoảng)
+                    if (Math.abs(score - tsaMax) < 0.0001) {
+                        return thptMax;
+                    }
+
+                    // Nội suy tuyến tính
+                    const ratio = (score - tsaMin) / (tsaMax - tsaMin);
+                    const result = thptMin + ratio * (thptMax - thptMin);
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * Quy đổi điểm TSA theo bảng HUST 2026
+         */
+        function convertTSAToTHPT(score, combo) {
+            const isA00 = combo === 'a00';
+            const brackets = isA00 ? TSA_A00_BRACKETS_2026 : TSA_D01_BRACKETS_2026;
+            const minValid = isA00 ? 44.93 : 43.88;
+            const maxValid = 100;
+
+            const result = interpolateTSA(score, brackets, minValid, maxValid);
+            return {
+                result: result,
+                inRange: result !== null
+            };
+        }
+
+        // =========================================
+        // CONVERT FUNCTIONS
+        // =========================================
+
+        function convertHSAScore() {
+            const scoreInput = document.getElementById('hsaScore').value.replace(',', '.');
+            const score = parseFloat(scoreInput);
+            const schoolKey = document.getElementById('hsaSchool').value;
+            const tableKey = document.getElementById('vnuIsCode').value;
+
+            if (isNaN(score) || score < 0) {
+                alert('Vui lòng nhập điểm HSA hợp lệ');
+                return;
+            }
+
+            if (!schoolKey) {
+                alert('Vui lòng chọn trường đại học');
+                return;
+            }
+
+            const school = SCHOOL_INFO[schoolKey];
+            const result = convertHSA(score, schoolKey, tableKey);
+
+            if (result === null) {
+                alert('Không thể quy đổi điểm này');
+                return;
+            }
+
+            // Hiển thị kết quả
+            document.getElementById('hsaResultPlaceholder').style.display = 'none';
+            document.getElementById('hsaResultContent').classList.add('show');
+
+            document.getElementById('hsaResultScore').innerHTML = result.toFixed(2) + '<span>/30</span>';
+
+            const tagsHtml = `
+                <span class="result-tag highlight">HSA: ${score}</span>
+                <span class="result-tag success">${school.combo}</span>
+                <span class="result-tag">${school.name.split('(')[0].trim()}</span>
+                <span class="result-tag">2026</span>
+            `;
+            document.getElementById('hsaResultTags').innerHTML = tagsHtml;
+
+            const noteEl = document.getElementById('hsaResultNote');
+            if (score < school.minScore || score > school.maxScore) {
+                noteEl.style.display = 'flex';
+                noteEl.querySelector('span').textContent = `Điểm ${score} nằm ngoài phạm vi bảng quy đổi (${school.minScore}-${school.maxScore}). Kết quả được ước tính.`;
+            } else {
+                noteEl.style.display = 'none';
+            }
+        }
+
+        function convertTSAScore() {
+            const scoreInput = document.getElementById('tsaScore').value.replace(',', '.');
+            const score = parseFloat(scoreInput);
+            const combo = document.getElementById('tsaCombo').value;
+
+            if (isNaN(score) || score < 0 || score > 100) {
+                alert('Vui lòng nhập điểm TSA hợp lệ (0-100)');
+                return;
+            }
+
+            if (!combo) {
+                alert('Vui lòng chọn tổ hợp xét tuyển');
+                return;
+            }
+
+            const { result, inRange } = convertTSAToTHPT(score, combo);
+
+            // Hiển thị kết quả
+            document.getElementById('tsaResultPlaceholder').style.display = 'none';
+            document.getElementById('tsaResultContent').classList.add('show');
+
+            if (!inRange || result === null) {
+                const comboName = combo === 'a00' ? 'A00' : 'D01';
+                const minValid = combo === 'a00' ? '44.93' : '43.88';
+                document.getElementById('tsaResultScore').innerHTML = '--<span>/30</span>';
+                document.getElementById('tsaResultTags').innerHTML = `
+                    <span class="result-tag highlight">TSA: ${score}</span>
+                    <span class="result-tag success">${comboName}</span>
+                    <span class="result-tag">ĐH Bách khoa Hà Nội</span>
+                    <span class="result-tag">2026</span>
+                `;
+                const noteEl = document.getElementById('tsaResultNote');
+                noteEl.style.display = 'flex';
+                noteEl.style.background = 'rgba(239, 68, 68, 0.1)';
+                noteEl.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                noteEl.querySelector('span').textContent = `Điểm TSA ${score} nằm ngoài phạm vi quy đổi (${minValid} - 100) cho tổ hợp ${comboName}. Không thể quy đổi.`;
+                return;
+            }
+
+            document.getElementById('tsaResultScore').innerHTML = result.toFixed(2) + '<span>/30</span>';
+
+            const comboName = combo === 'a00' ? 'A00 (Toán, Lý, Hóa)' : 'D01 (Toán, Văn, Anh)';
+            document.getElementById('tsaResultTags').innerHTML = `
+                <span class="result-tag highlight">TSA: ${score}</span>
+                <span class="result-tag success">${comboName}</span>
+                <span class="result-tag">ĐH Bách khoa Hà Nội</span>
+                <span class="result-tag">2026</span>
+            `;
+
+            const noteEl = document.getElementById('tsaResultNote');
+            noteEl.style.display = 'flex';
+            noteEl.style.background = '';
+            noteEl.style.borderColor = '';
+            noteEl.querySelector('span').textContent = 'Quy đổi theo bảng phân vị tương quan điểm chuẩn giữa các phương thức tuyển sinh năm 2026 của Đại học Bách khoa Hà Nội.';
+        }
+
+        // Enter key support
+        document.getElementById('hsaScore').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') convertHSAScore();
+        });
+
+        document.getElementById('tsaScore').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') convertTSAScore();
+        });
+
+        // =========================================
+        // NAVBAR SCROLL EFFECT
+        // =========================================
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+        });
+
+        // =========================================
+        // USER AUTH STATE
+        // =========================================
+        function updateNavAuthState() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            const navActions = document.getElementById('navActions');
+            if (!navActions) return;
+
+            if (currentUser) {
+                const isAdmin = (typeof RoleSystem !== 'undefined')
+                    ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                    : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                navActions.innerHTML = `
+                    <div class="user-dropdown user-card-static">
+                        <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                            <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                            ${currentUser.fullname || currentUser.username || 'Tài khoản'}
+                        </span>
+                    </div>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu">
+                        <span></span><span></span><span></span>
+                    </button>
+                `;
+            }
+        }
+
+        updateNavAuthState();
+
+        window.addEventListener('userLogin', updateNavAuthState);
+        window.addEventListener('userLogout', updateNavAuthState);
+    </script>
+
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('click', function(e) {
+            const mobileBtn = e.target.closest('#mobileMenuBtn');
+            const navCenter = document.querySelector('.nav-center');
+            if (mobileBtn && navCenter) {
+                navCenter.classList.toggle('active');
+                mobileBtn.classList.toggle('active');
+            }
+        });
+    </script>
+</body>
+</html>

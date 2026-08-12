@@ -1,0 +1,21 @@
+{
+  "name": "skyedu-main",
+  "version": "1.0.0",
+  "description": "[![GitHub Pages](https://img.shields.io/badge/Demo-skyedu.id.vn-blue)](https://skyedu.id.vn)\r [![Firebase](https://img.shields.io/badge/Backend-Firebase-orange)](https://firebase.google.com)\r [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)\r [![PWA](https://img.shields.io/badge/PWA-Ready-success)](manifest.json)",
+  "main": "anti-cheat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-html": "^8.1.4",
+    "prettier": "^3.9.6"
+  },
+  "dependencies": {
+    "acorn": "^8.18.0"
+  }
+}
