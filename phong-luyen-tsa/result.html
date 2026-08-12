@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Kết quả bài thi - SKY EDU</title>
+
+<!-- FOUC Prevention: Apply theme synchronously before CSS loads -->
+<script>
+(function(){
+  try {
+    var t = localStorage.getItem('skyedu_theme') || 'dark';
+    var html = document.documentElement;
+    if (t === 'lightpremium') {
+      html.classList.add('light','light-premium-mode');
+      html.style.backgroundColor = '#FDF2F8';
+      html.style.colorScheme = 'light';
+    } else {
+      html.classList.add('dark-mode');
+      html.style.backgroundColor = '#0D1117';
+      html.style.colorScheme = 'dark';
+    }
+    html.style.visibility = 'hidden';
+    window.addEventListener('load', function(){
+      html.style.visibility = 'visible';
+    });
+    setTimeout(function(){ html.style.visibility = 'visible'; }, 800);
+  } catch(e) {}
+})();
+</script>
+<style>
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+  body.theme-ready { opacity: 1; }
+</style>
+<script>
+  (function(){
+    function show(){
+      var b = document.body; if (b) b.classList.add('theme-ready');
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      requestAnimationFrame(function(){ requestAnimationFrame(show); });
+    });
+    window.addEventListener('load', show);
+    setTimeout(show, 800);
+  })();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preload" href="../assets/css/premium-style.css" as="style">
+<link rel="stylesheet" href="../assets/css/premium-style.css">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="../firebase-config.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="../assets/js/theme.js" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<!-- SKY EDU: sửa hiển thị -\infty / +\infty -->
+<script src="../assets/js/infty-fix.js" defer></script>
+<link rel="stylesheet" href="../assets/css/style.css">
+    
+    <style>
+        /* ============================================================
+           SKY EDU — RESULT PAGE
+           Professional redesign: glassmorphism, gradient mesh, soft shadows
+           ============================================================ */
+        :root {
+            /* Brand (TSA — Sky Blue) */
+            --brand-50:  #EFF6FF;
+            --brand-100: #DBEAFE;
+            --brand-300: #60A5FA;
+            --brand-500: #2563EB;
+            --brand-600: #1D4ED8;
+            --brand-700: #1E40AF;
+            --brand-grad: linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%);
+            --brand-glow: rgba(37, 99, 235, 0.35);
+            --brand-soft: rgba(37, 99, 235, 0.08);
+
+            --accent-500: #10B981;
+            --accent-600: #059669;
+            --warn-500:   #F59E0B;
+            --err-500:    #EF4444;
+            --err-600:    #DC2626;
+
+            --text-900: #0B1220;
+            --text-700: #334155;
+            --text-500: #64748B;
+            --text-300: #94A3B8;
+
+            --surface:        #FFFFFF;
+            --surface-muted:  #F8FAFC;
+            --surface-border: rgba(15, 23, 42, 0.06);
+            --ring-track:     #EEF2F7;
+
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 6px 22px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 20px 60px -20px rgba(37, 99, 235, 0.28),
+                         0 8px 24px -10px rgba(15, 23, 42, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-900);
+            background:
+                radial-gradient(80% 60% at 100% 0%, rgba(59, 130, 246, 0.12), transparent 70%),
+                radial-gradient(60% 60% at 0% 100%, rgba(124, 58, 237, 0.10), transparent 70%),
+                linear-gradient(180deg, #F7FAFF 0%, #EEF4FF 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 56px 20px 80px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            line-height: 1.55;
+            font-feature-settings: "ss01", "cv11", "kern";
+            font-optical-sizing: auto;
+        }
+
+        /* Apply Vietnamese-optimized font to all headings + body */
+        .result-title,
+        .score-title,
+        .review-title,
+        .question-review-label,
+        .question-review-status,
+        .question-review-text,
+        .btn-action,
+        .result-badge,
+        .score-value-suffix {
+            font-family: 'Inter', -apple-system, sans-serif;
+            letter-spacing: -0.015em;
+        }
+
+        /* Tabular numbers for hero + counts + time */
+        .score-ratio,
+        .score-ratio strong,
+        .score-ratio #totalCountHero,
+        .score-ratio-sep,
+        .score-value-suffix,
+        .review-count,
+        .filter-tab-count,
+        .q-num-badge,
+        .score-meta strong,
+        #timeSpent {
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum", "lnum";
+        }
+
+        .result-container {
+            max-width: 760px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ===== HEADER ===== */
+        .result-header {
+            text-align: center;
+            margin-bottom: 28px;
+            animation: rise .6s ease-out both;
+        }
+        .result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--brand-soft);
+            color: var(--brand-700);
+            border: 1px solid rgba(37, 99, 235, 0.18);
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            backdrop-filter: blur(6px);
+        }
+        .result-badge iconify-icon { font-size: 16px; }
+        .result-title {
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 800;
+            color: var(--text-900);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+        .result-subtitle {
+            font-size: 14px;
+            color: var(--text-500);
+        }
+
+        /* ===== HERO CARD (vòng tròn X/Y) ===== */
+        .score-hero {
+            position: relative;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 36px 28px;
+            margin-bottom: 20px;
+            border: 1px solid var(--surface-border);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: rise .7s .05s ease-out both;
+        }
+        /* Decorative mesh gradient */
+        .score-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(60% 80% at 100% 0%, rgba(59, 130, 246, 0.10), transparent 60%),
+                radial-gradient(50% 60% at 0% 100%, rgba(16, 185, 129, 0.10), transparent 60%);
+            pointer-events: none;
+        }
+        .score-hero > * { position: relative; z-index: 1; }
+
+        .score-hero-simple {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 36px;
+            align-items: center;
+        }
+        .score-ring-wrap {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
+        }
+        .score-ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .score-ring-bg {
+            fill: none;
+            stroke: var(--ring-track);
+            stroke-width: 14;
+        }
+        .score-ring-fg {
+            fill: none;
+            stroke: url(#scoreGradTsa);
+            stroke-width: 14;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+            filter: drop-shadow(0 4px 14px var(--brand-glow));
+        }
+        .score-ring-center {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .score-ratio {
+            display: flex; align-items: baseline; gap: 4px;
+            font-weight: 800;
+            color: var(--text-900);
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+        .score-ratio strong {
+            font-size: 64px;
+            background: var(--brand-grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .score-ratio-sep {
+            font-size: 40px;
+            color: var(--text-300);
+            font-weight: 600;
+            padding: 0 2px;
+        }
+        .score-ratio #totalCountHero {
+            font-size: 44px;
+            color: var(--text-500);
+            font-weight: 700;
+        }
+        .score-value-suffix {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-500);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .score-info {
+            display: flex; flex-direction: column;
+            gap: 16px;
+        }
+        .score-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-900);
+            letter-spacing: -0.02em;
+            margin: 0;
+            line-height: 1.25;
+        }
+        .score-meta {
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px 22px;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, var(--brand-50), #FFFFFF);
+            border: 1px solid rgba(37, 99, 235, 0.14);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-700);
+            width: fit-content;
+            max-width: 100%;
+        }
+        .score-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .score-meta iconify-icon { font-size: 16px; color: var(--brand-500); }
+        .score-meta strong { color: var(--text-900); font-weight: 700; }
+        .score-meta-dot { color: var(--text-300); }
+
+        /* ===== REVIEW CARD (Chi tiết đáp án) ===== */
+        .review-section {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 28px 28px 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--surface-border);
+            box-shadow: var(--shadow-md);
+            animation: rise .7s .12s ease-out both;
+        }
+        .review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+        .review-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-900);
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .review-title-icon {
+            width: 32px; height: 32px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--brand-soft);
+            color: var(--brand-600);
+            border-radius: 10px;
+            font-size: 18px;
+        }
+        .review-count {
+            font-size: 13px;
+            color: var(--text-500);
+            font-weight: 600;
+            background: var(--surface-muted);
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-left: 8px;
+        }
+
+        .filter-tabs {
+            display: inline-flex;
+            gap: 4px;
+            padding: 4px;
+            background: var(--surface-muted);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+        }
+        .filter-tab {
+            padding: 8px 14px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-500);
+            cursor: pointer;
+            transition: all .2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-tab:hover { color: var(--text-900); }
+        .filter-tab.active {
+            background: var(--surface);
+            color: var(--brand-700);
+            box-shadow: var(--shadow-sm), 0 0 0 1px rgba(37, 99, 235, 0.18);
+        }
+        .filter-tab-count {
+            font-size: 11px;
+            background: var(--brand-soft);
+            color: var(--brand-700);
+            padding: 2px 7px;
+            border-radius: 999px;
+            font-weight: 700;
+            min-width: 22px;
+            text-align: center;
+        }
+        .filter-tab.active .filter-tab-count { background: var(--brand-100); }
+
+        /* ===== QUESTION CARD ===== */
+        .question-review {
+            position: relative;
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            background: var(--surface);
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+            animation: fadeUp .4s ease-out both;
+        }
+        .question-review::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 14px; bottom: 14px;
+            width: 4px;
+            border-radius: 0 4px 4px 0;
+            background: var(--ring-track);
+        }
+        .question-review[data-status="correct"]::before { background: linear-gradient(180deg, #10B981, #059669); }
+        .question-review[data-status="wrong"]::before   { background: linear-gradient(180deg, #EF4444, #DC2626); }
+        .question-review[data-status="skipped"]::before { background: linear-gradient(180deg, #F59E0B, #D97706); }
+        .question-review[data-status="pending"]::before { background: linear-gradient(180deg, #6366F1, #4F46E5); }
+        .question-review:last-child { margin-bottom: 0; }
+
+        .question-review:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(37, 99, 235, 0.22);
+        }
+
+        .question-review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .question-review-num {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .q-num-badge {
+            width: 32px; height: 32px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800;
+            background: var(--surface-muted);
+            color: var(--text-700);
+            border: 1px solid var(--surface-border);
+        }
+        .q-num-badge.correct { background: rgba(16, 185, 129, 0.10); color: var(--accent-600); border-color: rgba(16, 185, 129, 0.25); }
+        .q-num-badge.wrong   { background: rgba(239, 68, 68, 0.10);  color: var(--err-600);    border-color: rgba(239, 68, 68, 0.22); }
+        .q-num-badge.skipped { background: rgba(245, 158, 11, 0.10); color: #B45309;           border-color: rgba(245, 158, 11, 0.25); }
+        .q-num-badge.pending { background: rgba(99, 102, 241, 0.10); color: #4338CA;          border-color: rgba(99, 102, 241, 0.22); }
+
+        .question-review-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-500);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .question-review-status {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .question-review-status::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        .question-review-status.correct { background: rgba(16, 185, 129, 0.10); color: var(--accent-600); }
+        .question-review-status.wrong   { background: rgba(239, 68, 68, 0.10);  color: var(--err-600); }
+        .question-review-status.skipped { background: rgba(245, 158, 11, 0.10); color: #B45309; }
+        .question-review-status.pending { background: rgba(99, 102, 241, 0.10); color: #4338CA; }
+
+        .question-content-preview {
+            font-size: 14px;
+            color: var(--text-700);
+            line-height: 1.6;
+            margin-bottom: 14px;
+            padding-left: 4px;
+        }
+
+        .question-answers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 10px;
+        }
+        .answer-detail {
+            font-size: 13px;
+            padding: 12px 14px;
+            background: var(--surface-muted);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+        .answer-detail strong {
+            color: var(--text-900);
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .answer-detail > span { word-break: break-word; }
+
+        .answer-correct { color: var(--accent-600); font-weight: 700; }
+        .answer-wrong   { color: var(--err-600); font-weight: 700; }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 8px;
+            animation: rise .7s .2s ease-out both;
+        }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 26px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+            letter-spacing: -0.01em;
+        }
+        .btn-action:hover { transform: translateY(-2px); }
+        .btn-action:active { transform: translateY(0); }
+        .btn-action iconify-icon { font-size: 18px; }
+
+        .btn-action.btn-secondary {
+            background: var(--surface);
+            color: var(--text-900);
+            border: 1.5px solid var(--surface-border);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-action.btn-secondary:hover {
+            border-color: var(--text-300);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-action.btn-primary {
+            background: var(--brand-grad);
+            color: #fff;
+            box-shadow: 0 8px 20px -4px var(--brand-glow),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        }
+        .btn-action.btn-primary:hover {
+            box-shadow: 0 14px 30px -6px var(--brand-glow),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        /* ===== LOADING / UTIL ===== */
+        .loading { text-align: center; padding: 80px 24px; }
+        .loading-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--ring-track);
+            border-top-color: var(--brand-500);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== KaTeX Math Rendering - Chuẩn như sách giáo khoa ===== */
+        
+        /* KaTeX base font */
+        .katex { font-family: 'KaTeX_Main', 'Times New Roman', 'Cambria Math', 'Lucida Bright', serif !important; }
+        
+        /* Inline math - căn chỉnh baseline với văn bản */
+        .katex .katex-html {
+            display: inline-block;
+            vertical-align: baseline;
+        }
+        
+        /* Display math ($$...$$) - căn giữa với khoảng cách hợp lý */
+        .katex-display {
+            margin: 16px 0;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        
+        .katex-display > .katex {
+            font-size: 1.1em !important;
+            text-align: center;
+        }
+        
+        /* Answer review KaTeX */
+        #answerReview .katex {
+            font-size: 1.05em;
+            vertical-align: baseline;
+        }
+        
+        #answerReview .katex-display {
+            margin: 12px 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        
+        /* ================================================================
+           TÍCH PHÂN - Căn chỉnh chiều cao và vị trí cận
+           ================================================================ */
+        
+        .katex .mathnormal[class*="int"],
+        .katex .mord[class*="int"] {
+            font-size: 1.15em;
+            position: relative;
+        }
+        
+        .katex .m_limits > .mord {
+            position: relative;
+        }
+        
+        /* ================================================================
+           HỆ PHƯƠNG TRÌNH / PIECEWISE - Dấu ngoặc nhọn tự co giãn
+           ================================================================ */
+        
+        /* Ngoặc nhọn trái - to và rõ ràng */
+        .katex .mopen.vernacular {
+            font-size: 1.4em;
+            line-height: 1;
+            position: relative;
+            top: -0.05em;
+        }
+        
+        /* Ngoặc nhọn phải - ẩn hoàn toàn (chỉ có dấu { bên trái) */
+        .katex .mclose.vernacular {
+            visibility: hidden;
+            width: 0;
+        }
+        
+        /* Khoảng cách dòng cho hệ phương trình */
+        .katex-display .katex .mtable .mtr {
+            line-height: 1.8;
+        }
+        
+        /* Khoảng cách giữa dấu { và phương trình đầu tiên */
+        .katex .mleft.vernacular {
+            margin-right: 0.05em;
+        }
+        
+        /* Khoảng cách cột cho ma trận hệ phương trình */
+        .katex .mtable .mtd {
+            padding: 0.1em 0.15em;
+        }
+        
+        /* ================================================================
+           MA TRẬN
+           ================================================================ */
+        
+        .katex .mtable {
+            margin: 0.5em 0;
+        }
+        
+        .katex .mtable .mtd {
+            padding: 0.15em 0.3em;
+        }
+        
+        /* ================================================================
+           CĂN THỨC, PHÂN SỐ, MŨ, CHỈ SỐ
+           ================================================================ */
+        
+        .katex .sqrt {
+            height: auto;
+        }
+        
+        .katex .mfrac > span {
+            vertical-align: baseline;
+        }
+        
+        /* ================================================================
+           Responsive KaTeX
+           ================================================================ */
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            body { padding: 70px 24px 60px; }
+            .score-hero-simple { gap: 28px; }
+            .score-ring-wrap { width: 220px; height: 220px; }
+            .review-section { padding: 24px 20px; }
+        }
+        @media (max-width: 768px) {
+            body { padding: 60px 16px 50px; }
+            .score-hero-simple {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                text-align: center;
+            }
+            .score-ring-wrap { width: 200px; height: 200px; margin: 0 auto; }
+            .score-ratio strong { font-size: 52px; }
+            .score-ratio #totalCountHero { font-size: 32px; }
+            .score-info { align-items: center; }
+            .score-title { font-size: 20px; }
+            .score-subtitle { font-size: 14px; }
+            .review-section { padding: 20px 16px; }
+            .review-header { flex-direction: column; align-items: stretch; gap: 12px; }
+            .filter-tabs { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .filter-tab { flex-shrink: 0; }
+            .action-buttons { flex-direction: column; gap: 10px; }
+            .btn-action { width: 100%; }
+            .result-header { padding: 16px; }
+            .result-title { font-size: 20px; }
+            .result-subtitle { font-size: 12px; }
+        }
+        @media (max-width: 600px) {
+            body { padding: 52px 12px 48px; }
+            .score-ring-wrap { width: 180px; height: 180px; }
+            .score-ring-svg { width: 180px; height: 180px; }
+            .score-ratio strong { font-size: 44px; }
+            .score-ratio #totalCountHero { font-size: 28px; }
+            .score-ratio-sep { font-size: 28px; }
+            .score-title { font-size: 18px; }
+            .score-subtitle { font-size: 13px; }
+            .score-stat { padding: 10px 14px; font-size: 13px; }
+            .review-section { padding: 16px 12px; }
+            .review-header { padding: 12px; }
+            .filter-tab { padding: 6px 12px; font-size: 12px; }
+            .result-header { padding: 12px; }
+            .result-title { font-size: 18px; }
+            .result-subtitle { font-size: 11px; }
+        }
+        @media (max-width: 480px) {
+            body { padding: 48px 10px 44px; }
+            .score-ring-wrap { width: 160px; height: 160px; }
+            .score-ring-svg { width: 160px; height: 160px; }
+            .score-ratio strong { font-size: 38px; }
+            .score-ratio #totalCountHero { font-size: 24px; }
+            .score-ratio-sep { font-size: 24px; }
+            .score-title { font-size: 16px; }
+            .score-subtitle { font-size: 12px; }
+            .score-info { gap: 8px; }
+            .score-stat { padding: 8px 12px; font-size: 12px; border-radius: 8px; }
+            .review-section { padding: 14px 10px; border-radius: 12px; }
+            .review-header { padding: 10px; border-radius: 10px; }
+            .filter-tabs { gap: 6px; }
+            .filter-tab { padding: 5px 10px; font-size: 11px; }
+            .action-buttons { gap: 8px; }
+            .btn-action { padding: 10px 16px; font-size: 13px; }
+            .result-header { padding: 10px; border-radius: 10px; }
+            .result-badge { font-size: 11px; padding: 4px 10px; }
+            .result-title { font-size: 16px; }
+            .result-subtitle { font-size: 10px; }
+        }
+        @media (max-width: 390px) {
+            body { padding: 44px 8px 40px; }
+            .score-ring-wrap { width: 140px; height: 140px; }
+            .score-ring-svg { width: 140px; height: 140px; }
+            .score-ratio strong { font-size: 32px; }
+            .score-ratio #totalCountHero { font-size: 20px; }
+            .score-ratio-sep { font-size: 20px; }
+            .score-title { font-size: 14px; }
+            .score-stat { padding: 6px 10px; font-size: 11px; }
+            .review-section { padding: 12px 8px; }
+        }
+        @media (max-width: 360px) {
+            .score-ring-wrap { width: 120px; height: 120px; }
+            .score-ring-svg { width: 120px; height: 120px; }
+            .score-ratio strong { font-size: 28px; }
+            .score-ratio #totalCountHero { font-size: 18px; }
+        }
+        @media (max-width: 768px) and (orientation: landscape) {
+            .score-hero-simple { grid-template-columns: 1fr 1fr; text-align: left; }
+            .score-ring-wrap { margin: 0; }
+            .score-info { align-items: flex-start; }
+        }
+        @supports (padding: env(safe-area-inset-bottom)) {
+            body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+        }
+
+        /* ================================================================
+           FIX HIỂN THỊ \infty  (chỉ áp dụng cho ký hiệu vô cùng)
+           ------------------------------------------------------------
+           - Không thay đổi ký tự Unicode, không replace \infty
+           - Chỉ tác động lên span đã được đánh dấu bằng .sky-infty
+             (KaTeX .mord chứa ∞, hoặc MathJax .mjx-c221E)
+           - Không ảnh hưởng tới bất kỳ ký hiệu toán học nào khác
+           ================================================================ */
+        .katex .sky-infty {
+            font-family: 'KaTeX_Main', 'Times New Roman', serif !important;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: inherit;
+            font-style: normal;
+            /* Giữ ∞ thẳng hàng baseline với + / - */
+            vertical-align: 0;
+            /* Text-shadow cực mảnh giúp ∞ sắc nét, đều nét hơn */
+            text-shadow: 0 0 0.005em currentColor;
+        }
+        /* MathJax: ký hiệu ∞ có class cố định mjx-c221E */
+        .mjx-c221E.sky-infty {
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <div class="result-header">
+            <div class="result-badge">
+                <iconify-icon icon="lucide:award" aria-hidden="true"></iconify-icon>
+                Kết quả bài thi
+            </div>
+            <h1 class="result-title" id="examName">Đang tải kết quả...</h1>
+            <p class="result-subtitle" id="completedAtHeader">Hoàn thành lúc 14:30 - 14/06/2026</p>
+        </div>
+
+        <div class="score-hero score-hero-simple">
+            <div class="score-ring-wrap">
+                <svg class="score-ring-svg" viewBox="0 0 200 200" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="scoreGradTsa" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3B82F6"/>
+                            <stop offset="100%" stop-color="#2563EB"/>
+                        </linearGradient>
+                    </defs>
+                    <circle class="score-ring-bg" cx="100" cy="100" r="86"/>
+                    <circle id="scoreRingFg" class="score-ring-fg" cx="100" cy="100" r="86"
+                        stroke-dasharray="540.35"
+                        stroke-dashoffset="540.35"/>
+                </svg>
+                <div class="score-ring-center">
+                    <div class="score-ratio">
+                        <strong id="correctCountHero">0</strong>
+                        <span class="score-ratio-sep">/</span>
+                        <span id="totalCountHero">0</span>
+                    </div>
+                    <div class="score-value-suffix">câu đúng</div>
+                </div>
+            </div>
+
+            <div class="score-info">
+                <h2 class="score-title" id="scoreTitle">Kết quả bài thi TSA</h2>
+                <div class="score-meta">
+                    <span class="score-meta-item">
+                        <iconify-icon icon="lucide:clock" aria-hidden="true"></iconify-icon>
+                        Thời gian: <strong id="timeSpent">0:00</strong>
+                    </span>
+                    <span class="score-meta-dot">•</span>
+                    <span class="score-meta-item">
+                        <iconify-icon icon="lucide:check-circle" aria-hidden="true"></iconify-icon>
+                        Hoàn thành: <strong id="completedAtMeta">--</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="review-section">
+            <div class="review-header">
+                <h2 class="review-title">
+                    <span class="review-title-icon"><iconify-icon icon="lucide:list-checks" aria-hidden="true"></iconify-icon></span>
+                    Chi tiết đáp án
+                    <span class="review-count" id="reviewCount">--</span>
+                </h2>
+                <div class="filter-tabs">
+                    <button type="button" class="filter-tab active" data-filter="all">Tất cả <span class="filter-tab-count" data-count-filter="all">0</span></button>
+                    <button type="button" class="filter-tab" data-filter="correct">Đúng <span class="filter-tab-count" data-count-filter="correct">0</span></button>
+                    <button type="button" class="filter-tab" data-filter="wrong">Sai <span class="filter-tab-count" data-count-filter="wrong">0</span></button>
+                    <button type="button" class="filter-tab" data-filter="skipped">Bỏ qua <span class="filter-tab-count" data-count-filter="skipped">0</span></button>
+                </div>
+            </div>
+
+            <div id="answerReview"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button type="button" class="btn-action btn-secondary" onclick="goBack()">
+                <iconify-icon icon="lucide:arrow-left" aria-hidden="true"></iconify-icon>
+                Quay lại
+            </button>
+            <button type="button" class="btn-action btn-primary" onclick="retryExam()">
+                <iconify-icon icon="lucide:rotate-ccw" aria-hidden="true"></iconify-icon>
+                Làm lại
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let resultData = null;
+        let currentFilter = 'all';
+
+        async function loadResult() {
+            let resultData = null;
+
+            // ============================================================
+            // 1) ƯU TIÊN ĐỌC TỪ FIREBASE (examResults/{uid}/{examId}) làm nguồn chính
+            //    → chống client tampering (localStorage có thể user tự sửa)
+            // ============================================================
+            if (typeof firebase !== 'undefined' && firebase.auth && firebase.database) {
+                try {
+                    const user = firebase.auth().currentUser;
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const examId = urlParams.get('examId') || urlParams.get('id');
+
+                    if (user) {
+                        const path = 'examResults/' + user.uid;
+                        const snap = await firebase.database().ref(path).once('value');
+                        const data = snap.val() || {};
+
+                        let selected = null;
+                        if (examId && data[examId]) {
+                            selected = data[examId];
+                        } else {
+                            const values = Object.values(data);
+                            selected = values.find(item => item && item.examId === examId) || values[0] || null;
+                        }
+                        if (selected) resultData = selected;
+                    }
+                } catch (e) {
+                    console.warn('[result] Firebase read failed:', e);
+                }
+            }
+
+            // ============================================================
+            // 2) FALLBACK: localStorage cache khi OFFLINE (chỉ để hiển thị ngay,
+            //    KHÔNG dùng làm nguồn dữ liệu chính để tính lại XP/Streak)
+            // ============================================================
+            if (!resultData) {
+                let resultStr = null;
+                try {
+                    resultStr = localStorage.getItem('examResultTSA');
+                    if (!resultStr) resultStr = localStorage.getItem('examResult');
+                    if (!resultStr) resultStr = localStorage.getItem('hsaResult');
+                } catch (e) {}
+
+                if (resultStr) {
+                    try { resultData = JSON.parse(resultStr); } catch (e) {}
+                }
+            }
+
+            if (!resultData) {
+                showEmptyResult();
+                return;
+            }
+
+            // Lấy options từ examData đã lưu (localStorage) nếu không có trong resultData
+            if (!resultData.options) {
+                try {
+                    const examRaw = localStorage.getItem('__current_exam_data');
+                    if (examRaw) {
+                        const examInfo = JSON.parse(examRaw);
+                        if (examInfo && examInfo.options) {
+                            resultData.options = examInfo.options;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            displayResult(resultData);
+        }
+
+        function showEmptyResult() {
+            document.querySelector('.result-container').innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Không tìm thấy kết quả thi</p>
+                    <button type="button" class="btn-action btn-primary" onclick="goBack()" style="margin-top: 20px;">
+                        Quay lại phòng luyện
+                    </button>
+                </div>
+            `;
+        }
+
+        function displayResult(data) {
+            console.log('[result] displayResult data:', data);
+            console.log('[result] mcq_multi questions in data.questions:',
+                (data.questions || []).filter(q => q.type === 'mcq_multi').map(q => ({
+                    id: q.id, correctAnswers: q.correctAnswers, options: q.options
+                }))
+            );
+            document.getElementById('examName').textContent = data.examName || 'Phòng luyện TSA';
+
+            const completedAt = new Date(data.completedAt);
+            const timeStr = completedAt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = completedAt.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const completedText = `${timeStr} - ${dateStr}`;
+            const headerEl = document.getElementById('completedAtHeader');
+            const metaEl = document.getElementById('completedAtMeta');
+            if (headerEl) headerEl.textContent = `Hoàn thành: ${completedText}`;
+            if (metaEl) metaEl.textContent = completedText;
+
+            // === RECOUNT SỐ CÂU ĐÚNG TỪ questions/answers ===
+            // data.correct trong localStorage có thể là kết quả lưu từ lần nộp
+            // cũ (khi còn bug chấm sai) → không tin. Tự chấm lại qua QuestionTypes
+            // để khớp với logic trong renderAnswerReview (phần 'Chi tiết đáp án').
+            const total = data.total || (Array.isArray(data.questions) ? data.questions.length : 0);
+            let correct = 0;
+            if (Array.isArray(data.questions) && data.answers && typeof _gradeStatus === 'function') {
+                data.questions.forEach((q, i) => {
+                    const key = `q${i + 1}`;
+                    const userAnswer = data.answers[key];
+                    if (_isSkippedAnswer(userAnswer)) return;
+                    const g = _gradeStatus(q, userAnswer);
+                    if (g.correct === true) correct++;
+                });
+            } else {
+                // Fallback nếu không có questions/answers (rất hiếm)
+                correct = data.correct || 0;
+            }
+
+            // === HERO: chỉ hiện số câu đúng / tổng số câu ===
+            const correctEl = document.getElementById('correctCountHero');
+            const totalEl   = document.getElementById('totalCountHero');
+            if (correctEl) correctEl.textContent = correct;
+            if (totalEl)   totalEl.textContent = total;
+            console.log('[result] rendering correct=' + correct + ', total=' + total);
+
+            // Animate progress ring theo tỉ lệ đúng/tổng
+            animateScoreRatio(correct, total);
+
+            const timeUsed = data.timeSpent || data.timeUsed || 0;
+            const minutes = Math.floor(timeUsed / 60);
+            const seconds = timeUsed % 60;
+            document.getElementById('timeSpent').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            renderAnswerReview(data);
+            // Render LaTeX trong nội dung câu hỏi (sau khi DOM đã build)
+            renderMathInReview();
+        }
+
+        // Animate vòng tròn theo tỉ lệ đúng/tổng (0..1).
+        function animateScoreRatio(correct, total) {
+            const ringEl = document.getElementById('scoreRingFg');
+            const RADIUS = 86;
+            const CIRC = 2 * Math.PI * RADIUS;
+            const targetPct = total > 0 ? Math.max(0, Math.min(1, correct / total)) : 0;
+
+            if (ringEl) {
+                ringEl.setAttribute('stroke-dasharray', CIRC.toFixed(2));
+                ringEl.setAttribute('stroke-dashoffset', CIRC.toFixed(2));
+            }
+
+            const duration = 1200;
+            const startTs = performance.now();
+            function step(now) {
+                const t = Math.min(1, (now - startTs) / duration);
+                const eased = 1 - Math.pow(1 - t, 3);
+                if (ringEl) {
+                    const offset = CIRC * (1 - targetPct * eased);
+                    ringEl.setAttribute('stroke-dashoffset', offset.toFixed(2));
+                }
+                if (t < 1) requestAnimationFrame(step);
+                else if (ringEl) ringEl.setAttribute('stroke-dashoffset', (CIRC * (1 - targetPct)).toFixed(2));
+            }
+            requestAnimationFrame(step);
+        }
+
+        // Gọi KaTeX renderMathInElement để công thức toán ($...$ / $$...$$ / \( \) / \[ \]) hiển thị đúng.
+        function renderMathInReview() {
+            const tryRender = () => {
+                const review = document.getElementById('answerReview');
+                if (!review) return;
+                if (typeof renderMathInElement !== 'undefined') {
+                    try {
+                        renderMathInElement(review, {
+                            delimiters: [
+                                { left: '$$', right: '$$', display: true },
+                                { left: '$', right: '$', display: false },
+                                { left: '\\(', right: '\\)', display: false },
+                                { left: '\\[', right: '\\]', display: true }
+                            ],
+                            throwOnError: false,
+                            trust: true,
+                            strict: false
+                        });
+                    } catch (e) {
+                        console.warn('[result] KaTeX render error:', e);
+                    }
+                }
+            };
+            // KaTeX auto-render load với `defer` → có thể chưa sẵn sàng ngay sau DOMContentLoaded.
+            if (typeof renderMathInElement !== 'undefined') tryRender();
+            else setTimeout(tryRender, 150);
+        }
+
+        function _isSkippedAnswer(userAnswer) {
+            if (userAnswer === undefined || userAnswer === null || userAnswer === '') return true;
+            if (Array.isArray(userAnswer) && userAnswer.length === 0) return true;
+            if (typeof userAnswer === 'object' && !Array.isArray(userAnswer)) {
+                // Object không có field nào có giá trị → coi như skipped
+                const vals = Object.values(userAnswer).map(v => v === undefined || v === null || v === '' ? '' : v);
+                return vals.every(v => v === '');
+            }
+            return false;
+        }
+
+        // Escape HTML an toàn để chèn vào innerHTML mà không bị XSS.
+        // Vẫn giữ nguyên các ký tự $ để KaTeX render công thức.
+        function _escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // Xác định đúng/sai dựa trên engine dùng chung với exam.html (QuestionTypes.grade).
+        // Nếu QuestionTypes chưa load (lỗi CDN/script), fallback status = 'wrong' để không báo sai ngầm.
+        function _gradeStatus(q, userAnswer) {
+            if (typeof QuestionTypes === 'undefined' || !QuestionTypes || !QuestionTypes.grade) {
+                return { correct: null, pending: false };
+            }
+            try {
+                const r = QuestionTypes.grade(q, userAnswer);
+                return {
+                    correct: r.correct === true ? true : (r.correct === null ? null : false),
+                    pending: r.correct === null
+                };
+            } catch (e) {
+                console.warn('[renderAnswerReview] grade error:', e);
+                return { correct: null, pending: false };
+            }
+        }
+
+        // Format đáp án của user & đáp án đúng dạng text cho người dùng đọc.
+        // Với các dạng có cấu trúc phức tạp (pairs, correctOrder, correctMapping, fill_image object...)
+        // phải format riêng — không dùng String(object) chung.
+        function _formatUserAnswer(q, userAnswer) {
+            if (userAnswer === undefined || userAnswer === null || userAnswer === '') return 'Chưa trả lời';
+            if (userAnswer === 'Chưa trả lời') return userAnswer;
+
+            const t = q.type;
+            if (t === 'mcq_single') {
+                if (q.options && typeof userAnswer === 'string' && /^[A-D]$/.test(userAnswer)) {
+                    const idx = userAnswer.charCodeAt(0) - 65;
+                    return q.options[idx] || userAnswer;
+                }
+                if (q.options && q.options.includes(userAnswer)) return userAnswer;
+                return String(userAnswer);
+            }
+            if (t === 'true_false') return String(userAnswer);
+            if (t === 'mcq_multi') {
+                if (!Array.isArray(userAnswer)) return String(userAnswer);
+                const validUserAnswers = userAnswer.filter(a => a != null && String(a).trim() !== '');
+                if (validUserAnswers.length === 0) return 'Chưa trả lời';
+                if (!q.options) return validUserAnswers.join(', ');
+                return validUserAnswers.map(a => {
+                    const unescapedA = _unescapeHtml(a);
+                    const idx = q.options.indexOf(unescapedA);
+                    if (idx >= 0) return `${String.fromCharCode(65 + idx)}. ${q.options[idx]}`;
+                    const escapedIdx = q.options.indexOf(a);
+                    if (escapedIdx >= 0) return `${String.fromCharCode(65 + escapedIdx)}. ${a}`;
+                    return a;
+                }).join(' và ');
+            }
+            if (t === 'fill_blank') {
+                if (!Array.isArray(userAnswer)) return String(userAnswer);
+                return userAnswer.map(s => s || '_(trống)_').join(' / ');
+            }
+            if (t === 'short_answer') {
+                // short_answer lưu dạng string trực tiếp, không phải array
+                if (typeof userAnswer === 'string') return userAnswer;
+                if (Array.isArray(userAnswer)) return userAnswer[0] || '_(trống)_';
+                return String(userAnswer);
+            }
+            if (t === 'matching') {
+                if (typeof userAnswer !== 'object' || Array.isArray(userAnswer)) return String(userAnswer);
+                const pairs = q.pairs || [];
+                const out = [];
+                Object.keys(userAnswer).forEach(pos => {
+                    const pair = pairs[parseInt(pos)];
+                    const rightIdx = parseInt(userAnswer[pos]);
+                    if (pair && !isNaN(rightIdx)) {
+                        const rightText = (pair.right && pair.right[rightIdx]) || userAnswer[pos];
+                        out.push(`${pair.left || '?'} → ${rightText}`);
+                    }
+                });
+                return out.length ? out.join('; ') : '_(chưa ghép)_';
+            }
+            if (t === 'word_arrange' || t === 'sentence_order') {
+                if (!Array.isArray(userAnswer)) return String(userAnswer);
+                const source = (t === 'word_arrange' ? q.words : q.sentences) || [];
+                return userAnswer.map(i => source[i] || '?').join(' → ');
+            }
+            if (t === 'drag_drop') {
+                if (typeof userAnswer !== 'object' || Array.isArray(userAnswer)) return String(userAnswer);
+                const choices = q.choices || [];
+                const out = [];
+                Object.keys(userAnswer).forEach(pos => {
+                    const ci = userAnswer[pos];
+                    out.push(`${pos}: ${choices[ci] !== undefined ? choices[ci] : ci}`);
+                });
+                return out.length ? out.join('; ') : '_(chưa điền)_';
+            }
+            if (t === 'matrix_choice') {
+                if (typeof userAnswer !== 'object' || Array.isArray(userAnswer)) return String(userAnswer);
+                const rows = q.rows || [];
+                const out = [];
+                Object.keys(userAnswer).forEach(rowIdx => {
+                    const r = rows[parseInt(rowIdx)];
+                    const v = userAnswer[rowIdx];
+                    if (r) out.push(`${r}: ${v}`);
+                });
+                return out.length ? out.join('; ') : '_(chưa chọn)_';
+            }
+            if (t === 'fill_image') {
+                if (typeof userAnswer === 'object' && userAnswer !== null && !Array.isArray(userAnswer)) {
+                    const parts = [];
+                    if (userAnswer.input !== undefined && userAnswer.input !== '') parts.push(userAnswer.input);
+                    if (userAnswer.select !== undefined && userAnswer.select !== '') parts.push(userAnswer.select);
+                    return parts.length ? parts.join(' / ') : '_(chưa điền)_';
+                }
+                return String(userAnswer);
+            }
+            if (t === 'essay') return String(userAnswer);
+
+            // Fallback
+            if (typeof userAnswer === 'object') {
+                try { return JSON.stringify(userAnswer); } catch (e) { return '[object]'; }
+            }
+            return String(userAnswer);
+        }
+
+        function _unescapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'");
+        }
+
+        function _formatCorrectAnswer(q) {
+            const t = q.type;
+            if (t === 'mcq_single') {
+                if (q.options) {
+                    if (typeof q.correctAnswer === 'number') return q.options[q.correctAnswer] || String(q.correctAnswer);
+                    if (typeof q.correctAnswer === 'string' && /^[A-D]$/.test(q.correctAnswer)) {
+                        return q.options[q.correctAnswer.charCodeAt(0) - 65] || q.correctAnswer;
+                    }
+                    // Unescape before comparing with options (options are stored unescaped in Firebase)
+                    const unescaped = _unescapeHtml(q.correctAnswer);
+                    if (q.options.includes(unescaped)) return unescaped;
+                    if (q.options.includes(q.correctAnswer)) return q.correctAnswer;
+                }
+                return String(q.correctAnswer);
+            }
+            if (t === 'true_false') return String(q.correctAnswer);
+            if (t === 'mcq_multi') {
+                console.log('[result] _formatCorrectAnswer mcq_multi:', {
+                    qid: q.id,
+                    correctAnswers: q.correctAnswers,
+                    options: q.options,
+                    'typeof correctAnswers': typeof q.correctAnswers,
+                    'Array.isArray': Array.isArray(q.correctAnswers),
+                    'correctAnswers.length': q.correctAnswers && q.correctAnswers.length
+                });
+                if (!Array.isArray(q.correctAnswers)) {
+                    console.warn('[result] mcq_multi: correctAnswers is not an array', { qid: q.id, val: q.correctAnswers });
+                    return '_(không có)_';
+                }
+                const validAnswers = q.correctAnswers.filter(a => a != null && String(a).trim() !== '');
+                console.log('[result] mcq_multi validAnswers:', { qid: q.id, validAnswers, raw: q.correctAnswers, filtered: q.correctAnswers.filter(a => true) });
+                if (validAnswers.length === 0) {
+                    console.warn('[result] mcq_multi: correctAnswers is empty', { qid: q.id, raw: q.correctAnswers, typeofItems: (q.correctAnswers || []).map(a => typeof a) });
+                    return '_(không có)_';
+                }
+                if (!q.options) return validAnswers.join(', ');
+                return validAnswers.map(a => {
+                    const unescapedA = _unescapeHtml(a);
+                    const idx = q.options.indexOf(unescapedA);
+                    if (idx >= 0) return `${String.fromCharCode(65 + idx)}. ${q.options[idx]}`;
+                    const escapedIdx = q.options.indexOf(a);
+                    if (escapedIdx >= 0) return `${String.fromCharCode(65 + escapedIdx)}. ${a}`;
+                    return a;
+                }).join(' và ');
+            }
+            if (t === 'fill_blank') {
+                if (!Array.isArray(q.correctAnswers)) return '_(không có)_';
+                return q.correctAnswers.map(s => s || '_(trống)_').join(' / ');
+            }
+            if (t === 'short_answer') {
+                // short_answer dùng correctAnswer là string trực tiếp
+                return (q.correctAnswer !== undefined && q.correctAnswer !== '') ? String(q.correctAnswer) : '_(không có)_';
+            }
+            if (t === 'matching') {
+                const pairs = q.pairs || [];
+                if (!pairs.length) return '_(không có)_';
+                return pairs.map(p => `${p.left || '?'} → ${(p.right && p.right[p.correct]) || ''}`).join('; ');
+            }
+            if (t === 'word_arrange' || t === 'sentence_order') {
+                if (!Array.isArray(q.correctOrder)) return '_(không có)_';
+                const source = (t === 'word_arrange' ? q.words : q.sentences) || [];
+                return q.correctOrder.map(i => source[i] || '?').join(' → ');
+            }
+            if (t === 'drag_drop') {
+                const cm = q.correctMapping || {};
+                const choices = q.choices || [];
+                const out = [];
+                Object.keys(cm).forEach(pos => {
+                    const ci = cm[pos];
+                    out.push(`${pos}: ${choices[ci] !== undefined ? choices[ci] : ci}`);
+                });
+                return out.length ? out.join('; ') : '_(không có)_';
+            }
+            if (t === 'matrix_choice') {
+                const ca = q.correctAnswer || {};
+                const rows = q.rows || [];
+                const out = [];
+                Object.keys(ca).forEach(rowIdx => {
+                    const r = rows[parseInt(rowIdx)];
+                    if (r) out.push(`${r}: ${ca[rowIdx]}`);
+                });
+                return out.length ? out.join('; ') : '_(không có)_';
+            }
+            if (t === 'fill_image') {
+                return (q.correctAnswer !== undefined && q.correctAnswer !== '') ? String(q.correctAnswer) : '_(không có)_';
+            }
+            if (t === 'essay') return '_(câu tự luận — chờ chấm tay)_';
+            return '';
+        }
+
+        function renderAnswerReview(data) {
+            const container = document.getElementById('answerReview');
+            if (!data.questions || !data.answers) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Không có dữ liệu chi tiết.</p>';
+                return;
+            }
+
+            const questions = data.questions;
+            const answers = data.answers;
+            // Kiểm tra tùy chọn ẩn đáp án
+            const showAnswers = data.options?.showAnswers !== false;
+            console.log('[result] showAnswers:', showAnswers, 'data.options:', data.options);
+
+            let html = '';
+
+            // Thông báo nếu đáp án bị ẩn
+            if (!showAnswers) {
+                html += `
+                    <div style="background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 16px; margin-bottom: 16px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🔒</div>
+                        <div style="color: #FCD34D; font-weight: 600;">Đáp án đúng đã bị ẩn</div>
+                        <div style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">Đề thi này được cấu hình không hiển thị đáp án đúng</div>
+                    </div>
+                `;
+            }
+
+            questions.forEach((q, i) => {
+                const key = `q${i + 1}`;
+                const userAnswer = answers[key];
+
+                let status;
+                if (_isSkippedAnswer(userAnswer)) {
+                    status = 'skipped';
+                } else {
+                    const g = _gradeStatus(q, userAnswer);
+                    if (g.pending) {
+                        status = 'pending';
+                    } else if (g.correct === true) {
+                        status = 'correct';
+                    } else {
+                        status = 'wrong';
+                    }
+                }
+
+                const rawContent = q.content ? String(q.content) : '';
+                const plainText = rawContent.replace(/<[^>]*>/g, '');
+                const isLongContent = plainText.length > 120;
+                const displayContent = rawContent
+                    ? (isLongContent ? plainText.slice(0, 200) + '…' : plainText)
+                    : ('Câu hỏi ' + (i + 1));
+
+                const userAnswerText = _formatUserAnswer(q, userAnswer);
+                const correctAnswerText = _formatCorrectAnswer(q);
+
+                const statusLabel = status === 'correct' ? 'Đúng'
+                    : status === 'wrong' ? 'Sai'
+                    : status === 'pending' ? 'Chờ chấm'
+                    : 'Bỏ qua';
+
+                html += `
+                    <div class="question-review" data-status="${status}">
+                        <div class="question-review-header">
+                            <div class="question-review-num">
+                                <div class="q-num-badge ${status}">${i + 1}</div>
+                            </div>
+                            <div class="question-review-status ${status}">
+                                ${statusLabel}
+                            </div>
+                        </div>
+                        <div class="question-content-preview">${_escapeHtml(displayContent)}</div>
+                        <div class="question-answers">
+                            <div class="answer-detail">
+                                <strong>Đáp án của bạn:</strong>
+                                <span class="${status === 'correct' ? 'answer-correct' : status === 'wrong' ? 'answer-wrong' : ''}">${_escapeHtml(userAnswerText)}</span>
+                            </div>
+                            ${showAnswers ? `
+                            <div class="answer-detail">
+                                <strong>Đáp án đúng:</strong>
+                                <span class="answer-correct">${_escapeHtml(correctAnswerText)}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Đếm số câu theo trạng thái để hiển thị trên filter tabs + review-count
+            const counts = {
+                all: 0, correct: 0, wrong: 0, skipped: 0, pending: 0
+            };
+            const matches = html.match(/data-status="(\w+)"/g) || [];
+            matches.forEach(m => {
+                const st = m.match(/data-status="(\w+)"/)[1];
+                counts.all++;
+                if (counts[st] !== undefined) counts[st]++;
+            });
+
+            document.querySelectorAll('.filter-tab-count').forEach(el => {
+                const f = el.getAttribute('data-count-filter');
+                if (f && counts[f] !== undefined) el.textContent = counts[f];
+            });
+            const reviewCountEl = document.getElementById('reviewCount');
+            if (reviewCountEl) {
+                reviewCountEl.textContent = `${counts.all} câu`;
+            }
+        }
+
+        function setupFilters() {
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    currentFilter = tab.dataset.filter;
+                    document.querySelectorAll('.question-review').forEach(review => {
+                        if (currentFilter === 'all' || review.dataset.status === currentFilter) {
+                            review.style.display = '';
+                        } else {
+                            review.style.display = 'none';
+                        }
+                    });
+                    // Cập nhật review-count để khớp filter
+                    const reviewCountEl = document.getElementById('reviewCount');
+                    if (reviewCountEl) {
+                        const visible = (currentFilter === 'all')
+                            ? document.querySelectorAll('.question-review').length
+                            : document.querySelectorAll('.question-review[data-status="' + currentFilter + '"]').length;
+                        reviewCountEl.textContent = `${visible} ${currentFilter === 'all' ? 'câu' : currentFilter}`;
+                    }
+                });
+            });
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function retryExam() {
+            if (resultData && resultData.examId) {
+                window.location.href = `exam.html?id=${resultData.examId}`;
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadResult();
+            setupFilters();
+        });
+    </script>
+
+    <!-- SKY EDU Hooks: tự động đẩy dữ liệu sang Dashboard/Rank (BỎ leaderboard theo yêu cầu) -->
+    <script src="../assets/js/question-types.js?v=3.2"></script>
+    <script src="../assets/js/core/sky-store.js"></script>
+    <script src="../assets/js/core/rank-system.js"></script>
+    <script src="../assets/js/core/achievement-engine.js"></script>
+    <script src="../assets/js/core/learning-stats.js"></script>
+    <script src="../assets/js/hooks/exam-result-bridge.js"></script>
+</body>
+</html>

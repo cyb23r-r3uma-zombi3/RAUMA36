@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Đổi mật khẩu - SKY EDU</title>
+    <meta name="theme-color" content="#050B1A">
+
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#FDF2F8'; scheme = 'light'; pageBg = '#FDF2F8';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 600);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){
+          var b = document.body; if (b) b.classList.add('theme-ready');
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(show); });
+        });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="../assets/css/premium-style.css" as="style">
+
+    <link rel="stylesheet" href="../assets/css/premium-style.css">
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+    <link rel="prefetch" href="../index.html">
+    <link rel="prefetch" href="../dashboard.html">
+    <link rel="prefetch" href="../dashboard.html">
+    <link rel="prefetch" href="../khoa-hoc-pages/index.html">
+
+    <script src="../assets/js/theme.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        :root { --page-bg: #070D1F; }
+        
+        .page-bg { position: fixed; inset: 0; z-index: 0; background: var(--page-bg); }
+        .bg-gradient { position: fixed; top: -50%; left: 50%; transform: translateX(-50%); width: 150%; height: 100%; background: radial-gradient(ellipse at center top, rgba(0, 212, 255, 0.12) 0%, rgba(59, 130, 246, 0.08) 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%); pointer-events: none; z-index: 0; }
+        .bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 80px 80px; pointer-events: none; }
+        .floating-orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: float 20s ease-in-out infinite; }
+        .orb-1 { width: 400px; height: 400px; background: rgba(0, 212, 255, 0.15); top: 10%; left: 10%; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(139, 92, 246, 0.12); bottom: 20%; right: 15%; animation-delay: -7s; }
+        .orb-3 { width: 280px; height: 280px; background: rgba(16, 185, 129, 0.09); top: 45%; left: 55%; animation-delay: -12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 25% { transform: translate(30px, -30px) scale(1.05); } 50% { transform: translate(-20px, 20px) scale(0.95); } 75% { transform: translate(20px, 30px) scale(1.02); } }
+
+        .auth-wrapper { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+        .auth-card { width: 100%; max-width: 440px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 48px 40px; animation: fadeInUp 0.8s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .auth-logo { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 32px; }
+        .auth-logo svg { filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.4)); }
+        .auth-logo-text { display: flex; flex-direction: column; }
+        .auth-logo-title { font-size: 24px; font-weight: 800; background: linear-gradient(135deg, #fff 0%, #00BFFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .auth-logo-subtitle { font-size: 10px; color: #94A3B8; font-weight: 500; letter-spacing: 0.5px; }
+
+        .auth-header { text-align: center; margin-bottom: 32px; }
+        .auth-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .auth-subtitle { font-size: 15px; color: #94A3B8; }
+
+        .auth-form { display: flex; flex-direction: column; gap: 20px; }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-label { font-size: 13px; font-weight: 600; color: #E2E8F0; display: flex; align-items: center; gap: 6px; }
+        .form-label iconify-icon { color: #00D4FF; font-size: 16px; }
+        .form-input { padding: 14px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; font-size: 15px; color: #fff; transition: all 0.3s ease; }
+        .form-input::placeholder { color: #64748B; }
+        .form-input:focus { outline: none; border-color: #00D4FF; box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15); }
+
+        .form-hint { font-size: 12px; color: #64748B; line-height: 1.5; }
+
+        .form-btn { padding: 16px 24px; background: linear-gradient(135deg, #00D4FF, #3B82F6); border: none; border-radius: 12px; font-size: 16px; font-weight: 700; color: #050B1A; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; }
+        .form-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 191, 255, 0.3); }
+        .form-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .form-footer { text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+        .form-footer p { font-size: 14px; color: #94A3B8; }
+        .form-footer a { color: #00D4FF; font-weight: 600; text-decoration: none; transition: color 0.3s ease; }
+        .form-footer a:hover { color: #8B5CF6; }
+
+        .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: 15px; z-index: 99999; animation: fadeInDown 0.3s ease; max-width: 90%; text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+        .toast.success { background: #10B981; color: white; }
+        .toast.error { background: #EF4444; color: white; }
+        .toast.info { background: #3B82F6; color: white; }
+        @keyframes fadeInDown { from { transform: translateX(-50%) translateY(-20px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+        @keyframes fadeOutUp { from { transform: translateX(-50%) translateY(0); opacity: 1; } to { transform: translateX(-50%) translateY(-20px); opacity: 0; } }
+
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        @media (max-width: 1024px) {
+            .change-page { padding: 80px 24px 40px; }
+            .auth-card { padding: 36px 28px; }
+        }
+        @media (max-width: 768px) {
+            .change-page { padding: 70px 20px 32px; }
+            .auth-card { padding: 32px 24px; }
+            .auth-title { font-size: 26px; }
+            .form-group { margin-bottom: 18px; }
+            .form-label { font-size: 13px; }
+            .form-input { padding: 12px 14px; font-size: 15px; }
+            .btn-change { padding: 14px 24px; font-size: 15px; }
+        }
+        @media (max-width: 600px) {
+            .change-page { padding: 60px 16px 24px; }
+            .auth-card { padding: 28px 20px; border-radius: 16px; }
+            .auth-title { font-size: 22px; }
+            .form-group { margin-bottom: 16px; }
+            .form-label { font-size: 12px; margin-bottom: 6px; }
+            .form-input { padding: 12px 14px; font-size: 16px; border-radius: 10px; }
+            .input-icon { width: 44px; }
+            .btn-change { padding: 14px 20px; font-size: 14px; border-radius: 12px; }
+        }
+        @media (max-width: 480px) {
+            .change-page { padding: 52px 12px 20px; }
+            .auth-card { padding: 24px 16px; border-radius: 14px; }
+            .auth-title { font-size: 20px; margin-bottom: 8px; }
+            .form-group { margin-bottom: 14px; }
+            .form-label { font-size: 11px; }
+            .form-input { padding: 11px 12px; font-size: 16px; }
+            .btn-change { padding: 12px 18px; font-size: 14px; }
+        }
+        @media (max-width: 390px) {
+            .change-page { padding: 48px 10px 16px; }
+            .auth-card { padding: 20px 14px; border-radius: 12px; }
+            .auth-title { font-size: 18px; }
+            .form-input { padding: 10px 12px; font-size: 16px; }
+            .btn-change { padding: 11px 16px; font-size: 13px; }
+        }
+        @media (max-width: 360px) {
+            .change-page { padding: 44px 8px 12px; }
+            .auth-card { padding: 18px 12px; border-radius: 10px; }
+            .auth-title { font-size: 16px; }
+            .form-input { padding: 9px 10px; font-size: 16px; }
+            .btn-change { padding: 10px 14px; font-size: 12px; }
+        }
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .change-page { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <a href="../index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher – Think Better</span>
+                    </div>
+                </a>
+
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="../index.html" class="active">Trang chủ</a></li>
+                        <li><a href="../khoa-hoc-pages/index.html">Khóa học</a></li>
+                        <li><a href="../quy-doi-diem.html">Quy đổi điểm</a></li>
+                        <li><a href="../phong-luyen-tsa/index.html">Phòng luyện TSA</a></li>
+                        <li><a href="../phong-luyen-hsa/index.html">Phòng luyện HSA</a></li>
+                        <li><a href="../thi-thu/index.html">Thi thử</a></li>
+                        <li><a href="../dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <div class="nav-actions" id="navActions">
+                    <a href="../account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                    <a href="../account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                .user-dropdown { position: relative; display: inline-block; }
+                .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+                .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+                .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+                .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+                .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+                @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+                .user-dropdown.open .user-dropdown-content { display: block; }
+                .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+                .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+                .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+                .dropdown-item:hover iconify-icon { color: #00D4FF; }
+                .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+                .dropdown-item.logout { color: #EF4444; }
+                .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+                .dropdown-item.admin-only { color: #FACC15; }
+                .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+            </style>
+        </header>
+    <div class="page-bg"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                    <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                </svg>
+                <div class="auth-logo-text">
+                    <span class="auth-logo-title">SKY EDU</span>
+                    <span class="auth-logo-subtitle">Fly Higher – Think Better</span>
+                </div>
+            </div>
+
+            <div class="auth-header">
+                <h1 class="auth-title">Đổi mật khẩu</h1>
+                <p class="auth-subtitle">Cập nhật mật khẩu để bảo vệ tài khoản</p>
+            </div>
+
+            <form class="auth-form" id="changePasswordForm">
+                <div class="form-group">
+                    <label class="form-label">
+                        <iconify-icon icon="lucide:lock-keyhole" aria-hidden="true"></iconify-icon>
+                        Mật khẩu hiện tại
+                    </label>
+                    <input type="password" class="form-input" id="oldPassword" placeholder="Nhập mật khẩu hiện tại" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <iconify-icon icon="lucide:lock-plus" aria-hidden="true"></iconify-icon>
+                        Mật khẩu mới
+                    </label>
+                    <input type="password" class="form-input" id="newPassword" placeholder="Nhập mật khẩu mới" required>
+                    <span class="form-hint">Ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <iconify-icon icon="lucide:lock" aria-hidden="true"></iconify-icon>
+                        Xác nhận mật khẩu mới
+                    </label>
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="Nhập lại mật khẩu mới" required>
+                </div>
+
+                <button type="submit" class="form-btn" id="submitBtn">
+                    <iconify-icon icon="lucide:check-circle" aria-hidden="true"></iconify-icon>
+                    Cập nhật mật khẩu
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p>Quay lại <a href="tai-khoan.html">trang tài khoản</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <script src="../assets/js/data-validator.js"></script>
+
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            window.location.href = 'dang-nhap.html';
+        }
+
+        document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            changePassword();
+        });
+
+        function showNotification(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'fadeOutUp 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        async function changePassword() {
+            const oldPass = document.getElementById('oldPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const btn = document.getElementById('submitBtn');
+            const originalContent = btn.innerHTML;
+
+            if (!oldPass || !newPass || !confirmPass) {
+                showNotification('Vui lòng nhập đầy đủ thông tin!', 'error');
+                return;
+            }
+
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#]).{8,}$/;
+            if (!passwordRegex.test(newPass)) {
+                showNotification('Mật khẩu mới phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!', 'error');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                showNotification('Mật khẩu xác nhận không khớp!', 'error');
+                return;
+            }
+
+            if (oldPass === newPass) {
+                showNotification('Mật khẩu mới phải khác mật khẩu cũ!', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<iconify-icon icon="lucide:loader-2" class="spin" aria-hidden="true"></iconify-icon> Đang xử lý...';
+
+            try {
+                const user = firebase.auth().currentUser;
+
+                if (!user) {
+                    showNotification('Vui lòng đăng nhập lại!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                    return;
+                }
+
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    user.email,
+                    oldPass
+                );
+
+                await user.reauthenticateWithCredential(credential);
+                await user.updatePassword(newPass);
+
+                showNotification('Đổi mật khẩu thành công!', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'tai-khoan.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Lỗi đổi mật khẩu:', error);
+
+                let errorMessage = 'Đã xảy ra lỗi. Vui lòng thử lại!';
+
+                if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Mật khẩu hiện tại không đúng!';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Mật khẩu mới quá yếu!';
+                } else if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = 'Vui lòng đăng nhập lại trước khi đổi mật khẩu!';
+                    setTimeout(() => {
+                        localStorage.removeItem('currentUser');
+                        window.location.href = 'dang-nhap.html';
+                    }, 2000);
+                }
+
+                showNotification(errorMessage, 'error');
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+        }
+    </script>
+
+    <script>
+        (function() {
+            function getCurrentUser() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.getSession === 'function') {
+                    return SessionSecurity.getSession();
+                }
+                try {
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function updateNavAuthState() {
+                const currentUser = getCurrentUser();
+                const navActions = document.getElementById('navActions');
+                if (!navActions) return;
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                        ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                        : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                    const isLight = window.Theme && window.Theme.currentTheme === 'lightpremium';
+                    const themeName = isLight ? 'Chế độ tối' : 'Chế độ sáng';
+                    const themeIcon = isLight ? 'lucide:moon' : 'lucide:sun';
+
+                    navActions.innerHTML = `
+                        <div class="user-dropdown user-card-static">
+                            <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${escapeHtml(currentUser.fullname || currentUser.username || 'Tài khoản')}
+                            </span>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    `;
+                }
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function performLogout() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.clearSession === 'function') {
+                    SessionSecurity.clearSession();
+                } else {
+                    localStorage.removeItem('currentUser');
+                }
+                try { localStorage.removeItem('sky_users'); sessionStorage.clear(); } catch(e) {}
+
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut().catch(function(e) { console.warn('signOut error:', e); })
+                        .finally(function() { window.location.href = '../account/dang-nhap.html'; });
+                } else {
+                    window.location.href = '../account/dang-nhap.html';
+                }
+            }
+
+            document.addEventListener('click', function(e) {
+                const mobileBtn = e.target.closest('#mobileMenuBtn');
+                const navCenter = document.querySelector('.nav-center');
+                if (mobileBtn && navCenter) {
+                    navCenter.classList.toggle('active');
+                    mobileBtn.classList.toggle('active');
+                }
+            });
+
+            updateNavAuthState();
+            window.addEventListener('userLogin', updateNavAuthState);
+            window.addEventListener('userLogout', updateNavAuthState);
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                    updateNavAuthState();
+                }
+            });
+            window.addEventListener('themeChange', updateNavAuthState);
+            window.updateNavAuthState = updateNavAuthState;
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>404 - KhÃÂÃÂÃÂÃÂ´ng tÃÂÃÂÃÂÃÂ¬m thÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ¥y trang | SKY EDU</title>
+    
+    <!-- FOUC Prevention: Apply theme synchronously before CSS loads -->
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+    var t = localStorage.getItem('skyedu_theme') || 'dark';
+    var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#FDF2F8'; scheme = 'light'; pageBg = '#FDF2F8';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        // Wait for body to exist then set its bg immediately
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        // Re-apply body bg before reveal to ensure correct color
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 600);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){
+          var b = document.body; if (b) b.classList.add('theme-ready');
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(show); });
+        });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <meta name="theme-color" content="#050B1A">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/css/premium-style.css" as="style">
+    <link rel="stylesheet" href="assets/css/premium-style.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <script src="assets/js/theme.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script>
+        // GitHub Pages SPA fallback: nÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ¿u URL khÃÂÃÂÃÂÃÂ´ng phÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ£i /, chuyÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn vÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ root ÃÂÃÂÃÂÃÂÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ index.html xÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ­ lÃÂÃÂÃÂÃÂ½
+        (function () {
+            try {
+                var path = window.location.pathname;
+                var search = window.location.search || '';
+                var hash = window.location.hash || '';
+                // NÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ¿u lÃÂÃÂÃÂÃÂ  path hÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ£p lÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ trong repo (file cÃÂÃÂÃÂÃÂ³ .html hoÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ·c thÃÂÃÂÃÂÃÂ° mÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ¥c cÃÂÃÂÃÂÃÂ³ index.html) thÃÂÃÂÃÂÃÂ¬ KHÃÂÃÂÃÂÃÂNG redirect
+                var isHtml = /\.html?$/i.test(path);
+                var knownDirs = ['/phong-luyen-tsa/', '/phong-luyen-hsa/', '/khoa-hoc-pages/', '/account/', '/assets/'];
+                var isKnown = knownDirs.some(function (d) { return path.indexOf(d) === 0; });
+
+                if (!isHtml && !isKnown && path !== '/' && path !== '/index.html') {
+                    window.location.replace('/' + path.replace(/^\/+/, '') + search + hash);
+                }
+            } catch (e) {
+                console.warn('404 redirect script error:', e);
+            }
+        })();
+    </script>
+    <style>
+        :root { --page-bg: #070D1F; }
+        .page-bg { position: fixed; inset: 0; z-index: 0; background: var(--page-bg); }
+        .bg-gradient { position: fixed; top: -50%; left: 50%; transform: translateX(-50%); width: 150%; height: 100%; background: radial-gradient(ellipse at center top, rgba(239, 68, 68, 0.1) 0%, rgba(59, 130, 246, 0.05) 30%, transparent 70%); pointer-events: none; z-index: 0; }
+        .bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+        .floating-orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: float 20s ease-in-out infinite; }
+        .orb-1 { width: 400px; height: 400px; background: rgba(239, 68, 68, 0.08); top: 10%; left: 20%; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(59, 130, 246, 0.06); bottom: 20%; right: 15%; animation-delay: -7s; }
+        .orb-3 { width: 280px; height: 280px; background: rgba(16, 185, 129, 0.09); top: 45%; left: 55%; animation-delay: -12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 25% { transform: translate(30px, -30px) scale(1.05); } 50% { transform: translate(-20px, 20px) scale(0.95); } 75% { transform: translate(20px, 30px) scale(1.02); } }
+
+        .error-wrapper { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+        .error-card { text-align: center; animation: fadeInUp 0.8s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .error-icon { width: 120px; height: 120px; margin: 0 auto 32px; border-radius: 50%; background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(59, 130, 246, 0.15)); border: 1px solid rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); } 50% { box-shadow: 0 0 50px rgba(239, 68, 68, 0.5); } }
+        .error-icon iconify-icon { font-size: 56px; color: #EF4444; }
+
+        .error-code { font-size: 100px; font-weight: 900; background: linear-gradient(135deg, #EF4444, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 16px; }
+
+        .error-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+
+        .error-desc { font-size: 16px; color: #94A3B8; max-width: 400px; margin: 0 auto 32px; line-height: 1.6; }
+
+        .error-btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 32px; background: linear-gradient(135deg, #00D4FF, #3B82F6); color: #050B1A; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; transition: all 0.3s ease; }
+        .error-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0, 191, 255, 0.4); }
+
+        @media (max-width: 480px) {
+            .error-code { font-size: 72px; }
+            .error-title { font-size: 24px; }
+            .error-icon { width: 100px; height: 100px; }
+            .error-icon iconify-icon { font-size: 44px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ Think Better</span>
+                    </div>
+                </a>
+
+                <!-- Center Menu -->
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="index.html" class="active">Trang chÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ§</a></li>
+                        <li><a href="khoa-hoc-pages/index.html">KhÃÂÃÂÃÂÃÂ³a hÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂc</a></li>
+                        <li><a href="quy-doi-diem.html">Quy ÃÂÃÂÃÂÃÂÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂi ÃÂÃÂÃÂÃÂiÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂm</a></li>
+                        <li><a href="phong-luyen-tsa/index.html">PhÃÂÃÂÃÂÃÂ²ng luyÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn TSA</a></li>
+                        <li><a href="phong-luyen-hsa/index.html">PhÃÂÃÂÃÂÃÂ²ng luyÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn HSA</a></li>
+                        <li><a href="thi-thu/index.html">Thi thÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ­</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="nav-actions" id="navActions">
+                    <a href="account/dang-nhap.html" class="btn-ghost">ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂng nhÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ­p</a>
+                    <a href="account/dang-ky.html" class="btn-primary-sm">ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂng kÃÂÃÂÃÂÃÂ½</a>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="MÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ menu" title="MÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                .user-dropdown { position: relative; display: inline-block; }
+                .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+                .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+                .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+                .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+                .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+                @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+                .user-dropdown.open .user-dropdown-content { display: block; }
+                .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+                .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+                .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+                .dropdown-item:hover iconify-icon { color: #00D4FF; }
+                .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+                .dropdown-item.logout { color: #EF4444; }
+                .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+                .dropdown-item.admin-only { color: #FACC15; }
+                .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+            </style>
+        </header>
+    <div class="page-bg"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="theme-switcher" id="themeSwitcher" style="position: absolute; top: 20px; right: 20px; z-index: 100;">
+        <button type="button" class="theme-switcher-btn" aria-label="ChuyÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn giao diÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn" aria-haspopup="true" title="ChuyÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn giao diÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn" onclick="document.querySelector('#themeSwitcher .theme-switcher-dropdown').classList.toggle('open'); event.stopPropagation();">
+            <iconify-icon class="theme-current-icon" icon="lucide:sun" width="16" height="16" aria-hidden="true"></iconify-icon>
+            <span class="theme-current-label">SÃÂÃÂÃÂÃÂ¡ng</span>
+            <iconify-icon icon="lucide:chevron-down" width="14" height="14" aria-hidden="true"></iconify-icon>
+        </button>
+        <div class="theme-switcher-dropdown" id="themeDropdown">
+            <div class="theme-option active" data-theme="light" onclick="__applyTheme('light')">
+                <div class="theme-option-icon"><iconify-icon icon="lucide:sun" width="14" aria-hidden="true"></iconify-icon></div>
+                SÃÂÃÂÃÂÃÂ¡ng
+            </div>
+            <div class="theme-option" data-theme="dark" onclick="__applyTheme('dark')">
+                <div class="theme-option-icon"><iconify-icon icon="lucide:moon" width="14" aria-hidden="true"></iconify-icon></div>
+                TÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂi
+            </div>
+            <div class="theme-option" data-theme="white-premium" onclick="__applyTheme('white-premium')">
+                <div class="theme-option-icon"><iconify-icon icon="ph:star-fill" width="14" aria-hidden="true"></iconify-icon></div>
+                White Premium
+            </div>
+        </div>
+    </div>
+
+    <div class="error-wrapper">
+        <div class="error-card">
+            <div class="error-icon">
+                <iconify-icon icon="lucide:search-x" aria-hidden="true"></iconify-icon>
+            </div>
+            <div class="error-code">404</div>
+            <h1 class="error-title">KhÃÂÃÂÃÂÃÂ´ng tÃÂÃÂÃÂÃÂ¬m thÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ¥y trang</h1>
+            <p class="error-desc">Trang bÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ¡n ÃÂÃÂÃÂÃÂang tÃÂÃÂÃÂÃÂ¬m kiÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ¿m khÃÂÃÂÃÂÃÂ´ng tÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn tÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ¡i hoÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ·c ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ£ ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°ÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ£c di chuyÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂn ÃÂÃÂÃÂÃÂÃÂÃÂ¡ÃÂÃÂºÃÂÃÂ¿n vÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ trÃÂÃÂÃÂÃÂ­ khÃÂÃÂÃÂÃÂ¡c.</p>
+            <a href="index.html" class="error-btn">
+                <iconify-icon icon="lucide:home" aria-hidden="true"></iconify-icon>
+                VÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ trang chÃÂÃÂ¡ÃÂÃÂ»ÃÂÃÂ§
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // =========================================
+        // AUTH STATE - CÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂ­p nhÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂ­t navbar khi ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂng nhÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂ­p/ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂng xuÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂ¥t
+        // =========================================
+        (function() {
+            function getCurrentUser() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.getSession === 'function') {
+                    return SessionSecurity.getSession();
+                }
+                try {
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function updateNavAuthState() {
+                const currentUser = getCurrentUser();
+                const navActions = document.getElementById('navActions');
+                if (!navActions) return;
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                        ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                        : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                    const isLight = window.Theme && window.Theme.currentTheme === 'lightpremium';
+                    const themeName = isLight ? 'ChÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂ¿ ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂ»ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ tÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂ»ÃÂÃÂ¢ÃÂÃÂÃÂÃÂi' : 'ChÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂ¿ ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡ÃÂÃÂÃÂÃÂ»ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ sÃÂÃÂÃÂÃÂ¡ng';
+                    const themeIcon = isLight ? 'lucide:moon' : 'lucide:sun';
+
+                    navActions.innerHTML = `
+                        <div class="user-dropdown user-card-static">
+                            <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${escapeHtml(currentUser.fullname || currentUser.username || "Tài khoản")}
+                            </span>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    `;
+                }
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function performLogout() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.clearSession === 'function') {
+                    SessionSecurity.clearSession();
+                } else {
+                    localStorage.removeItem('currentUser');
+                }
+                try { localStorage.removeItem('sky_users'); sessionStorage.clear(); } catch(e) {}
+
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut().catch(function(e) { console.warn('signOut error:', e); })
+                        .finally(function() { window.location.href = 'account/dang-nhap.html'; });
+                } else {
+                    window.location.href = 'account/dang-nhap.html';
+                }
+            }
+
+            // Mobile menu
+            document.addEventListener('click', function(e) {
+                const mobileBtn = e.target.closest('#mobileMenuBtn');
+                const navCenter = document.querySelector('.nav-center');
+                if (mobileBtn && navCenter) {
+                    navCenter.classList.toggle('active');
+                    mobileBtn.classList.toggle('active');
+                }
+            });
+
+            // Sync auth state on load
+            updateNavAuthState();
+
+            // Listen for userLogin/userLogout events
+            window.addEventListener('userLogin', updateNavAuthState);
+            window.addEventListener('userLogout', updateNavAuthState);
+
+            // Listen for storage changes (cross-tab)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                    updateNavAuthState();
+                }
+            });
+
+            // Listen for theme changes
+            window.addEventListener('themeChange', updateNavAuthState);
+
+            // Export for external use
+            window.updateNavAuthState = updateNavAuthState;
+        })();
+    </script>
+</body>\n</html>
+

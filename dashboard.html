@@ -1,0 +1,2841 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Dashboard - SKY EDU</title>
+
+    <!-- FOUC Prevention: Apply theme synchronously before CSS loads -->
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#F8FAFC'; scheme = 'light'; pageBg = '#F8FAFC';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 1200);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+
+    <meta name="theme-color" content="#050B1A">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/css/premium-style.css" as="style">
+    <link rel="stylesheet" href="assets/css/premium-style.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <script src="assets/js/theme.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+
+    <!-- Firebase SDK + SkyStore -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <!-- Sky EDU core modules -->
+    <script src="assets/js/core/sky-store.js"></script>
+    <script src="assets/js/core/rank-system.js"></script>
+    <script src="assets/js/core/achievement-engine.js"></script>
+    <script src="assets/js/core/learning-stats.js"></script>
+    <script src="assets/js/core/ai-insight.js"></script>
+    <script src="assets/js/gamification.js"></script>
+
+    <style>
+        /* ============================================================
+           DASHBOARD PAGE - Unified CSS for Dark + Light modes
+           ============================================================ */
+        :root {
+            --page-bg: #070D1F;
+            --dash-bg: #0A1230;
+            --dash-card: rgba(255, 255, 255, 0.04);
+            --dash-card-border: rgba(255, 255, 255, 0.08);
+            --dash-text: #F8FAFC;
+            --dash-text-muted: #94A3B8;
+            --dash-text-subtle: #64748B;
+            --dash-accent: #00D4FF;
+            --dash-accent-2: #8B5CF6;
+            --dash-accent-3: #10B981;
+            --dash-accent-4: #F59E0B;
+            --dash-accent-5: #EC4899;
+            --dash-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            --dash-grid: rgba(255,255,255,0.03);
+            --dash-radius: 22px;
+            --dash-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .light-premium-mode {
+            --page-bg: #F8FAFC;
+            --dash-bg: #FFFFFF;
+            --dash-card: #FFFFFF;
+            --dash-card-border: rgba(15, 23, 42, 0.08);
+            --dash-text: #0F172A;
+            --dash-text-muted: #475569;
+            --dash-text-subtle: #64748B;
+            --dash-accent: #DB2777;
+            --dash-accent-2: #7C3AED;
+            --dash-accent-3: #10B981;
+            --dash-accent-4: #F59E0B;
+            --dash-accent-5: #EC4899;
+            --dash-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+            --dash-grid: rgba(15, 23, 42, 0.04);
+        }
+
+        .light-premium-mode body,
+        body.light-premium-mode {
+            background-color: var(--page-bg, #F8FAFC) !important;
+            background-image: none !important;
+            color: var(--dash-text) !important;
+        }
+        .light-premium-mode body::before,
+        body.light-premium-mode::before {
+            background: none !important;
+        }
+
+        /* ===== Base Layout ===== */
+        .page-bg { position: fixed; inset: 0; z-index: 0; background: var(--page-bg); transition: background 0.3s ease; }
+        .bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(var(--dash-grid) 1px, transparent 1px), linear-gradient(90deg, var(--dash-grid) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+        .floating-orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: float 20s ease-in-out infinite; }
+        .orb-1 { width: 500px; height: 500px; background: rgba(0, 212, 255, 0.10); top: 5%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(124, 77, 255, 0.10); bottom: 10%; right: -5%; animation-delay: -7s; }
+        .orb-3 { width: 280px; height: 280px; background: rgba(236, 72, 153, 0.10); top: 45%; left: 55%; animation-delay: -12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-30px, 30px) scale(0.95); } }
+
+        .light-premium-mode .orb-1 { background: rgba(219, 39, 119, 0.12); }
+        .light-premium-mode .orb-2 { background: rgba(124, 58, 237, 0.10); }
+        .light-premium-mode .orb-3 { background: rgba(244, 114, 182, 0.14); }
+
+        .page-wrapper { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+        .page-content { padding-top: 100px; padding-bottom: 60px; flex: 1; }
+        .container { max-width: 1320px; margin: 0 auto; padding: 0 24px; }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .anim-fade-up { animation: fadeInUp 0.5s ease forwards; }
+
+        /* ===== Hero ===== */
+        .dash-hero {
+            position: relative;
+            overflow: hidden;
+            border-radius: 26px;
+            padding: 36px 40px;
+            margin-bottom: 28px;
+            background: linear-gradient(135deg, #1677FF 0%, #4364F7 50%, #6FB1FC 100%);
+            box-shadow: 0 24px 64px rgba(22,119,255,0.30);
+            color: #FFFFFF !important;
+        }
+        .dash-hero *,
+        .dash-hero *::before,
+        .dash-hero *::after { color: inherit; }
+
+        .light-premium-mode .dash-hero {
+            background: linear-gradient(135deg, #DB2777 0%, #7C3AED 50%, #6366F1 100%);
+            box-shadow: 0 24px 64px rgba(124,58,237,0.25);
+        }
+        .dash-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.16;
+            background-image:
+                radial-gradient(circle at 20% 30%, white 1px, transparent 1px),
+                radial-gradient(circle at 70% 60%, white 1px, transparent 1px);
+            background-size: 30px 30px, 40px 40px;
+            pointer-events: none;
+        }
+        .dash-hero::after {
+            content: '';
+            position: absolute;
+            right: -50px;
+            top: -50px;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 60%);
+            pointer-events: none;
+        }
+        .dash-hero-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .dash-avatar-wrap { position: relative; flex-shrink: 0; }
+        .dash-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            font-weight: 800;
+            color: #FFFFFF !important;
+            border: 4px solid rgba(255,255,255,0.4);
+            overflow: hidden;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.25);
+        }
+        .dash-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .dash-avatar-ring {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, rgba(255,255,255,0.5), rgba(255,255,255,0.1), rgba(255,255,255,0.5));
+            -webkit-mask: radial-gradient(circle, transparent 56%, black 58%);
+            mask: radial-gradient(circle, transparent 56%, black 58%);
+            animation: spin 8s linear infinite;
+            pointer-events: none;
+        }
+        .light-premium-mode .dash-avatar-ring {
+            background: conic-gradient(from 0deg, rgba(255,255,255,0.6), rgba(236,72,153,0.4), rgba(255,255,255,0.6));
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .dash-info { flex: 1; min-width: 240px; }
+        .dash-greeting { font-size: 14px; opacity: 0.9; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .dash-name { font-size: 32px; font-weight: 900; margin: 0 0 10px; letter-spacing: -0.02em; }
+        .dash-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .dash-badge-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.20);
+            backdrop-filter: blur(10px);
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #FFFFFF !important;
+        }
+        .dash-xp-row { display: flex; gap: 28px; margin-bottom: 14px; flex-wrap: wrap; }
+        .dash-xp-block { display: flex; flex-direction: column; }
+        .dash-xp-value { font-size: 24px; font-weight: 900; line-height: 1.1; }
+        .dash-xp-label { font-size: 11px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
+
+        .dash-progress {
+            background: rgba(255,255,255,0.20);
+            border-radius: 12px;
+            padding: 12px 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.20);
+        }
+        .dash-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .dash-progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .dash-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, rgba(255,255,255,0.7));
+            border-radius: 999px;
+            transition: width 1s ease;
+            box-shadow: 0 0 16px rgba(255,255,255,0.5);
+        }
+
+        /* ===== Stats Grid ===== */
+        .dash-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .dash-stat-card {
+            background: var(--dash-card);
+            border: 1px solid var(--dash-card-border);
+            border-radius: 18px;
+            padding: 22px 20px;
+            box-shadow: var(--dash-shadow);
+            transition: var(--dash-transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .dash-stat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.06;
+            background: var(--stat-gradient);
+            transition: opacity 0.3s;
+        }
+        .dash-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 48px rgba(0,0,0,0.12);
+        }
+        .dash-stat-card:hover::before { opacity: 0.12; }
+        .dash-stat-card > * { position: relative; z-index: 1; }
+        .dash-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--stat-gradient, linear-gradient(135deg, #00D4FF, #8B5CF6));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+            color: #FFFFFF !important;
+        }
+        .dash-stat-icon iconify-icon { font-size: 26px; }
+        .dash-stat-value {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--dash-text);
+            line-height: 1;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+        .dash-stat-label { font-size: 13px; color: var(--dash-text-muted); font-weight: 600; }
+        .dash-stat-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            margin-top: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 999px;
+        }
+        .dash-stat-trend.up { background: rgba(16,185,129,0.15); color: #10B981; }
+        .dash-stat-trend.down { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .dash-stat-trend.neutral { background: rgba(148,163,184,0.15); color: var(--dash-text-muted); }
+
+        /* ===== Generic Card ===== */
+        .dash-card {
+            background: var(--dash-card);
+            border: 1px solid var(--dash-card-border);
+            border-radius: var(--dash-radius);
+            padding: 26px;
+            box-shadow: var(--dash-shadow);
+            transition: var(--dash-transition);
+        }
+        .dash-card:hover { transform: translateY(-2px); }
+        .dash-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .dash-card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--dash-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.01em;
+            margin: 0;
+        }
+        .dash-card-title iconify-icon { color: var(--dash-accent); font-size: 22px; }
+        .dash-card-sub { font-size: 12px; color: var(--dash-text-muted); font-weight: 600; }
+        .dash-card-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(0,212,255,0.10);
+            border: 1px solid rgba(0,212,255,0.20);
+            border-radius: 10px;
+            color: var(--dash-accent) !important;
+            font-weight: 700;
+            font-size: 12px;
+            text-decoration: none;
+            transition: var(--dash-transition);
+        }
+        .dash-card-action:hover {
+            background: rgba(0,212,255,0.20);
+            transform: translateY(-1px);
+        }
+        .light-premium-mode .dash-card-action {
+            background: rgba(219,39,119,0.10);
+            border-color: rgba(219,39,119,0.20);
+            color: #9D174D !important;
+            -webkit-text-fill-color: #9D174D !important;
+        }
+        .light-premium-mode .dash-card-action:hover {
+            background: rgba(219,39,119,0.20);
+            color: #831843 !important;
+            -webkit-text-fill-color: #831843 !important;
+        }
+
+        /* ===== Grid Layouts ===== */
+        .dash-top-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .dash-charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px; }
+        .dash-chart-wrap { position: relative; height: 280px; }
+        .dash-bottom-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .dash-goal-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .dash-three-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+
+        /* ===== Goal Card ===== */
+        .dash-goal-card {
+            background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(139,92,246,0.06));
+            border: 1px solid rgba(0,212,255,0.20);
+            border-radius: var(--dash-radius);
+            padding: 26px;
+            box-shadow: var(--dash-shadow);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .light-premium-mode .dash-goal-card {
+            background: linear-gradient(135deg, rgba(219,39,119,0.06), rgba(124,58,237,0.05));
+            border-color: rgba(219,39,119,0.20);
+        }
+        .dash-goal-card::before {
+            content: '';
+            position: absolute;
+            right: -50px;
+            top: -50px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,212,255,0.15), transparent 70%);
+            pointer-events: none;
+        }
+        .dash-goal-card > * { position: relative; z-index: 1; }
+        .dash-goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .dash-goal-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--dash-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dash-goal-title iconify-icon { color: var(--dash-accent); font-size: 22px; }
+        .dash-goal-date { font-size: 12px; color: var(--dash-text-muted); font-weight: 600; text-align: right; }
+        .dash-goal-day { color: var(--dash-text); font-weight: 800; }
+        .dash-goal-progress-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .dash-goal-pct {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--dash-text);
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+        .dash-goal-pct-target { font-size: 14px; color: var(--dash-text-muted); font-weight: 600; }
+        .dash-goal-bar {
+            height: 12px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+        .light-premium-mode .dash-goal-bar { background: rgba(15,23,42,0.08); }
+        .dash-goal-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00D4FF, #8B5CF6);
+            border-radius: 999px;
+            box-shadow: 0 0 12px rgba(0,212,255,0.5);
+            transition: width 1s ease;
+        }
+        .light-premium-mode .dash-goal-bar-fill {
+            background: linear-gradient(90deg, #DB2777, #7C3AED);
+            box-shadow: 0 0 12px rgba(124,58,237,0.5);
+        }
+        .dash-goal-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .dash-goal-stat {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 12px 14px;
+            text-align: center;
+        }
+        .light-premium-mode .dash-goal-stat { background: rgba(255,255,255,0.55); }
+        .dash-goal-stat-val {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--dash-text);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .dash-goal-stat-label {
+            font-size: 11px;
+            color: var(--dash-text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== Motivation Card ===== */
+        .dash-motivation-card {
+            background: linear-gradient(135deg, #DB2777 0%, #7C3AED 50%, #6366F1 100%);
+            border: none;
+            color: #FFFFFF !important;
+            padding: 28px;
+            border-radius: var(--dash-radius);
+            box-shadow: 0 16px 40px rgba(219,39,119,0.25);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            animation: fadeInUp 0.6s 0.1s ease backwards;
+        }
+        .dash-motivation-card * { color: #FFFFFF !important; }
+        .dash-motivation-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 30% 20%, rgba(255,255,255,0.15) 0%, transparent 30%),
+                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.10) 0%, transparent 30%);
+            pointer-events: none;
+        }
+        .dash-motivation-card > * { position: relative; z-index: 1; }
+        .dash-motivation-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.9; }
+        .dash-motivation-text {
+            font-size: 17px;
+            line-height: 1.55;
+            font-weight: 700;
+            font-style: italic;
+            margin-bottom: 14px;
+            flex: 1;
+        }
+        .dash-motivation-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .dash-motivation-streak {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.20);
+            border-radius: 999px;
+            backdrop-filter: blur(10px);
+        }
+        .dash-motivation-action { display: inline-flex; align-items: center; gap: 4px; opacity: 0.9; }
+
+        /* ===== Week Compare Card ===== */
+        .dash-week-card {
+            background: var(--dash-card);
+            border: 1px solid var(--dash-card-border);
+            border-radius: var(--dash-radius);
+            padding: 24px;
+            box-shadow: var(--dash-shadow);
+        }
+        .dash-week-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 14px;
+        }
+        .dash-week-block {
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .light-premium-mode .dash-week-block {
+            background: rgba(15,23,42,0.03);
+            border-color: rgba(15,23,42,0.06);
+        }
+        .dash-week-block-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--dash-text-muted);
+            margin-bottom: 8px;
+        }
+        .dash-week-block-val {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--dash-text);
+            line-height: 1;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+        .dash-week-block-delta {
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 8px;
+            border-radius: 999px;
+        }
+        .dash-week-block-delta.up { background: rgba(16,185,129,0.15); color: #10B981; }
+        .dash-week-block-delta.down { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .dash-week-block-delta.same { background: rgba(148,163,184,0.15); color: var(--dash-text-muted); }
+
+        /* ===== Progress List ===== */
+        .dash-progress-list { display: flex; flex-direction: column; gap: 14px; }
+        .dash-progress-item { }
+        .dash-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .dash-progress-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dash-text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dash-progress-title iconify-icon { color: var(--dash-text-muted); font-size: 14px; }
+        .dash-progress-val {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--dash-accent);
+        }
+        .dash-progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .light-premium-mode .dash-progress-bar { background: rgba(15,23,42,0.08); }
+        .dash-progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--dash-accent), var(--dash-accent-2));
+            border-radius: 999px;
+            transition: width 1s ease;
+        }
+        .dash-progress-bar-fill.green { background: linear-gradient(90deg, #10B981, #14B8A6); }
+        .dash-progress-bar-fill.orange { background: linear-gradient(90deg, #F59E0B, #EF4444); }
+        .dash-progress-empty {
+            text-align: center;
+            padding: 24px;
+            color: var(--dash-text-muted);
+            font-size: 13px;
+        }
+        .dash-progress-meta { font-size: 11px; color: var(--dash-text-muted); margin-top: 4px; }
+
+        /* ===== Activity List ===== */
+        .dash-activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 460px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+        .dash-activity-list::-webkit-scrollbar { width: 6px; }
+        .dash-activity-list::-webkit-scrollbar-track { background: transparent; }
+        .dash-activity-list::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.3); border-radius: 999px; }
+        .dash-activity-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: var(--dash-transition);
+        }
+        .light-premium-mode .dash-activity-item {
+            background: #FFFFFF;
+            border-color: rgba(15,23,42,0.08);
+        }
+        .dash-activity-item:hover {
+            background: rgba(0,212,255,0.06);
+            border-color: rgba(0,212,255,0.20);
+            transform: translateX(4px);
+        }
+        .dash-activity-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .dash-activity-icon.high { background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(16,185,129,0.10)); color: #10B981; }
+        .dash-activity-icon.medium { background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(245,158,11,0.10)); color: #F59E0B; }
+        .dash-activity-icon.low { background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(239,68,68,0.10)); color: #EF4444; }
+        .dash-activity-info { flex: 1; min-width: 0; }
+        .dash-activity-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dash-text);
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .dash-activity-meta {
+            font-size: 12px;
+            color: var(--dash-text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dash-activity-score {
+            font-size: 16px;
+            font-weight: 900;
+            padding: 6px 12px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .dash-activity-score.high { background: rgba(16,185,129,0.18); color: #10B981; }
+        .dash-activity-score.medium { background: rgba(245,158,11,0.18); color: #F59E0B; }
+        .dash-activity-score.low { background: rgba(239,68,68,0.18); color: #EF4444; }
+        .dash-activity-empty {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .dash-activity-empty .icon { font-size: 48px; margin-bottom: 12px; }
+        .dash-activity-empty .title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dash-text);
+            margin-bottom: 8px;
+        }
+        .dash-activity-empty .desc {
+            font-size: 13px;
+            color: var(--dash-text-muted);
+            margin-bottom: 20px;
+        }
+        .dash-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 11px 22px;
+            background: linear-gradient(135deg, #1677FF, #4364F7);
+            color: #FFFFFF !important;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            transition: var(--dash-transition);
+            box-shadow: 0 8px 20px rgba(22,119,255,0.30);
+        }
+        .light-premium-mode .dash-btn {
+            background: linear-gradient(135deg, #DB2777, #7C3AED);
+            box-shadow: 0 8px 20px rgba(124,58,237,0.30);
+        }
+        .dash-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px rgba(22,119,255,0.40);
+        }
+        .light-premium-mode .dash-btn:hover {
+            box-shadow: 0 12px 26px rgba(124,58,237,0.40);
+        }
+
+        /* ===== Achievements ===== */
+        .dash-ach-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        .dash-ach-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 18px 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            text-align: center;
+            transition: var(--dash-transition);
+            cursor: default;
+        }
+        .light-premium-mode .dash-ach-card {
+            background: #FFFFFF;
+            border-color: rgba(15,23,42,0.08);
+        }
+        .dash-ach-card.earned {
+            background: linear-gradient(135deg, rgba(245,158,11,0.10), rgba(239,68,68,0.10));
+            border-color: rgba(245,158,11,0.30);
+            box-shadow: 0 8px 20px rgba(245,158,11,0.10);
+        }
+        .dash-ach-card.earned::before {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #10B981;
+            color: #FFFFFF !important;
+            font-size: 12px;
+            line-height: 20px;
+            text-align: center;
+        }
+        .dash-ach-icon { font-size: 36px; margin-bottom: 8px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+        .dash-ach-card.locked .dash-ach-icon { opacity: 0.3; filter: grayscale(1); }
+        .dash-ach-name {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--dash-text);
+            margin-bottom: 4px;
+        }
+        .dash-ach-card.locked .dash-ach-name { color: var(--dash-text-muted); }
+        .dash-ach-desc { font-size: 11px; color: var(--dash-text-muted); line-height: 1.3; }
+        .dash-ach-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .dash-ach-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #F59E0B, #EC4899);
+            border-radius: 999px;
+        }
+        .dash-ach-counter {
+            background: rgba(255,255,255,0.06);
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--dash-text-muted);
+        }
+
+        /* ===== AI Insights ===== */
+        .dash-ai-card {
+            background: linear-gradient(135deg, rgba(139,92,246,0.10), rgba(236,72,153,0.08));
+            border-color: rgba(139,92,246,0.20);
+        }
+        .light-premium-mode .dash-ai-card {
+            background: linear-gradient(135deg, rgba(139,92,246,0.06), rgba(236,72,153,0.05));
+            border-color: rgba(124,58,237,0.20);
+        }
+        .dash-ai-section { margin-bottom: 14px; }
+        .dash-ai-section:last-child { margin-bottom: 0; }
+        .dash-ai-section-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--dash-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dash-ai-section-title .ai-icon { font-size: 14px; }
+        .dash-ai-list { display: flex; flex-direction: column; gap: 8px; }
+        .dash-ai-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            font-size: 13px;
+            color: var(--dash-text);
+        }
+        .light-premium-mode .dash-ai-item {
+            background: #FFFFFF;
+            border-color: rgba(124,58,237,0.15);
+            color: #0F172A;
+        }
+        .dash-ai-item .ai-emoji { font-size: 22px; flex-shrink: 0; }
+        .dash-ai-item .ai-info { flex: 1; min-width: 0; }
+        .dash-ai-item .ai-title { font-weight: 700; margin-bottom: 2px; }
+        .dash-ai-item .ai-desc { color: var(--dash-text-muted); font-size: 12px; line-height: 1.4; }
+        .dash-ai-item a { color: var(--dash-accent); text-decoration: none; font-weight: 700; }
+        .dash-ai-item a:hover { text-decoration: underline; }
+        .dash-ai-empty {
+            padding: 24px;
+            text-align: center;
+            color: var(--dash-text-muted);
+            font-size: 13px;
+        }
+        .dash-ai-badge {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: #FFFFFF !important;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-left: 4px;
+        }
+
+        /* ===== Per-Exam Best ===== */
+        .dash-exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+        }
+        .dash-exam-card {
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            transition: var(--dash-transition);
+        }
+        .light-premium-mode .dash-exam-card {
+            background: #FFFFFF;
+            border-color: rgba(15,23,42,0.08);
+        }
+        .dash-exam-card:hover {
+            border-color: rgba(0,212,255,0.30);
+            transform: translateY(-2px);
+            background: rgba(0,212,255,0.04);
+        }
+        .dash-exam-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dash-text);
+            margin-bottom: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .dash-exam-rank {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(245,158,11,0.15);
+            color: #B45309;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .light-premium-mode .dash-exam-rank { color: #B45309; background: rgba(245,158,11,0.18); }
+        .dash-exam-rank.top1 { background: rgba(255,215,0,0.25); color: #B8860B; }
+        .dash-exam-rank.top3 { background: rgba(192,192,192,0.25); color: #6B7280; }
+        .dash-exam-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--dash-text-muted);
+            margin-top: 6px;
+        }
+        .dash-exam-row strong { color: var(--dash-text); font-weight: 700; }
+        .dash-exam-empty {
+            padding: 32px 16px;
+            text-align: center;
+            color: var(--dash-text-muted);
+        }
+        .dash-exam-empty .icon { font-size: 36px; margin-bottom: 8px; }
+
+        /* ===== Recommended Exams ===== */
+        .dash-recommend-list { display: flex; flex-direction: column; gap: 10px; }
+        .dash-recommend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            transition: var(--dash-transition);
+            text-decoration: none;
+            color: inherit;
+        }
+        .light-premium-mode .dash-recommend-item {
+            background: #FFFFFF;
+            border-color: rgba(15,23,42,0.08);
+        }
+        .light-premium-mode .dash-recommend-item:hover {
+            background: rgba(219,39,119,0.06);
+            border-color: rgba(219,39,119,0.30);
+        }
+        .dash-recommend-item:hover {
+            background: rgba(0,212,255,0.08);
+            border-color: rgba(0,212,255,0.30);
+            transform: translateX(4px);
+        }
+        .dash-recommend-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--dash-accent), var(--dash-accent-2));
+            color: #FFFFFF !important;
+        }
+        .dash-recommend-info { flex: 1; min-width: 0; }
+        .dash-recommend-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dash-text);
+            margin-bottom: 2px;
+        }
+        .dash-recommend-desc { font-size: 12px; color: var(--dash-text-muted); }
+        .dash-recommend-cta {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--dash-accent), var(--dash-accent-2));
+            color: #FFFFFF !important;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ===== Heatmap ===== */
+        .dash-heatmap-wrap { display: flex; align-items: flex-end; gap: 12px; }
+        .dash-heatmap-axis {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-bottom: 4px;
+        }
+        .dash-heatmap-axis span {
+            font-size: 10px;
+            color: var(--dash-text-muted);
+            font-weight: 600;
+            height: 14px;
+            line-height: 14px;
+        }
+        .dash-heatmap {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+        .dash-heatmap-col { display: flex; flex-direction: column; gap: 4px; }
+        .dash-heatmap-cell {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.06);
+            transition: transform 0.15s;
+            cursor: pointer;
+        }
+        .light-premium-mode .dash-heatmap-cell { background: rgba(15,23,42,0.08); }
+        .dash-heatmap-cell:hover { transform: scale(1.4); box-shadow: 0 0 12px rgba(0,212,255,0.6); }
+        .dash-heatmap-cell.lvl-1 { background: rgba(0,212,255,0.30); }
+        .dash-heatmap-cell.lvl-2 { background: rgba(0,212,255,0.55); }
+        .dash-heatmap-cell.lvl-3 { background: rgba(0,212,255,0.80); }
+        .dash-heatmap-cell.lvl-4 { background: rgba(16,185,129,0.95); box-shadow: 0 0 10px rgba(16,185,129,0.35); }
+        .dash-heatmap-cell.today { outline: 2px solid #F59E0B; outline-offset: 1px; }
+        .light-premium-mode .dash-heatmap-cell.lvl-1 { background: rgba(219,39,119,0.30); }
+        .light-premium-mode .dash-heatmap-cell.lvl-2 { background: rgba(219,39,119,0.50); }
+        .light-premium-mode .dash-heatmap-cell.lvl-3 { background: rgba(219,39,119,0.75); }
+        .dash-heatmap-legend {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--dash-text-muted);
+            justify-content: flex-end;
+        }
+        .dash-heatmap-stats {
+            display: flex;
+            gap: 18px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .dash-heatmap-stat { text-align: left; }
+        .dash-heatmap-stat-val {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--dash-text);
+        }
+        .dash-heatmap-stat-label {
+            font-size: 11px;
+            color: var(--dash-text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== Tabs ===== */
+        .dash-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .dash-tab {
+            padding: 7px 14px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--dash-card-border);
+            color: var(--dash-text-muted) !important;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--dash-transition);
+            border: none;
+            background: transparent;
+        }
+        .dash-tab:hover {
+            color: var(--dash-text) !important;
+            background: rgba(255,255,255,0.06);
+        }
+        .light-premium-mode .dash-tab:hover {
+            background: rgba(15,23,42,0.06);
+        }
+        .dash-tab.active {
+            background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(139,92,246,0.20));
+            border-color: rgba(0,212,255,0.50);
+            color: var(--dash-text) !important;
+        }
+        .light-premium-mode .dash-tab.active {
+            background: linear-gradient(135deg, rgba(219,39,119,0.15), rgba(124,58,237,0.12));
+            border-color: rgba(219,39,119,0.40);
+        }
+
+        /* ===== Quick Action Bar ===== */
+        .dash-quick-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .dash-quick-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: var(--dash-card);
+            border: 1px solid var(--dash-card-border);
+            border-radius: 14px;
+            text-decoration: none;
+            color: var(--dash-text) !important;
+            font-weight: 700;
+            font-size: 14px;
+            transition: var(--dash-transition);
+            box-shadow: var(--dash-shadow);
+        }
+        .dash-quick-btn:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0,212,255,0.40);
+            box-shadow: 0 12px 28px rgba(0,212,255,0.15);
+        }
+        .light-premium-mode .dash-quick-btn:hover {
+            border-color: rgba(219,39,119,0.40);
+            box-shadow: 0 12px 28px rgba(219,39,119,0.15);
+        }
+        .dash-quick-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #FFFFFF !important;
+        }
+        .dash-quick-icon.tsa { background: linear-gradient(135deg, #1677FF, #4364F7); }
+        .dash-quick-icon.hsa { background: linear-gradient(135deg, #A78BFA, #7C3AED); }
+        .dash-quick-icon.lb { background: linear-gradient(135deg, #F59E0B, #EC4899); }
+        .dash-quick-icon.course { background: linear-gradient(135deg, #10B981, #14B8A6); }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1200px) {
+            .dash-stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .dash-three-grid { grid-template-columns: 1fr 1fr; }
+            .dash-goal-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 900px) {
+            .dash-stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .dash-top-row, .dash-bottom-row { grid-template-columns: 1fr; }
+            .dash-charts-grid { grid-template-columns: 1fr; }
+            .dash-three-grid { grid-template-columns: 1fr; }
+            .dash-quick-bar { grid-template-columns: repeat(2, 1fr); }
+            .dash-goal-grid { grid-template-columns: 1fr; }
+            .dash-week-row { grid-template-columns: 1fr; }
+            .dash-goal-stats { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .dash-hero { padding: 24px 18px; }
+            .dash-avatar { width: 80px; height: 80px; font-size: 32px; }
+            .dash-name { font-size: 22px; }
+            .dash-xp-row { gap: 16px; }
+            .dash-quick-bar { grid-template-columns: 1fr; }
+            .container { padding: 0 16px; }
+            .dash-stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .dash-chart-wrap { height: 200px; }
+            .dash-card { padding: 16px; }
+            .dash-goal-stats { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-bg"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="page-wrapper">
+        <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher • Think Better</span>
+                    </div>
+                </a>
+
+                <!-- Center Menu -->
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="khoa-hoc-pages/index.html">Khóa học</a></li>
+                        <li><a href="quy-doi-diem.html">Quy đổi điểm</a></li>
+                        <li><a href="phong-luyen-tsa/index.html">Phòng luyện TSA</a></li>
+                        <li><a href="phong-luyen-hsa/index.html">Phòng luyện HSA</a></li>
+                        <li><a href="thi-thu/index.html">Thi thử</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="nav-actions" id="navActions">
+                    <!-- Dynamic content via JS -->
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="container">
+
+                <!-- HERO PROFILE -->
+                <section id="dashHero" class="dash-hero">
+                    <div class="dash-hero-content">
+                        <div class="dash-avatar-wrap">
+                            <div class="dash-avatar-ring"></div>
+                            <div class="dash-avatar" id="dashAvatar">U</div>
+                        </div>
+                        <div class="dash-info">
+                            <div class="dash-greeting" id="dashGreeting">Chào mừng trở lại</div>
+                            <h1 class="dash-name" id="dashName">Bạn</h1>
+                            <div class="dash-badges" id="dashBadges"></div>
+                            <div class="dash-xp-row">
+                                <div class="dash-xp-block">
+                                    <span class="dash-xp-value" id="dashXpValue">0</span>
+                                    <span class="dash-xp-label">Tổng XP</span>
+                                </div>
+                                <div class="dash-xp-block">
+                                    <span class="dash-xp-value" id="dashLevelValue">Lv. 1</span>
+                                    <span class="dash-xp-label">Cấp bậc</span>
+                                </div>
+                                <div class="dash-xp-block">
+                                    <span class="dash-xp-value" id="dashStreakValue">0 ngày</span>
+                                    <span class="dash-xp-label">Streak ngày</span>
+                                </div>
+                                <div class="dash-xp-block">
+                                    <span class="dash-xp-value" id="dashRankValue">#-</span>
+                                    <span class="dash-xp-label">Cấp độ</span>
+                                </div>
+                            </div>
+                            <div class="dash-progress" id="dashProgressWrap">
+                                <div class="dash-progress-header">
+                                    <span id="dashProgressLabel">Tiến độ lên cấp</span>
+                                    <span id="dashProgressPct">0%</span>
+                                </div>
+                                <div class="dash-progress-bar"><div class="dash-progress-fill" id="dashProgressFill" style="width:0%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- QUICK ACTIONS -->
+                <section class="dash-quick-bar">
+                    <a href="phong-luyen-tsa/index.html" class="dash-quick-btn">
+                        <div class="dash-quick-icon tsa"><iconify-icon icon="lucide:book-open" aria-hidden="true"></iconify-icon></div>
+                        <div>
+                            <div>Phòng luyện TSA</div>
+                            <div style="font-size:12px;color:var(--dash-text-muted);font-weight:500;">Toán & Tư duy</div>
+                        </div>
+                    </a>
+                    <a href="phong-luyen-hsa/index.html" class="dash-quick-btn">
+                        <div class="dash-quick-icon hsa"><iconify-icon icon="lucide:brain" aria-hidden="true"></iconify-icon></div>
+                        <div>
+                            <div>Phòng luyện HSA</div>
+                            <div style="font-size:12px;color:var(--dash-text-muted);font-weight:500;">Năng lực & Khoa học</div>
+                        </div>
+                    </a>
+                    <a href="khoa-hoc-pages/index.html" class="dash-quick-btn">
+                        <div class="dash-quick-icon course"><iconify-icon icon="lucide:graduation-cap" aria-hidden="true"></iconify-icon></div>
+                        <div>
+                            <div>Khóa học</div>
+                            <div style="font-size:12px;color:var(--dash-text-muted);font-weight:500;">Lý thuyết đầy đủ</div>
+                        </div>
+                    </a>
+                </section>
+
+                <!-- 6 STAT CARDS -->
+                <section class="dash-stats-grid" id="dashStatsGrid"></section>
+
+                <!-- TOP ROW: HEATMAP + RECENT ACTIVITY -->
+                <section class="dash-top-row">
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:calendar" aria-hidden="true"></iconify-icon> Lịch sử học tập</h3>
+                            <span class="dash-card-sub">12 tuần gần nhất</span>
+                        </div>
+                        <div id="dashHeatmap"></div>
+                    </div>
+
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:zap" aria-hidden="true"></iconify-icon> Hoạt động gần đây</h3>
+                            <a href="phong-luyen-tsa/index.html" class="dash-card-action">Làm bài <iconify-icon icon="lucide:arrow-right" aria-hidden="true"></iconify-icon></a>
+                        </div>
+                        <div id="dashActivity" class="dash-activity-list"></div>
+                    </div>
+                </section>
+
+                <!-- CHARTS -->
+                <section class="dash-charts-grid">
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:trending-up" aria-hidden="true"></iconify-icon> Điểm theo thời gian</h3>
+                            <span class="dash-card-sub">10 đề gần nhất</span>
+                        </div>
+                        <div class="dash-chart-wrap"><canvas id="dashChartProgress"></canvas></div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:pie-chart" aria-hidden="true"></iconify-icon> Phân bố kết quả</h3>
+                            <span class="dash-card-sub">Xuất sắc • Cần cố gắng</span>
+                        </div>
+                        <div class="dash-chart-wrap"><canvas id="dashChartDistribution"></canvas></div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:bar-chart-3" aria-hidden="true"></iconify-icon> Câu làm mỗi ngày</h3>
+                            <span class="dash-card-sub">7 ngày qua</span>
+                        </div>
+                        <div class="dash-chart-wrap"><canvas id="dashChartPerDay"></canvas></div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:target" aria-hidden="true"></iconify-icon> Độ chính xác theo môn</h3>
+                            <span class="dash-card-sub">TSA / HSA</span>
+                        </div>
+                        <div class="dash-chart-wrap"><canvas id="dashChartAccuracy"></canvas></div>
+                    </div>
+                </section>
+
+                <!-- GOAL & MOTIVATION -->
+                <section class="dash-goal-grid">
+                    <div class="dash-goal-card">
+                        <div class="dash-goal-header">
+                            <h3 class="dash-goal-title"><iconify-icon icon="lucide:target" aria-hidden="true"></iconify-icon> Mục tiêu hôm nay</h3>
+                            <div class="dash-goal-date">
+                                <div class="dash-goal-day" id="dashGoalDay">—</div>
+                                <div id="dashGoalDate">—</div>
+                            </div>
+                        </div>
+                        <div class="dash-goal-progress-row">
+                            <span class="dash-goal-pct" id="dashGoalPct">0%</span>
+                            <span class="dash-goal-pct-target" id="dashGoalTarget">0 / 1 đề</span>
+                        </div>
+                        <div class="dash-goal-bar"><div class="dash-goal-bar-fill" id="dashGoalBarFill" style="width:0%"></div></div>
+                        <div class="dash-goal-stats">
+                            <div class="dash-goal-stat">
+                                <div class="dash-goal-stat-val" id="dashGoalExamsToday">0</div>
+                                <div class="dash-goal-stat-label">Đề hôm nay</div>
+                            </div>
+                            <div class="dash-goal-stat">
+                                <div class="dash-goal-stat-val" id="dashGoalQToday">0</div>
+                                <div class="dash-goal-stat-label">Câu hôm nay</div>
+                            </div>
+                            <div class="dash-goal-stat">
+                                <div class="dash-goal-stat-val" id="dashGoalStreak">0</div>
+                                <div class="dash-goal-stat-label">Streak ngày</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dash-motivation-card">
+                        <div class="dash-motivation-icon">🌟</div>
+                        <div class="dash-motivation-text" id="dashMotivation">Mỗi bước nhỏ đều đáng quý. Hãy làm một bài thi hôm nay.</div>
+                        <div class="dash-motivation-meta">
+                            <span class="dash-motivation-streak" id="dashMotivationStreak">🔥 0 ngày</span>
+                            <span class="dash-motivation-action"><iconify-icon icon="lucide:sparkles" aria-hidden="true"></iconify-icon> SKY EDU</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- WEEK COMPARISON + PER-SUBJECT PROGRESS -->
+                <section class="dash-goal-grid">
+                    <div class="dash-week-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:calendar-days" aria-hidden="true"></iconify-icon> So sánh tuần này vs tuần trước</h3>
+                        </div>
+                        <div class="dash-week-row" id="dashWeekCompare"></div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:layers" aria-hidden="true"></iconify-icon> Top đề đã làm</h3>
+                            <span class="dash-card-sub">Sắp xếp theo hoạt động gần nhất</span>
+                        </div>
+                        <div id="dashProgressByChuyenDe" class="dash-progress-list"></div>
+                    </div>
+                </section>
+
+                <!-- THREE COL GRID -->
+                <section class="dash-three-grid">
+                    <!-- AI INSIGHT -->
+                    <div class="dash-card dash-ai-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:sparkles" aria-hidden="true"></iconify-icon> Phân tích học tập <span class="dash-ai-badge">AI</span></h3>
+                        </div>
+                        <div id="dashAiInsight"></div>
+                    </div>
+
+                    <!-- ACHIEVEMENTS -->
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:award" aria-hidden="true"></iconify-icon> Thành tích <span id="dashAchCounter" class="dash-ach-counter">0/0</span></h3>
+                            <a href="quy-doi-diem.html" class="dash-card-action">Thêm <iconify-icon icon="lucide:arrow-right" aria-hidden="true"></iconify-icon></a>
+                        </div>
+                        <div id="dashAchievements" class="dash-ach-grid"></div>
+                    </div>
+
+                    <!-- RECOMMENDED EXAMS -->
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:flame" aria-hidden="true"></iconify-icon> Đề gợi ý cho bạn</h3>
+                            <span class="dash-card-sub">Dựa trên lịch sử</span>
+                        </div>
+                        <div id="dashRecommend" class="dash-recommend-list"></div>
+                    </div>
+                </section>
+
+                <!-- BOTTOM ROW: PER-EXAM BEST ONLY -->
+                <section class="dash-bottom-row">
+                    <div class="dash-card" style="width: 100%;">
+                        <div class="dash-card-header">
+                            <h3 class="dash-card-title"><iconify-icon icon="lucide:medal" aria-hidden="true"></iconify-icon> Thành tích đề thi</h3>
+                            <span class="dash-card-sub">Best score từng đề</span>
+                        </div>
+                        <div id="dashExamBest" class="dash-exam-grid"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        /* ===================================================================
+           SKY EDU - Dashboard Page (live data) - Optimized Version
+           =================================================================== */
+        (function() {
+            'use strict';
+
+            // ===== Utilities =====
+            function getCurrentUser() {
+                try {
+                    if (window.SkyStore && typeof SkyStore.getCurrentUser === 'function') {
+                        return SkyStore.getCurrentUser();
+                    }
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) { return null; }
+            }
+
+            function getGam() {
+                try {
+                    if (window.SkyStore && typeof SkyStore.getGamification === 'function') {
+                        return SkyStore.getGamification() || {};
+                    }
+                    if (window.Gamification && typeof Gamification.getStats === 'function') {
+                        return Gamification.getStats() || {};
+                    }
+                    return {};
+                } catch (e) { return {}; }
+            }
+
+            function getHistory() {
+                try {
+                    if (window.SkyStore && typeof SkyStore.getExamHistory === 'function') {
+                        return SkyStore.getExamHistory() || [];
+                    }
+                    return JSON.parse(localStorage.getItem('examHistory') || '[]');
+                } catch (e) { return []; }
+            }
+
+            function getLearningStats() {
+                try {
+                    if (window.LearningStats && typeof LearningStats.get === 'function') {
+                        return LearningStats.get() || {};
+                    }
+                    return {};
+                } catch (e) { return {}; }
+            }
+
+            function formatNumber(n) {
+                if (n === null || n === undefined || isNaN(n)) return '0';
+                return Number(n).toLocaleString('vi-VN');
+            }
+
+            function formatPercent(n) {
+                if (n === null || n === undefined || isNaN(n)) return '0%';
+                return Math.round(n) + '%';
+            }
+
+            function formatTime(s) {
+                if (!s || s <= 0) return '0 phút';
+                const h = Math.floor(s / 3600);
+                const m = Math.floor((s % 3600) / 60);
+                if (h > 0) return `${h}h ${m}m`;
+                return `${m} phút`;
+            }
+
+            function escapeHtml(s) {
+                const div = document.createElement('div');
+                div.textContent = String(s == null ? '' : s);
+                return div.innerHTML;
+            }
+
+            function subjectDisplay(subject) {
+                const map = {
+                    'TSA': 'Tư duy', 'HSA': 'Năng lực',
+                    'tsa': 'Tư duy', 'hsa': 'Năng lực',
+                    'math': 'Toán', 'logic': 'Logic'
+                };
+                return map[subject] || subject || '';
+            }
+
+            function getGreeting() {
+                const h = new Date().getHours();
+                if (h < 5) return 'Chúc bạn thức khuya nhé!';
+                if (h < 11) return 'Chào buổi sáng tươi đẹp!';
+                if (h < 14) return 'Chào buổi trưa ấm áp!';
+                if (h < 18) return 'Chào buổi chiều vui vẻ!';
+                if (h < 22) return 'Chào buổi tối ấm cúng!';
+                return 'Chúc bạn thức khuya nhé!';
+            }
+
+            function getLastExamLink() {
+                try {
+                    const history = getHistory();
+                    const last = history[history.length - 1];
+                    if (last && last.examId) {
+                        const path = (last.subject || '').toLowerCase() === 'hsa' ?
+                            'phong-luyen-hsa/exam.html' : 'phong-luyen-tsa/exam.html';
+                        return `${path}?examId=${encodeURIComponent(last.examId)}`;
+                    }
+                } catch (e) {}
+                return 'phong-luyen-tsa/index.html';
+            }
+
+            // ===== Main Dashboard =====
+            const DashPage = {
+                charts: {},
+                _refreshTimeout: null,
+
+                refresh() {
+                    if (this._refreshTimeout) {
+                        clearTimeout(this._refreshTimeout);
+                        this._refreshTimeout = null;
+                    }
+                    this._refreshTimeout = setTimeout(() => {
+                        this.renderAll();
+                        this._refreshTimeout = null;
+                    }, 50);
+                },
+
+                renderAll() {
+                    this.renderHero();
+                    this.renderStats();
+                    this.renderHeatmap();
+                    this.renderActivity();
+                    this.renderCharts();
+                    this.renderAiInsight();
+                    this.renderAchievements();
+                    this.renderRecommend();
+                    this.renderDailyGoal();
+                    this.renderMotivation();
+                    this.renderWeekCompare();
+                    this.renderProgressByChuyenDe();
+                    this.renderExamBest();
+                },
+
+                // ===== Hero =====
+                renderHero() {
+                    const user = getCurrentUser();
+                    const gam = getGam();
+                    const displayName = user ? (user.fullname || user.username || 'Học viên') : 'Khách';
+                    const initials = displayName.charAt(0).toUpperCase();
+                    const avatarEl = document.getElementById('dashAvatar');
+
+                    if (user && user.avatar && avatarEl) {
+                        try {
+                            avatarEl.innerHTML = `<img src="${user.avatar}" alt="" loading="lazy" onerror="this.parentNode.textContent='${initials}'">`;
+                        } catch (e) {
+                            avatarEl.textContent = initials;
+                        }
+                    } else if (avatarEl) {
+                        avatarEl.textContent = initials;
+                    }
+
+                    document.getElementById('dashGreeting').textContent = getGreeting();
+                    document.getElementById('dashName').textContent = displayName;
+                    document.getElementById('dashXpValue').textContent = formatNumber(gam.totalXP || 0);
+
+                    // Rank info
+                    let rankInfo = null;
+                    if (typeof RankSystem !== 'undefined') {
+                        rankInfo = RankSystem.getByXP(gam.totalXP || 0);
+                        if (rankInfo) {
+                            document.getElementById('dashLevelValue').textContent = `Lv. ${rankInfo.level}`;
+                            document.getElementById('dashBadges').innerHTML = `
+                                ${RankSystem.getBadgeHTML(rankInfo.current) || ''}
+                                ${gam.currentStreak > 0 ? `<span class="dash-badge-chip">🔥 ${gam.currentStreak} ngày</span>` : ''}
+                            `;
+                            const pct = rankInfo.next ?
+                                Math.min(100, Math.round((gam.totalXP - rankInfo.current.minXP) / (rankInfo.next.minXP - rankInfo.current.minXP) * 100)) :
+                                100;
+                            const fill = document.getElementById('dashProgressFill');
+                            fill.style.width = pct + '%';
+                            document.getElementById('dashProgressPct').textContent = pct + '%';
+                            if (rankInfo.next) {
+                                document.getElementById('dashProgressLabel').textContent =
+                                    `${formatNumber(gam.totalXP)} / ${formatNumber(rankInfo.next.minXP)} XP → ${rankInfo.next.name}`;
+                            } else {
+                                document.getElementById('dashProgressLabel').textContent = 'Đã đạt cấp bậc tối đa!';
+                            }
+                        } else {
+                            document.getElementById('dashLevelValue').textContent = 'Lv. 1';
+                        }
+                    }
+
+                    document.getElementById('dashStreakValue').textContent = (gam.currentStreak || 0) + ' ngày';
+                },
+
+                // ===== Stats =====
+                renderStats() {
+                    const history = getHistory();
+                    const ls = getLearningStats();
+                    const gam = getGam();
+
+                    const totalExams = history.length;
+                    const avgScore = history.length > 0 ?
+                        Math.round(history.reduce((a, b) => a + (b.total > 0 ? (b.score / b.total) * 100 : 0), 0) / history.length) :
+                        0;
+                    const bestScore = history.length > 0 ?
+                        Math.max(...history.map(h => h.total > 0 ? Math.round((h.score / h.total) * 100) : 0)) :
+                        0;
+                    const accuracy = ls.accuracy || 0;
+                    const totalQuestions = ls.totalQuestions || history.reduce((a, b) => a + (b.total || 0), 0);
+                    const totalTime = history.reduce((a, b) => a + (b.timeSpent || 0), 0);
+
+                    const cards = [
+                        {
+                            icon: 'lucide:file-check',
+                            gradient: 'linear-gradient(135deg, #1677FF, #4364F7)',
+                            value: formatNumber(totalExams),
+                            label: 'Đề đã hoàn thành',
+                            trend: totalExams > 0 ? 'up +1 tuần này' : null
+                        },
+                        {
+                            icon: 'lucide:gauge',
+                            gradient: 'linear-gradient(135deg, #FA709A, #FEE140)',
+                            value: avgScore + '%',
+                            label: 'Điểm trung bình',
+                            trend: avgScore >= 70 ? 'up Tốt' : avgScore >= 50 ? 'neutral Ổn' : 'down Cần cải thiện'
+                        },
+                        {
+                            icon: 'lucide:trophy',
+                            gradient: 'linear-gradient(135deg, #FFD700, #F59E0B)',
+                            value: bestScore + '%',
+                            label: 'Điểm cao nhất',
+                            trend: bestScore === 100 ? 'up Hoàn hảo' : bestScore >= 90 ? 'up Xuất sắc' : null
+                        },
+                        {
+                            icon: 'lucide:target',
+                            gradient: 'linear-gradient(135deg, #4FACFE, #00F2FE)',
+                            value: accuracy + '%',
+                            label: 'Tỉ lệ chính xác',
+                            trend: accuracy >= 70 ? 'up Ổn định' : accuracy >= 50 ? 'neutral Khá' : 'down Cần luyện'
+                        },
+                        {
+                            icon: 'lucide:book-open',
+                            gradient: 'linear-gradient(135deg, #A78BFA, #7C3AED)',
+                            value: formatNumber(totalQuestions),
+                            label: 'Câu đã làm',
+                            trend: null
+                        },
+                        {
+                            icon: 'lucide:clock',
+                            gradient: 'linear-gradient(135deg, #FBC2EB, #A6C1EE)',
+                            value: formatTime(totalTime),
+                            label: 'Thời gian học',
+                            trend: null
+                        }
+                    ];
+
+                    const grid = document.getElementById('dashStatsGrid');
+                    if (!grid) return;
+                    grid.innerHTML = cards.map((c, i) => `
+                        <div class="dash-stat-card anim-fade-up" style="--stat-gradient:${c.gradient};animation-delay:${i * 0.06}s">
+                            <div class="dash-stat-icon"><iconify-icon icon="${c.icon}" aria-hidden="true"></iconify-icon></div>
+                            <div class="dash-stat-value">${c.value}</div>
+                            <div class="dash-stat-label">${c.label}</div>
+                            ${c.trend ? (() => {
+                                const [dir, text] = c.trend.split(' ', 2);
+                                const cls = dir === 'up' ? 'up' : dir === 'down' ? 'down' : 'neutral';
+                                return `<div class="dash-stat-trend ${cls}">${dir === 'up' ? '↑' : dir === 'down' ? '↓' : '−'} ${text}</div>`;
+                            })() : ''}
+                        </div>
+                    `).join('');
+                },
+
+                // ===== Heatmap =====
+                renderHeatmap() {
+                    const wrap = document.getElementById('dashHeatmap');
+                    if (!wrap) return;
+                    if (typeof LearningStats === 'undefined') {
+                        wrap.innerHTML = '<div class="dash-progress-empty">Chưa có dữ liệu hoạt động.</div>';
+                        return;
+                    }
+                    const data = LearningStats.getHeatmapData(12);
+                    if (!data.cells.length) {
+                        wrap.innerHTML = '<div class="dash-progress-empty">Chưa có hoạt động. Hãy làm một bài thi đầu tiên!</div>';
+                        return;
+                    }
+                    const days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+                    const cols = [];
+                    for (let i = 0; i < data.cells.length; i += 7) cols.push(data.cells.slice(i, i + 7));
+
+                    const today = data.cells[data.cells.length - 1];
+                    const activeDays = data.cells.filter(c => c.count > 0).length;
+                    const totalActs = data.cells.reduce((a, c) => a + c.count, 0);
+                    let maxStreak = 0, cur = 0;
+                    for (let i = 0; i < data.cells.length; i++) {
+                        if (data.cells[i].count > 0) { cur++; if (cur > maxStreak) maxStreak = cur; }
+                        else cur = 0;
+                    }
+
+                    wrap.innerHTML = `
+                        <div class="dash-heatmap-wrap">
+                            <div class="dash-heatmap-axis">${days.map(d => `<span>${d}</span>`).join('')}</div>
+                            <div style="flex:1;overflow-x:auto;">
+                                <div class="dash-heatmap">
+                                    ${cols.map(col => `<div class="dash-heatmap-col">
+                                        ${col.map(cell => {
+                                            const intensity = data.maxCount > 0 ? (cell.count / data.maxCount) : 0;
+                                            const lvl = cell.count === 0 ? 0 : intensity < 0.25 ? 1 : intensity < 0.5 ? 2 : intensity < 0.75 ? 3 : 4;
+                                            return `<div class="dash-heatmap-cell lvl-${lvl}${cell.isToday ? ' today' : ''}" title="${cell.date}: ${cell.count} hoạt động"></div>`;
+                                        }).join('')}
+                                    </div>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dash-heatmap-legend">
+                            <span>Ít</span>
+                            <div class="dash-heatmap-cell lvl-0"></div>
+                            <div class="dash-heatmap-cell lvl-1"></div>
+                            <div class="dash-heatmap-cell lvl-2"></div>
+                            <div class="dash-heatmap-cell lvl-3"></div>
+                            <div class="dash-heatmap-cell lvl-4"></div>
+                            <span>Nhiều</span>
+                        </div>
+                        <div class="dash-heatmap-stats">
+                            <div class="dash-heatmap-stat">
+                                <div class="dash-heatmap-stat-val">${activeDays}</div>
+                                <div class="dash-heatmap-stat-label">Ngày hoạt động</div>
+                            </div>
+                            <div class="dash-heatmap-stat">
+                                <div class="dash-heatmap-stat-val">${totalActs}</div>
+                                <div class="dash-heatmap-stat-label">Tổng hoạt động</div>
+                            </div>
+                            <div class="dash-heatmap-stat">
+                                <div class="dash-heatmap-stat-val">${maxStreak}</div>
+                                <div class="dash-heatmap-stat-label">Streak dài nhất</div>
+                            </div>
+                            <div class="dash-heatmap-stat">
+                                <div class="dash-heatmap-stat-val">${today && today.count ? today.count : 0}</div>
+                                <div class="dash-heatmap-stat-label">Hôm nay</div>
+                            </div>
+                        </div>`;
+                },
+
+                // ===== Activity =====
+                renderActivity() {
+                    const wrap = document.getElementById('dashActivity');
+                    if (!wrap) return;
+                    const history = getHistory().slice().reverse();
+                    if (history.length === 0) {
+                        wrap.innerHTML = `
+                            <div class="dash-activity-empty">
+                                <div class="icon">📝</div>
+                                <div class="title">Chưa có hoạt động nào</div>
+                                <div class="desc">Hãy làm bài thi đầu tiên để bắt đầu hành trình!</div>
+                                <a href="phong-luyen-tsa/index.html" class="dash-btn">
+                                    <iconify-icon icon="lucide:play" aria-hidden="true"></iconify-icon> Bắt đầu làm bài
+                                </a>
+                            </div>`;
+                        return;
+                    }
+                    wrap.innerHTML = history.slice(0, 12).map(h => {
+                        const pct = h.total > 0 ? Math.round((h.score / h.total) * 100) : 0;
+                        const cls = pct >= 80 ? 'high' : pct >= 50 ? 'medium' : 'low';
+                        const icon = pct >= 80 ? '🌟' : pct >= 50 ? '📝' : '📚';
+                        const name = h.name || h.examName || 'Đề thi';
+                        const subject = h.subject ? ` · ${subjectDisplay(h.subject)}` : '';
+                        const t = h.completedAt ? new Date(h.completedAt).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+                        return `
+                            <div class="dash-activity-item">
+                                <div class="dash-activity-icon ${cls}">${icon}</div>
+                                <div class="dash-activity-info">
+                                    <div class="dash-activity-name">${escapeHtml(name)}</div>
+                                    <div class="dash-activity-meta">${t}${subject}</div>
+                                </div>
+                                <div class="dash-activity-score ${cls}">${h.score ? h.score.toFixed(1) : '0.0'}</div>
+                            </div>`;
+                    }).join('');
+                },
+
+                // ===== Charts =====
+                renderCharts() {
+                    if (typeof Chart === 'undefined') {
+                        setTimeout(() => this.renderCharts(), 300);
+                        return;
+                    }
+                    Object.values(this.charts).forEach(c => { try { c.destroy(); } catch (e) {} });
+                    this.charts = {};
+
+                    const history = getHistory();
+                    const ls = getLearningStats();
+                    const isDark = !document.body.classList.contains('light-premium-mode') &&
+                        !document.documentElement.classList.contains('light-premium-mode');
+                    const textColor = isDark ? '#F8FAFC' : '#0F172A';
+                    const mutedColor = isDark ? '#94A3B8' : '#475569';
+                    const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+                    const tooltipBg = isDark ? 'rgba(15,23,42,0.95)' : 'rgba(255,255,255,0.98)';
+
+                    const chartBase = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: mutedColor, font: { size: 11, weight: '600' }, padding: 12, usePointStyle: true, pointStyle: 'circle' }
+                            },
+                            tooltip: {
+                                backgroundColor: tooltipBg,
+                                titleColor: textColor,
+                                bodyColor: textColor,
+                                borderColor: gridColor,
+                                borderWidth: 1,
+                                padding: 12,
+                                cornerRadius: 10
+                            }
+                        },
+                        scales: {
+                            y: { grid: { color: gridColor }, ticks: { color: mutedColor, font: { size: 11, weight: '600' } } },
+                            x: { grid: { display: false }, ticks: { color: mutedColor, font: { size: 11, weight: '600' } } }
+                        }
+                    };
+
+                    // 1) Progress line
+                    const recent = history.slice(-10);
+                    const labels = recent.length ? recent.map((h, i) => {
+                        const t = h.completedAt ? new Date(h.completedAt) : new Date();
+                        return t.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+                    }) : [];
+                    const data = recent.map(h => h.total > 0 ? Math.round((h.score / h.total) * 100) : 0);
+
+                    const ctx1 = document.getElementById('dashChartProgress');
+                    if (ctx1) {
+                        if (recent.length === 0) {
+                            ctx1.parentElement.innerHTML = '<div style="text-align:center;padding:80px 20px;color:var(--dash-text-muted);font-size:14px;"><div style="font-size:36px;margin-bottom:10px;">📊</div>Hoàn thành đề thi đầu tiên để xem điểm theo thời gian</div>';
+                        } else {
+                            const grad = ctx1.getContext('2d').createLinearGradient(0, 0, 0, 280);
+                            grad.addColorStop(0, 'rgba(22,119,255,0.4)');
+                            grad.addColorStop(1, 'rgba(22,119,255,0.02)');
+                            this.charts.progress = new Chart(ctx1, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Điểm (%)',
+                                        data: data,
+                                        borderColor: '#1677FF',
+                                        backgroundColor: grad,
+                                        fill: true,
+                                        tension: 0.4,
+                                        pointBackgroundColor: '#1677FF',
+                                        pointBorderColor: '#fff',
+                                        pointBorderWidth: 2,
+                                        pointRadius: 5,
+                                        pointHoverRadius: 7,
+                                        borderWidth: 3
+                                    }]
+                                },
+                                options: { ...chartBase, scales: { ...chartBase.scales, y: { ...chartBase.scales.y, min: 0, max: 100 } } }
+                            });
+                        }
+                    }
+
+                    // 2) Score distribution
+                    const dist = {
+                        excellent: history.filter(h => h.total > 0 && (h.score / h.total) >= 0.9).length,
+                        good: history.filter(h => h.total > 0 && (h.score / h.total) >= 0.7 && (h.score / h.total) < 0.9).length,
+                        average: history.filter(h => h.total > 0 && (h.score / h.total) >= 0.5 && (h.score / h.total) < 0.7).length,
+                        poor: history.filter(h => h.total > 0 && (h.score / h.total) < 0.5).length
+                    };
+                    const ctx2 = document.getElementById('dashChartDistribution');
+                    if (ctx2) {
+                        if (history.length === 0) {
+                            ctx2.parentElement.innerHTML = '<div style="text-align:center;padding:80px 20px;color:var(--dash-text-muted);font-size:14px;"><div style="font-size:36px;margin-bottom:10px;">📊</div>Chưa có dữ liệu để phân tích</div>';
+                        } else {
+                            this.charts.dist = new Chart(ctx2, {
+                                type: 'doughnut',
+                                data: {
+                                    labels: ['Xuất sắc (90%+)', 'Tốt (70-89%)', 'Trung bình (50-69%)', 'Cần cố gắng (<50%)'],
+                                    datasets: [{
+                                        data: [dist.excellent, dist.good, dist.average, dist.poor],
+                                        backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#EF4444'],
+                                        borderWidth: 3,
+                                        borderColor: isDark ? '#0A1230' : '#fff',
+                                        hoverOffset: 8
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    cutout: '65%',
+                                    plugins: {
+                                        legend: {
+                                            position: 'bottom',
+                                            labels: {
+                                                color: mutedColor,
+                                                padding: 12,
+                                                font: { size: 11, weight: '600' },
+                                                usePointStyle: true,
+                                                pointStyle: 'circle'
+                                            }
+                                        },
+                                        tooltip: {
+                                            backgroundColor: tooltipBg,
+                                            titleColor: textColor,
+                                            bodyColor: textColor,
+                                            padding: 12,
+                                            cornerRadius: 10
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    // 3) Questions per day
+                    const byDate = ls.byDate || {};
+                    const last7 = [];
+                    for (let i = 6; i >= 0; i--) {
+                        const d = new Date();
+                        d.setDate(d.getDate() - i);
+                        const key = d.toISOString().substring(0, 10);
+                        last7.push({ label: d.toLocaleDateString('vi-VN', { weekday: 'short' }), count: byDate[key] || 0 });
+                    }
+                    const ctx3 = document.getElementById('dashChartPerDay');
+                    if (ctx3) {
+                        this.charts.perDay = new Chart(ctx3, {
+                            type: 'bar',
+                            data: {
+                                labels: last7.map(d => d.label),
+                                datasets: [{
+                                    label: 'Số đề',
+                                    data: last7.map(d => d.count),
+                                    backgroundColor: 'rgba(139,92,246,0.7)',
+                                    borderColor: '#8B5CF6',
+                                    borderWidth: 2,
+                                    borderRadius: 8,
+                                    hoverBackgroundColor: '#8B5CF6'
+                                }]
+                            },
+                            options: { ...chartBase, plugins: { ...chartBase.plugins, legend: { display: false } } }
+                        });
+                    }
+
+                    // 4) Accuracy by subject
+                    const accBySub = ls.accuracyBySubject || {};
+                    const subjects = Object.keys(accBySub);
+                    const ctx4 = document.getElementById('dashChartAccuracy');
+                    if (ctx4) {
+                        if (subjects.length === 0) {
+                            ctx4.parentElement.innerHTML = '<div style="text-align:center;padding:60px;color:var(--dash-text-muted);">Chưa có dữ liệu môn học</div>';
+                        } else {
+                            this.charts.acc = new Chart(ctx4, {
+                                type: 'bar',
+                                data: {
+                                    labels: subjects.map(s => subjectDisplay(s)),
+                                    datasets: [{
+                                        label: 'Độ chính xác (%)',
+                                        data: subjects.map(s => accBySub[s]),
+                                        backgroundColor: subjects.map(s => accBySub[s] >= 70 ? 'rgba(16,185,129,0.75)' : accBySub[s] >= 50 ? 'rgba(245,158,11,0.75)' : 'rgba(239,68,68,0.75)'),
+                                        borderRadius: 8,
+                                        borderWidth: 0
+                                    }]
+                                },
+                                options: { ...chartBase, scales: { ...chartBase.scales, y: { ...chartBase.scales.y, max: 100 } }, plugins: { ...chartBase.plugins, legend: { display: false } } }
+                            });
+                        }
+                    }
+                },
+
+                // ===== AI Insights =====
+                renderAiInsight() {
+                    const wrap = document.getElementById('dashAiInsight');
+                    if (!wrap) return;
+                    if (typeof AIInsight === 'undefined') {
+                        wrap.innerHTML = '<div class="dash-ai-empty">AI chưa sẵn sàng. Hãy làm thêm bài thi.</div>';
+                        return;
+                    }
+                    const insight = AIInsight.analyze();
+                    let html = '';
+
+                    if (insight.strengths && insight.strengths.length > 0) {
+                        html += `<div class="dash-ai-section">
+                            <div class="dash-ai-section-title"><span class="ai-icon">💪</span> Điểm mạnh của bạn</div>
+                            <div class="dash-ai-list">${insight.strengths.map(s => `
+                                <div class="dash-ai-item">
+                                    <span class="ai-emoji">${s.icon || '💪'}</span>
+                                    <div class="ai-info">
+                                        <div class="ai-title">${escapeHtml(s.title)}</div>
+                                        <div class="ai-desc">${escapeHtml(s.desc)}</div>
+                                    </div>
+                                </div>
+                            `).join('')}</div></div>`;
+                    }
+
+                    if (insight.weaknesses && insight.weaknesses.length > 0) {
+                        html += `<div class="dash-ai-section">
+                            <div class="dash-ai-section-title"><span class="ai-icon">⚠️</span> Cần cải thiện</div>
+                            <div class="dash-ai-list">${insight.weaknesses.map(s => `
+                                <div class="dash-ai-item">
+                                    <span class="ai-emoji">${s.icon || '⚠️'}</span>
+                                    <div class="ai-info">
+                                        <div class="ai-title">${escapeHtml(s.title)}</div>
+                                        <div class="ai-desc">${escapeHtml(s.desc)}</div>
+                                    </div>
+                                </div>
+                            `).join('')}</div></div>`;
+                    }
+
+                    if (insight.improvements && insight.improvements.length > 0) {
+                        html += `<div class="dash-ai-section">
+                            <div class="dash-ai-section-title"><span class="ai-icon">🎯</span> Ưu tiên hành động</div>
+                            <div class="dash-ai-list">${insight.improvements.map(s => `
+                                <div class="dash-ai-item">
+                                    <span class="ai-emoji">${s.icon || '🎯'}</span>
+                                    <div class="ai-info">
+                                        <div class="ai-title">${escapeHtml(s.title)}</div>
+                                        <div class="ai-desc">${escapeHtml(s.desc)}</div>
+                                    </div>
+                                </div>
+                            `).join('')}</div></div>`;
+                    }
+
+                    if (insight.nextLessons && insight.nextLessons.length > 0) {
+                        html += `<div class="dash-ai-section">
+                            <div class="dash-ai-section-title"><span class="ai-icon">📖</span> Gợi ý tiếp theo</div>
+                            <div class="dash-ai-list">${insight.nextLessons.map(l => `
+                                <div class="dash-ai-item">
+                                    <span class="ai-emoji">${l.icon || '📖'}</span>
+                                    <div class="ai-info">
+                                        <div class="ai-title"><a href="${l.link || 'phong-luyen-tsa/index.html'}">${escapeHtml(l.title)}</a></div>
+                                        <div class="ai-desc">${escapeHtml(l.desc)}</div>
+                                    </div>
+                                </div>
+                            `).join('')}</div></div>`;
+                    }
+
+                    if (!html) {
+                        html = '<div class="dash-ai-empty">Hoàn thành thêm đề thi để AI phân tích chính xác.</div>';
+                    }
+                    wrap.innerHTML = html;
+                },
+
+                // ===== Achievements =====
+                renderAchievements() {
+                    const wrap = document.getElementById('dashAchievements');
+                    const counter = document.getElementById('dashAchCounter');
+                    if (!wrap) return;
+                    if (typeof AchievementEngine === 'undefined') {
+                        wrap.innerHTML = '<div style="text-align:center;color:var(--dash-text-muted);padding:32px;">Đang tải...</div>';
+                        return;
+                    }
+                    const gam = getGam();
+                    const ls = getLearningStats();
+                    const earned = AchievementEngine.evaluate({
+                        totalExams: gam.totalExams || 0,
+                        totalXP: gam.totalXP || 0,
+                        streak: gam.currentStreak || 0,
+                        bestScore: gam.bestScore || 0,
+                        totalQuestions: ls.totalQuestions || 0
+                    });
+                    const list = AchievementEngine.list();
+                    if (counter) counter.textContent = `${earned.length}/${list.length}`;
+
+                    if (list.length === 0) {
+                        wrap.innerHTML = '<div style="text-align:center;color:var(--dash-text-muted);padding:32px;">Chưa có huy hiệu nào</div>';
+                        return;
+                    }
+
+                    wrap.innerHTML = list.slice(0, 9).map(a => {
+                        const isEarned = earned.includes(a.id);
+                        return `
+                            <div class="dash-ach-card ${isEarned ? 'earned' : 'locked'}">
+                                <div class="dash-ach-icon">${isEarned ? a.icon : '🔒'}</div>
+                                <div class="dash-ach-name">${escapeHtml(a.name)}</div>
+                                <div class="dash-ach-desc">${escapeHtml(a.description)}</div>
+                                ${isEarned ? '<div class="dash-ach-progress"><div class="dash-ach-progress-fill" style="width:100%"></div></div>' : ''}
+                            </div>`;
+                    }).join('');
+                },
+
+                // ===== Recommendations =====
+                renderRecommend() {
+                    const wrap = document.getElementById('dashRecommend');
+                    if (!wrap) return;
+                    const items = [
+                        { icon: 'lucide:book-open', title: 'Phòng luyện TSA', desc: 'Toán TSA - 13 chuyên đề', link: 'phong-luyen-tsa/index.html', gradient: 'tsa' },
+                        { icon: 'lucide:brain', title: 'Phòng luyện HSA', desc: 'Đánh giá năng lực HSA', link: 'phong-luyen-hsa/index.html', gradient: 'hsa' },
+                        { icon: 'lucide:graduation-cap', title: 'Khóa học trọn gói', desc: 'Lý thuyết + bài tập đầy đủ', link: 'khoa-hoc-pages/index.html', gradient: 'course' },
+                        { icon: 'lucide:repeat', title: 'Làm lại đề gần nhất', desc: 'Cải thiện điểm số', link: getLastExamLink(), gradient: 'lb' }
+                    ];
+                    wrap.innerHTML = items.map(it => `
+                        <a href="${it.link}" class="dash-recommend-item">
+                            <div class="dash-quick-icon ${it.gradient}"><iconify-icon icon="${it.icon}" aria-hidden="true"></iconify-icon></div>
+                            <div class="dash-recommend-info">
+                                <div class="dash-recommend-title">${escapeHtml(it.title)}</div>
+                                <div class="dash-recommend-desc">${escapeHtml(it.desc)}</div>
+                            </div>
+                            <div class="dash-recommend-cta">Mở →</div>
+                        </a>
+                    `).join('');
+                },
+
+                // ===== Daily Goal =====
+                renderDailyGoal() {
+                    const today = new Date();
+                    const dayLabel = today.toLocaleDateString('vi-VN', { weekday: 'long' });
+                    const dateLabel = today.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    document.getElementById('dashGoalDay').textContent = dayLabel.charAt(0).toUpperCase() + dayLabel.slice(1);
+                    document.getElementById('dashGoalDate').textContent = dateLabel;
+
+                    const history = getHistory();
+                    const todayKey = today.toISOString().substring(0, 10);
+                    const todayList = history.filter(h => {
+                        const t = h.completedAt || h.timestamp;
+                        return t && t.substring(0, 10) === todayKey;
+                    });
+                    const todayExams = todayList.length;
+                    const todayQuestions = todayList.reduce((a, b) => a + (b.total || 0), 0);
+
+                    const gam = getGam();
+                    const streak = gam.currentStreak || 0;
+                    const targetExams = streak >= 7 ? 2 : 1;
+
+                    const pct = Math.min(100, Math.round((todayExams / targetExams) * 100));
+                    document.getElementById('dashGoalPct').textContent = pct + '%';
+                    document.getElementById('dashGoalTarget').textContent = `${todayExams} / ${targetExams} đề hôm nay`;
+                    document.getElementById('dashGoalBarFill').style.width = pct + '%';
+
+                    // Animate counters
+                    this._animateCounter(document.getElementById('dashGoalExamsToday'), todayExams);
+                    this._animateCounter(document.getElementById('dashGoalQToday'), todayQuestions);
+                    document.getElementById('dashGoalStreak').textContent = streak;
+                },
+
+                _animateCounter(el, target) {
+                    if (!el) return;
+                    const start = parseInt(el.textContent) || 0;
+                    if (start === target) return;
+                    const startTime = performance.now();
+                    const duration = 600;
+                    const update = (t) => {
+                        const elapsed = t - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const easeOut = 1 - Math.pow(1 - progress, 3);
+                        const current = Math.floor(start + (target - start) * easeOut);
+                        el.textContent = current.toLocaleString('vi-VN');
+                        if (progress < 1) requestAnimationFrame(update);
+                        else el.textContent = target.toLocaleString('vi-VN');
+                    };
+                    requestAnimationFrame(update);
+                },
+
+                // ===== Motivation =====
+                renderMotivation() {
+                    const gam = getGam();
+                    const streak = gam.currentStreak || 0;
+                    const history = getHistory();
+                    const quotes = [
+                        'Mỗi câu trả lời đúng hôm nay là một bước tiến tới mục tiêu của bạn.',
+                        'Học không phải là chạy đua — là bước đi đều mỗi ngày.',
+                        'Kiên trì quan trọng hơn tốc độ. Một đề mỗi ngày là đủ.',
+                        'Bạn không cần giỏi ngay từ đầu, bạn chỉ cần không bỏ cuộc.',
+                        'Điểm số thay đổi — kỷ luật mới là vĩnh cửu.',
+                        'Streak của bạn đang chạy. Đừng để nó tắt hôm nay!'
+                    ];
+                    let quote;
+                    if (streak >= 7) quote = quotes[5];
+                    else if (history.length === 0) quote = quotes[1];
+                    else if (streak === 0) quote = quotes[2];
+                    else quote = quotes[new Date().getDate() % quotes.length];
+                    document.getElementById('dashMotivation').textContent = '"' + quote + '"';
+                    document.getElementById('dashMotivationStreak').textContent = `🔥 ${streak} ngày`;
+                },
+
+                // ===== Week Comparison =====
+                renderWeekCompare() {
+                    const wrap = document.getElementById('dashWeekCompare');
+                    if (!wrap) return;
+                    const history = getHistory();
+
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    const last7Start = new Date(today);
+                    last7Start.setDate(today.getDate() - 6);
+                    const prev7Start = new Date(today);
+                    prev7Start.setDate(today.getDate() - 13);
+
+                    const last7 = this._aggregateByDate(history, last7Start, today);
+                    const prev7 = this._aggregateByDate(history, prev7Start, new Date(today.getTime() - 86400000 * 7));
+
+                    function delta(curr, prev) {
+                        if (prev === 0 && curr === 0) return { val: 0, dir: 'same', pct: 0 };
+                        if (prev === 0) return { val: curr, dir: 'up', pct: 100 };
+                        const diff = curr - prev;
+                        const pct = Math.round((diff / prev) * 100);
+                        return { val: diff, dir: diff > 0 ? 'up' : diff < 0 ? 'down' : 'same', pct };
+                    }
+
+                    const d1 = delta(last7.exams, prev7.exams);
+                    const d2 = delta(last7.questions, prev7.questions);
+                    const d3 = delta(last7.accuracy, prev7.accuracy);
+                    const d4 = delta(last7.timeSpent, prev7.timeSpent);
+                    const d4Min = Math.round(last7.timeSpent / 60);
+                    const d4DeltaMin = Math.round(d4.val / 60);
+
+                    function fmtDelta(d, suffix = '') {
+                        if (d.dir === 'same') return `<span class="dash-week-block-delta same">— 0%</span>`;
+                        const sign = d.val > 0 ? '+' : '';
+                        return `<span class="dash-week-block-delta ${d.dir}">${d.dir === 'up' ? '↑' : '↓'} ${sign}${d.val}${suffix} (${d.dir === 'up' ? '+' : ''}${d.pct}%)</span>`;
+                    }
+
+                    wrap.innerHTML = `
+                        <div class="dash-week-block">
+                            <div class="dash-week-block-label">Đề đã làm</div>
+                            <div class="dash-week-block-val">${last7.exams}</div>
+                            ${fmtDelta(d1)}
+                        </div>
+                        <div class="dash-week-block">
+                            <div class="dash-week-block-label">Tổng câu</div>
+                            <div class="dash-week-block-val">${last7.questions}</div>
+                            ${fmtDelta(d2)}
+                        </div>
+                        <div class="dash-week-block">
+                            <div class="dash-week-block-label">Độ chính xác</div>
+                            <div class="dash-week-block-val">${last7.accuracy}%</div>
+                            ${fmtDelta(d3, '%')}
+                        </div>
+                        <div class="dash-week-block">
+                            <div class="dash-week-block-label">Thời gian</div>
+                            <div class="dash-week-block-val">${formatTime(last7.timeSpent)}</div>
+                            ${d4.dir === 'same' ? `<span class="dash-week-block-delta same">— 0%</span>` : `<span class="dash-week-block-delta ${d4.dir}">${d4.dir === 'up' ? '↑' : '↓'} ${d4.val > 0 ? '+' : ''}${d4DeltaMin}p (${d4.dir === 'up' ? '+' : ''}${d4.pct}%)</span>`}
+                        </div>`;
+                },
+
+                _aggregateByDate(history, startDate, endDate) {
+                    let exams = 0, questions = 0, correct = 0, timeSpent = 0;
+                    history.forEach(h => {
+                        const t = h.completedAt || h.timestamp;
+                        if (!t) return;
+                        const d = new Date(t);
+                        d.setHours(0, 0, 0, 0);
+                        if (d >= startDate && d <= endDate) {
+                            exams++;
+                            questions += (h.total || 0);
+                            correct += (h.score || 0);
+                            timeSpent += (h.timeSpent || 0);
+                        }
+                    });
+                    const accuracy = questions > 0 ? Math.round((correct / questions) * 100) : 0;
+                    return { exams, questions, correct, accuracy, timeSpent };
+                },
+
+                // ===== Progress by Exam =====
+                renderProgressByChuyenDe() {
+                    const wrap = document.getElementById('dashProgressByChuyenDe');
+                    if (!wrap) return;
+                    const history = getHistory();
+
+                    const examStats = {};
+                    history.forEach(h => {
+                        const key = h.examId || h.examName || 'unknown';
+                        const name = h.examName || key;
+                        if (!examStats[key]) {
+                            examStats[key] = { name, attempts: 0, totalQuestions: 0, correctQuestions: 0, lastTime: 0, bestPct: 0 };
+                        }
+                        const it = examStats[key];
+                        it.attempts++;
+                        it.totalQuestions += (h.total || 0);
+                        it.correctQuestions += (h.score || 0);
+                        const t = new Date(h.completedAt || h.timestamp || 0).getTime();
+                        if (t > it.lastTime) it.lastTime = t;
+                        const pct = h.total > 0 ? Math.round((h.score / h.total) * 100) : 0;
+                        if (pct > it.bestPct) it.bestPct = pct;
+                    });
+
+                    const exams = Object.entries(examStats);
+                    if (exams.length === 0) {
+                        wrap.innerHTML = '<div class="dash-progress-empty">Hoàn thành đề thi đầu tiên để theo dõi tiến độ từng đề.</div>';
+                        return;
+                    }
+                    wrap.innerHTML = '';
+                    const maxQ = Math.max(1, ...exams.map(([_, s]) => s.totalQuestions));
+                    exams
+                        .sort((a, b) => b[1].lastTime - a[1].lastTime)
+                        .slice(0, 6)
+                        .forEach(([key, s]) => {
+                            const pct = Math.min(100, Math.round((s.totalQuestions / maxQ) * 100));
+                            const accuracy = s.totalQuestions > 0 ? Math.round((s.correctQuestions / s.totalQuestions) * 100) : 0;
+                            const cls = accuracy >= 70 ? 'green' : accuracy >= 50 ? '' : 'orange';
+                            const item = document.createElement('div');
+                            item.className = 'dash-progress-item';
+                            item.innerHTML = `
+                                <div class="dash-progress-header">
+                                    <span class="dash-progress-title"><iconify-icon icon="lucide:book-marked" aria-hidden="true"></iconify-icon> ${escapeHtml(s.name)}</span>
+                                    <span class="dash-progress-val">${accuracy}% · ${s.attempts} lần</span>
+                                </div>
+                                <div class="dash-progress-bar"><div class="dash-progress-bar-fill ${cls}" style="width:${pct}%"></div></div>
+                                <div class="dash-progress-meta">${s.totalQuestions} câu · tốt nhất ${s.bestPct}% · gần nhất ${new Date(s.lastTime).toLocaleDateString('vi-VN')}</div>`;
+                            wrap.appendChild(item);
+                        });
+                },
+
+                // ===== Exam Best =====
+                renderExamBest() {
+                    const wrap = document.getElementById('dashExamBest');
+                    if (!wrap) return;
+                    const history = getHistory();
+                    const myUid = getCurrentUser()?.uid;
+
+                    const byExam = new Map();
+                    history.forEach(h => {
+                        const key = h.examId || h.examName;
+                        if (!key) return;
+                        if (!byExam.has(key)) {
+                            byExam.set(key, {
+                                examId: key,
+                                examName: h.examName || key,
+                                bestScore: 0,
+                                bestTotal: 0,
+                                attempts: 0,
+                                lastTime: 0,
+                                rank: null
+                            });
+                        }
+                        const it = byExam.get(key);
+                        it.attempts++;
+                        if (h.score > it.bestScore) {
+                            it.bestScore = h.score;
+                            it.bestTotal = h.total || 0;
+                        }
+                        const t = new Date(h.completedAt || 0).getTime();
+                        if (t > it.lastTime) it.lastTime = t;
+                    });
+
+                    const cards = Array.from(byExam.values()).sort((a, b) => b.lastTime - a.lastTime).slice(0, 6);
+                    if (cards.length === 0) {
+                        wrap.innerHTML = '<div class="dash-exam-empty"><div class="icon">🏆</div><div>Hoàn thành đề thi đầu tiên để thấy thành tích từng đề.</div></div>';
+                        return;
+                    }
+                    wrap.innerHTML = cards.map(c => {
+                        const pct = c.bestTotal > 0 ? Math.round((c.bestScore / c.bestTotal) * 100) : 0;
+                        const rankCls = c.rank === 1 ? 'top1' : c.rank && c.rank <= 3 ? 'top3' : '';
+                        const rankIcon = c.rank === 1 ? '🥇' : c.rank === 2 ? '🥈' : c.rank === 3 ? '🥉' : '📊';
+                        return `
+                            <div class="dash-exam-card">
+                                <div class="dash-exam-name">${escapeHtml(c.examName)}</div>
+                                ${c.rank ? `<div class="dash-exam-rank ${rankCls}">${rankIcon} Hạng ${c.rank}</div>` : ''}
+                                <div style="font-size:22px;font-weight:900;color:var(--dash-accent);">${pct}%</div>
+                                <div class="dash-exam-row"><span>Lần làm</span><strong>${c.attempts}</strong></div>
+                                <div class="dash-exam-row"><span>Điểm cao nhất</span><strong>${c.bestScore ? c.bestScore.toFixed(1) : '0.0'}/${c.bestTotal}</strong></div>
+                                <div class="dash-exam-row"><span>Cập nhật</span><strong>${new Date(c.lastTime).toLocaleDateString('vi-VN')}</strong></div>
+                            </div>`;
+                    }).join('');
+                },
+
+                // ===== Init =====
+                init() {
+                    this.renderAll();
+
+                    // Bind scroll for navbar
+                    const navbar = document.getElementById('navbar');
+                    window.addEventListener('scroll', () => {
+                        if (navbar) navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+                    });
+
+                    // Re-render on events
+                    ['themeChange', 'gamificationUpdate', 'skyStoreUpdate', 'rankUpdate']
+                        .forEach(evt => window.addEventListener(evt, () => this.refresh()));
+
+                    // Re-render when Chart.js loads
+                    if (typeof Chart === 'undefined') {
+                        const checkChart = setInterval(() => {
+                            if (typeof Chart !== 'undefined') {
+                                clearInterval(checkChart);
+                                this.refresh();
+                            }
+                        }, 200);
+                        setTimeout(() => clearInterval(checkChart), 8000);
+                    }
+                }
+            };
+
+            // ===== Start =====
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => DashPage.init());
+            } else {
+                DashPage.init();
+            }
+
+            // Expose for debugging
+            window.DashPage = DashPage;
+
+        })();
+    </script>
+
+    <!-- Navbar Auth -->
+    <script>
+        (function() {
+            function getCurrentUser() {
+                try {
+                    if (window.SkyStore && typeof SkyStore.getCurrentUser === 'function') {
+                        return SkyStore.getCurrentUser();
+                    }
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) { return null; }
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function updateNavAuthState() {
+                const currentUser = getCurrentUser();
+                const navActions = document.getElementById('navActions');
+                if (!navActions) return;
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                    ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                    : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                    const isLight = window.Theme && window.Theme.currentTheme === 'lightpremium';
+                    const themeName = isLight ? 'Chế độ sáng' : 'Chế độ tối';
+                    const themeIcon = isLight ? 'lucide:moon' : 'lucide:sun';
+
+                    navActions.innerHTML = `
+                        <div class="user-dropdown user-card-static">
+                            <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${escapeHtml(currentUser.fullname || currentUser.username || 'Tài khoản')}
+                            </span>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    `;
+                } else {
+                    navActions.innerHTML = `
+                        <a href="account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                        <a href="account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>`;
+                }
+            }
+
+            // Mobile menu toggle
+            document.addEventListener('click', function(e) {
+                const mobileBtn = e.target.closest('#mobileMenuBtn');
+                const navCenter = document.querySelector('.nav-center');
+                if (mobileBtn && navCenter) {
+                    navCenter.classList.toggle('active');
+                    mobileBtn.classList.toggle('active');
+                }
+            });
+
+            updateNavAuthState();
+            window.addEventListener('userLogin', updateNavAuthState);
+            window.addEventListener('userLogout', updateNavAuthState);
+            window.addEventListener('themeChange', updateNavAuthState);
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                    updateNavAuthState();
+                }
+            });
+
+            window.updateNavAuthState = updateNavAuthState;
+
+            // Navbar scroll effect
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                window.addEventListener('scroll', () => {
+                    navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+                });
+            }
+        })();
+    </script>
+
+    <!-- ============================================================
+         FLOATING CONTACT BUTTONS
+         ============================================================ -->
+    <style>
+        .floating-contact-wrapper {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+            --fc-btn-size: 52px;
+        }
+
+        .floating-contact-btn {
+            position: relative;
+            width: var(--fc-btn-size);
+            height: var(--fc-btn-size);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25),
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            background: var(--fc-bg, #ffffff);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fcSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .floating-contact-btn:nth-child(1) { animation-delay: 0.1s; }
+        .floating-contact-btn:nth-child(2) { animation-delay: 0.2s; }
+        .floating-contact-btn:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fcSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-contact-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            animation: fcRotate 4s linear infinite;
+        }
+
+        @keyframes fcRotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .floating-contact-btn:hover {
+            transform: scale(1.12) translateY(0);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35),
+                        0 0 20px var(--fc-glow, rgba(0, 212, 255, 0.3));
+        }
+
+        .floating-contact-btn:hover::before {
+            opacity: 1;
+        }
+
+        .floating-contact-btn:active {
+            transform: scale(1.05) translateY(0);
+            transition-duration: 0.1s;
+        }
+
+        .floating-contact-btn svg,
+        .floating-contact-btn iconify-icon {
+            width: 26px;
+            height: 26px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .floating-contact-btn:hover svg,
+        .floating-contact-btn:hover iconify-icon {
+            transform: scale(1.1);
+        }
+
+        /* Pulse animation for subtle glow */
+        .floating-contact-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 var(--fc-glow, rgba(0, 212, 255, 0.4));
+            animation: fcPulse 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fcPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 var(--fc-glow, rgba(0, 212, 255, 0.4));
+            }
+            50% {
+                box-shadow: 0 0 0 8px var(--fc-glow, rgba(0, 212, 255, 0));
+            }
+        }
+
+        /* Zalo Button - Official Logo */
+        .fc-btn-zalo {
+            --fc-bg: transparent;
+            --fc-glow: rgba(0, 104, 255, 0.4);
+            background: #0068FF;
+            border: none;
+        }
+        .fc-btn-zalo img {
+            width: 32px;
+            height: 32px;
+            display: block;
+        }
+
+        /* Facebook Button */
+        .fc-btn-facebook {
+            --fc-bg: #1877F2;
+            --fc-glow: rgba(24, 119, 242, 0.4);
+        }
+        .fc-btn-facebook svg { fill: #ffffff; }
+
+        /* TikTok Button */
+        .fc-btn-tiktok {
+            --fc-bg: #000000;
+            --fc-glow: rgba(255, 0, 80, 0.3);
+        }
+        .fc-btn-tiktok svg { fill: #ffffff; }
+
+        /* Tooltip */
+        .fc-tooltip {
+            position: absolute;
+            right: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%) translateX(8px);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease,
+                        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fc-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 6px solid transparent;
+            border-left-color: rgba(15, 23, 42, 0.95);
+        }
+
+        .floating-contact-btn:hover .fc-tooltip {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .fc-tooltip-icon {
+            font-size: 14px;
+        }
+
+        /* Light mode adjustments */
+        .light-premium-mode .fc-tooltip {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0F172A;
+            border-color: rgba(15, 23, 42, 0.1);
+        }
+        .light-premium-mode .fc-tooltip::after {
+            border-left-color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .floating-contact-wrapper {
+                bottom: 16px;
+                right: 16px;
+                gap: 10px;
+                --fc-btn-size: 48px;
+            }
+
+            .floating-contact-btn svg,
+            .floating-contact-btn iconify-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .fc-tooltip {
+                display: none;
+            }
+        }
+
+        /* Ensure buttons don't overlap with scroll-to-top or chat widgets */
+        @media (max-width: 640px) {
+            .floating-contact-wrapper {
+                margin-bottom: 60px;
+            }
+        }
+    </style>
+
+    <!-- Floating Contact Buttons -->
+    <div class="floating-contact-wrapper">
+        <!-- Zalo Button - Official Logo -->
+        <a href="https://zalo.me/g/nz1wy5lpygbgecojnxus"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="floating-contact-btn fc-btn-zalo"
+           aria-label="Tham gia nhóm Zalo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" 
+                 alt="Zalo" 
+                 width="30" 
+                 height="30"
+                 style="display: block;">
+            <span class="fc-tooltip">
+                <span class="fc-tooltip-icon">&#x1F4AC;</span>
+                Tham gia nhóm Zalo
+            </span>
+        </a>
+
+        <!-- Facebook Button -->
+        <a href="https://www.facebook.com/profile.php?id=61590532648304"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="floating-contact-btn fc-btn-facebook"
+           aria-label="Fanpage SKY EDU">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            <span class="fc-tooltip">
+                <span class="fc-tooltip-icon">&#x1F4BD;</span>
+                Fanpage SKY EDU
+            </span>
+        </a>
+
+        <!-- TikTok Button -->
+        <a href="https://www.tiktok.com/@skyedu_tsa_hsa"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="floating-contact-btn fc-btn-tiktok"
+           aria-label="TikTok SKY EDU">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+            <span class="fc-tooltip">
+                <span class="fc-tooltip-icon">&#x1F3B5;</span>
+                TikTok SKY EDU
+            </span>
+        </a>
+    </div>
+</body>
+</html>

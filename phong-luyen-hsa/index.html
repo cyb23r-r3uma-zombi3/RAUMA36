@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Phòng luyện HSA - SKY EDU</title>
+    <meta name="theme-color" content="#050B1A">
+    
+    <!-- FOUC Prevention: Apply theme synchronously before CSS loads -->
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#FDF2F8'; scheme = 'light'; pageBg = '#FDF2F8';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        // Wait for body to exist then set its bg immediately
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        // Re-apply body bg before reveal to ensure correct color
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 600);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){
+          var b = document.body; if (b) b.classList.add('theme-ready');
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(show); });
+        });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="../assets/css/premium-style.css" as="style">
+    <link rel="stylesheet" href="../assets/css/premium-style.css">
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+    <script src="../assets/js/theme.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <!-- Firebase + exam data -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js?v=2.0"></script>
+    <script src="../assets/js/exam-builder.js?v=2.0"></script>
+    <style>
+        :root { --page-bg: #070D1F; --accent-hsa: #A78BFA; }
+        .page-bg { position: fixed; inset: 0; z-index: 0; background: var(--page-bg); }
+        .bg-gradient { position: fixed; top: -50%; left: 50%; transform: translateX(-50%); width: 150%; height: 100%; background: radial-gradient(ellipse at center top, rgba(167, 139, 250, 0.1) 0%, rgba(124, 58, 237, 0.05) 30%, transparent 70%); pointer-events: none; z-index: 0; }
+        .bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+        .floating-orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: float 20s ease-in-out infinite; }
+        .orb-1 { width: 500px; height: 500px; background: rgba(167, 139, 250, 0.1); top: 5%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(124, 77, 255, 0.08); bottom: 10%; right: -5%; animation-delay: -7s; }
+        .orb-3 { width: 280px; height: 280px; background: rgba(16, 185, 129, 0.08); top: 45%; left: 55%; animation-delay: -12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 25% { transform: translate(40px, -40px) scale(1.05); } 50% { transform: translate(-30px, 30px) scale(0.95); } 75% { transform: translate(30px, 40px) scale(1.02); } }
+
+        .page-wrapper { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+        .page-content { padding-top: 100px; padding-bottom: 60px; flex: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        .section-header { text-align: center; margin-bottom: 48px; animation: fadeInUp 0.8s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .section-badge { display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px; background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2); border-radius: 50px; font-size: 12px; font-weight: 700; color: #A78BFA; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; }
+        .section-badge iconify-icon { font-size: 16px; }
+        .section-title { font-size: 42px; font-weight: 900; color: #fff; margin-bottom: 12px; letter-spacing: -1px; }
+        .section-title-gradient { background: linear-gradient(135deg, #A78BFA, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .section-desc { font-size: 17px; color: #94A3B8; max-width: 550px; margin: 0 auto; }
+
+        .layout-grid { display: grid; grid-template-columns: 340px 1fr; gap: 32px; width: 100%; }
+
+        .sidebar { position: sticky; top: 120px; height: fit-content; max-height: calc(100vh - 160px); overflow-y: auto; animation: fadeInUp 0.8s ease forwards; animation-delay: 0.2s; opacity: 0; }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(167, 139, 250, 0.3); border-radius: 4px; }
+
+        .sidebar-card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; }
+        .sidebar-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+        .sidebar-icon { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(124, 77, 255, 0.15)); border: 1px solid rgba(167, 139, 250, 0.2); display: flex; align-items: center; justify-content: center; }
+        .sidebar-icon iconify-icon { font-size: 24px; color: #A78BFA; }
+        .sidebar-title { font-size: 18px; font-weight: 800; color: #fff; }
+        .sidebar-subtitle { font-size: 12px; color: #94A3B8; margin-top: 2px; }
+
+        .topic-list { display: flex; flex-direction: column; gap: 6px; }
+        .topic-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; }
+        .topic-item:hover { background: rgba(167, 139, 250, 0.08); border-color: rgba(167, 139, 250, 0.2); transform: translateX(4px); }
+        .topic-item.active { background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(124, 77, 255, 0.1)); border-color: rgba(167, 139, 250, 0.3); }
+        .topic-number { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #A78BFA, #8B5CF6); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0; }
+        .topic-text { font-size: 13px; font-weight: 600; color: #E2E8F0; line-height: 1.4; }
+
+        .main-content { animation: fadeInUp 0.8s ease forwards; animation-delay: 0.4s; opacity: 0; }
+        .content-card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 28px; }
+        .content-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+        .content-icon { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(124, 77, 255, 0.15)); border: 1px solid rgba(167, 139, 250, 0.2); display: flex; align-items: center; justify-content: center; }
+        .content-icon iconify-icon { font-size: 28px; color: #A78BFA; }
+        .content-title { font-size: 20px; font-weight: 800; color: #fff; }
+        .content-subtitle { font-size: 14px; color: #94A3B8; margin-top: 4px; }
+
+        .exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .exam-card { position: relative; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .exam-card:hover { border-color: rgba(167, 139, 250, 0.3); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(167, 139, 250, 0.1); }
+        .exam-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(124, 77, 255, 0.15)); color: #A78BFA; }
+        .exam-badge.easy { background: rgba(74, 222, 128, 0.15); color: #4ADE80; }
+        .exam-badge.medium { background: rgba(250, 204, 21, 0.15); color: #FACC15; }
+        .exam-badge.hard { background: rgba(248, 113, 113, 0.15); color: #F87171; }
+        .exam-title { font-size: 15px; font-weight: 700; color: #fff; margin: 14px 0 10px; }
+        .exam-meta { display: flex; flex-wrap: wrap; gap: 12px; }
+        .exam-meta-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #94A3B8; }
+        .exam-meta-item iconify-icon { font-size: 14px; color: #8B5CF6; }
+        .exam-start { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin-top: 16px; background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(124, 77, 255, 0.1)); border: 1px solid rgba(167, 139, 250, 0.2); border-radius: 10px; font-size: 13px; font-weight: 700; color: #A78BFA; transition: all 0.3s ease; }
+        .exam-card:hover .exam-start { background: linear-gradient(135deg, #A78BFA, #8B5CF6); color: #fff; }
+        .exam-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .exam-icon { margin-left: auto; opacity: 0.6; }
+        .exam-icon iconify-icon { font-size: 20px; color: #A78BFA; }
+        .exam-empty { grid-column: 1/-1; padding: 60px 20px; text-align: center; color: #94A3B8; }
+        .exam-empty iconify-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.6; }
+        .exam-empty h4 { font-size: 16px; margin: 8px 0 4px; color: #E2E8F0; font-weight: 600; }
+        .exam-empty p { font-size: 13px; color: #94A3B8; }
+
+        @media (max-width: 1024px) { .layout-grid { grid-template-columns: 1fr; } .sidebar { position: static; max-height: none; } }
+        @media (max-width: 768px) { .section-title { font-size: 32px; } }
+    </style>
+</head>
+<body>
+    <div class="page-bg"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="page-wrapper">
+        <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <!-- Logo -->
+                <a href="../index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher - Think Better</span>
+                    </div>
+                </a>
+
+                <!-- Center Menu -->
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="../index.html">Trang chủ</a></li>
+                        <li><a href="../khoa-hoc-pages/index.html">Khóa học</a></li>
+                        <li><a href="../quy-doi-diem.html">Quy đổi điểm</a></li>
+                        <li><a href="../phong-luyen-tsa/index.html">Phòng luyện TSA</a></li>
+                        <li><a href="../phong-luyen-hsa/index.html" class="active">Phòng luyện HSA</a></li>
+                        <li><a href="../thi-thu/index.html">Thi thử</a></li>
+                        <li><a href="../dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="nav-actions" id="navActions">
+                    <a href="../account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                    <a href="../account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                .user-dropdown { position: relative; display: inline-block; }
+                .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+                .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+                .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+                .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+                .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+                @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+                .user-dropdown.open .user-dropdown-content { display: block; }
+                .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+                .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+                .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+                .dropdown-item:hover iconify-icon { color: #00D4FF; }
+                .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+                .dropdown-item.logout { color: #EF4444; }
+                .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+                .dropdown-item.admin-only { color: #FACC15; }
+                .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+            </style>
+        </header>
+
+        <style>
+            .user-dropdown { position: relative; display: inline-block; }
+            .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2); border-radius: 10px; color: #A78BFA; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+            .user-dropdown-btn:hover { background: rgba(167, 139, 250, 0.2); border-color: rgba(167, 139, 250, 0.4); }
+            .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+            .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+            .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+            @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+            .user-dropdown.open .user-dropdown-content { display: block; }
+            .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+            .dropdown-item:hover { background: rgba(167, 139, 250, 0.15); color: #A78BFA; }
+            .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+            .dropdown-item:hover iconify-icon { color: #A78BFA; }
+            .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+            .dropdown-item.logout { color: #EF4444; }
+            .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+            .dropdown-item.logout iconify-icon { color: #EF4444; }
+            .dropdown-item.admin-only { color: #FACC15; }
+            .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+        </style>
+
+        <main class="page-content">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-badge"><iconify-icon icon="lucide:target" aria-hidden="true"></iconify-icon><span>Phòng luyện HSA</span></div>
+                    <h1 class="section-title"><span class="section-title-gradient">Luyện thi HSA - Đánh giá năng lực</span></h1>
+                    <p class="section-desc">Phần thi Định lượng. Chọn chuyên đề và bắt đầu luyện tập</p>
+                </div>
+
+                <div class="layout-grid">
+                    <aside class="sidebar">
+                        <div class="sidebar-card">
+                            <div class="sidebar-header">
+                                <div class="sidebar-icon"><iconify-icon icon="lucide:calculator" aria-hidden="true"></iconify-icon></div>
+                                <div>
+                                    <h3 class="sidebar-title">Phần thi Định lượng</h3>
+                                    <p class="sidebar-subtitle">Chọn chuyên đề để luyện</p>
+                                </div>
+                            </div>
+                            <div class="topic-list" id="topicList">
+                                <div class="topic-item active" data-topic="toan-dai-so"><span class="topic-number">1</span><span class="topic-text">Toán Đại số</span></div>
+                                <div class="topic-item" data-topic="toan-giai-tich"><span class="topic-number">2</span><span class="topic-text">Toán Giải tích</span></div>
+                                <div class="topic-item" data-topic="toan-hinh-hoc"><span class="topic-number">3</span><span class="topic-text">Toán Hình học</span></div>
+                                <div class="topic-item" data-topic="toan-xac-suat"><span class="topic-number">4</span><span class="topic-text">Xác suất & Thống kê</span></div>
+                                <div class="topic-item" data-topic="toan-so-hoc"><span class="topic-number">5</span><span class="topic-text">Số học & Tổ hợp</span></div>
+                                <div class="topic-item" data-topic="hsa-thuc-chien" data-extra="1"><span class="topic-number">🔥</span><span class="topic-text">Đề thực chiến</span></div>
+                                <!-- "Đề thi thử" đã chuyển sang trang /thi-thu/ (tab HSA) -->
+                            </div>
+                        </div>
+                    </aside>
+
+                    <div class="main-content">
+                        <div class="content-card">
+                            <div class="content-header">
+                                <div class="content-icon"><iconify-icon icon="lucide:file-question" aria-hidden="true"></iconify-icon></div>
+                                <div>
+                                    <h3 class="content-title" id="selectedTopicTitle">Toán Đại số</h3>
+                                    <p class="content-subtitle">Các đề thi available</p>
+                                </div>
+                            </div>
+                            <div class="exam-grid" id="examGrid">
+                                <!-- Hiển thị đang cập nhật -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/hsa-topics.js?v=2.0"></script>
+    <script src="../assets/js/core/role-system.js"></script>
+    <script>
+        // =========================================
+        // TOPICS DATA - lấy từ hsa-topics.js nếu có, fallback hard-coded
+        // =========================================
+        const TOPICS_DATA = (typeof HsaTopics !== 'undefined')
+            ? { ...HsaTopics.TOPICS_BY_KEY, ...HsaTopics.EXTRA_CATEGORIES.reduce((m, c) => { m[c.key] = { num: c.badge || '🔥', title: c.title }; return m; }, {}) }
+            : {
+                'toan-dai-so': { num: 1, title: 'Toán Đại số' },
+                'toan-giai-tich': { num: 2, title: 'Toán Giải tích' },
+                'toan-hinh-hoc': { num: 3, title: 'Toán Hình học' },
+                'toan-xac-suat': { num: 4, title: 'Xác suất & Thống kê' },
+                'toan-so-hoc': { num: 5, title: 'Số học & Tổ hợp' },
+                'hsa-thuc-chien': { num: '🔥', title: 'Đề thực chiến' }
+            };
+
+        function topicTitle(key) {
+            const t = TOPICS_DATA[key];
+            return t ? t.title : 'Chuyên đề';
+        }
+
+        // =========================================
+        // HELPER: Kiểm tra quyền truy cập video/bài tập cho HSA
+        // Theo yêu cầu: Có role HSA/TSA -> xem được. Không có role -> không xem được
+        // =========================================
+        function canAccessHSAResources() {
+            const user = RoleSystem ? RoleSystem.getCurrentUser() : null;
+            if (!user) return false;
+            return RoleSystem.can(user, 'canAccessHSA');
+        }
+
+        // Hàm mở video cho HSA
+        function openExamVideo(videoUrl) {
+            if (!videoUrl || !canAccessHSAResources()) {
+                alert('Bạn cần có quyền HSA/TSA để xem video.');
+                return;
+            }
+            // Mở video trong cửa sổ mới
+            window.open(videoUrl, '_blank');
+        }
+
+        // =========================================
+        // LOAD EXAMS - gộp từ nhiều nguồn giống Phòng luyện TSA
+        // =========================================
+        function getAllExamsMerged() {
+            const out = [];
+            const seen = new Set();
+            const tryPush = (arr) => {
+                if (!Array.isArray(arr)) return;
+                arr.forEach(e => {
+                    if (e && e.id && !seen.has(e.id)) {
+                        seen.add(e.id);
+                        out.push(e);
+                    }
+                });
+            };
+            try { tryPush(JSON.parse(localStorage.getItem('exams') || '[]')); } catch (e) {}
+            try { tryPush(JSON.parse(localStorage.getItem('sky_exams') || '[]')); } catch (e) {}
+            try { tryPush(JSON.parse(localStorage.getItem('phongluyen_exams') || '[]')); } catch (e) {}
+            // Gộp thêm từ ExamBuilder nếu có
+            try {
+                if (typeof ExamBuilder !== 'undefined' && typeof ExamBuilder.getAll === 'function') {
+                    tryPush(ExamBuilder.getAll());
+                }
+            } catch (e) {}
+            return out;
+        }
+
+        // Thử đồng bộ từ Firebase: phongluyen_exams
+        async function fetchFirebaseExams() {
+            try {
+                if (typeof firebase === 'undefined' || !firebase.database) return [];
+                const db = firebase.database();
+                const snap = await db.ref('phongluyen_exams').once('value');
+                if (!snap || !snap.val()) return [];
+                return Object.values(snap.val()).filter(e => e && e.id);
+            } catch (e) { return []; }
+        }
+
+        async function refreshExamsFromFirebase() {
+            try {
+                const fb = await fetchFirebaseExams();
+                if (fb.length) {
+                    const existing = getAllExamsMerged();
+                    const map = new Map();
+                    existing.forEach(e => map.set(e.id, e));
+                    fb.forEach(e => { if (!map.has(e.id)) map.set(e.id, e); });
+                    const merged = Array.from(map.values());
+                    try { localStorage.setItem('phongluyen_exams', JSON.stringify(merged)); } catch (e) {}
+                }
+            } catch (e) {}
+        }
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+                { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+            ));
+        }
+
+        function inferLevel(exam) {
+            const n = (exam.questions || []).length;
+            if (n === 0) return null;
+            if (n <= 15) return { label: 'Dễ', cls: 'easy' };
+            if (n <= 35) return { label: 'TB', cls: 'medium' };
+            return { label: 'Khó', cls: 'hard' };
+        }
+
+        function renderExams(topicId) {
+            const examGrid = document.getElementById('examGrid');
+            const titleEl = document.getElementById('selectedTopicTitle');
+            const subtitleEl = document.querySelector('.content-subtitle');
+            titleEl.textContent = topicTitle(topicId);
+            const isExtra = topicId === 'hsa-thuc-chien';
+            if (subtitleEl) subtitleEl.textContent = isExtra ? 'Đề tổng hợp mô phỏng kì thi thật' : 'Các đề thi đang có';
+
+            const all = getAllExamsMerged();
+            const filtered = all
+                .filter(e => (e.type || 'tsa') === 'hsa')
+                .filter(e => (e.category || 'hsa-thuc-chien') === topicId)
+                // Loại bỏ đề thi thử - đã chuyển sang trang /thi-thu/
+                .filter(e => {
+                    const r = e.room || (typeof ExamBuilder !== 'undefined' && ExamBuilder._inferRoomFromLegacy
+                        ? ExamBuilder._inferRoomFromLegacy(e) : null);
+                    return r !== 'mock-exam';
+                });
+
+            if (filtered.length === 0) {
+                examGrid.innerHTML = `
+                    <div class="exam-empty">
+                        <iconify-icon icon="lucide:inbox" aria-hidden="true"></iconify-icon>
+                        <h4>Chưa có đề thi nào</h4>
+                        <p>Admin chưa tạo đề cho chuyên đề này.</p>
+                    </div>`;
+                return;
+            }
+
+            examGrid.innerHTML = filtered.map(exam => {
+                const lvl = inferLevel(exam);
+                const lvlBadge = lvl ? `<span class="exam-badge level ${lvl.cls}">${lvl.label}</span>` : '';
+                const safeId = escapeHtml(exam.id || '');
+
+                // === Kiểm tra quyền truy cập tài liệu (video/bài tập/đáp án) ===
+                const hasAccess = canAccessHSAResources();
+                const hasVideo = hasAccess && !!(exam.videoUrl && exam.videoUrl.trim());
+                const hasExercise = hasAccess && !!(exam.exerciseFileUrl && exam.exerciseFileUrl.trim());
+                const hasAnswer = hasAccess && !!(exam.answerFileUrl && exam.answerFileUrl.trim());
+                const hasAnyResource = hasVideo || hasExercise || hasAnswer;
+
+                // Nếu có quyền và có tài liệu, hiển thị các nút tài liệu
+                const resourcesHtml = hasAnyResource ? `
+                    <div class="exam-resources" style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
+                        ${hasVideo ? `<button type="button" class="exam-res-btn video" onclick="openExamVideo('${escapeHtml(exam.videoUrl || '')}'); return false;"><iconify-icon icon="lucide:play-circle" aria-hidden="true"></iconify-icon> Video chữa</button>` : ''}
+                        ${hasExercise ? `<a class="exam-res-btn exercise" href="${escapeHtml(exam.exerciseFileUrl || '')}" target="_blank" rel="noopener"><iconify-icon icon="lucide:download" aria-hidden="true"></iconify-icon> Bài tập</a>` : ''}
+                        ${hasAnswer ? `<a class="exam-res-btn answer" href="${escapeHtml(exam.answerFileUrl || '')}" target="_blank" rel="noopener"><iconify-icon icon="lucide:file-check-2" aria-hidden="true"></iconify-icon> Đáp án</a>` : ''}
+                    </div>` : '';
+
+                return `
+                <div class="exam-card" data-exam-id="${safeId}">
+                    <div class="exam-card-header">
+                        <span class="exam-badge">HSA</span>
+                        ${lvlBadge}
+                        <div class="exam-icon"><iconify-icon icon="lucide:file-text" aria-hidden="true"></iconify-icon></div>
+                    </div>
+                    <h3 class="exam-title">${escapeHtml(exam.name || 'Đề thi HSA')}</h3>
+                    <div class="exam-meta">
+                        <div class="exam-meta-item"><iconify-icon icon="lucide:hash" aria-hidden="true"></iconify-icon> ${escapeHtml(exam.code || '')}</div>
+                        <div class="exam-meta-item"><iconify-icon icon="lucide:clock" aria-hidden="true"></iconify-icon> ${exam.timeMinutes || 90} phút</div>
+                        <div class="exam-meta-item"><iconify-icon icon="lucide:list" aria-hidden="true"></iconify-icon> ${(exam.questions || []).length} câu</div>
+                    </div>
+                    <button type="button" class="exam-start" onclick="location.href='./exam.html?examId=${safeId}'">
+                        <iconify-icon icon="lucide:play" aria-hidden="true"></iconify-icon> Vào thi ngay
+                    </button>
+                    ${resourcesHtml}
+                </div>`;
+            }).join('');
+        }
+
+        // Gán sự kiện click cho topic-item
+        document.querySelectorAll('.topic-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.topic-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                renderExams(this.dataset.topic);
+            });
+        });
+
+        // Load lần đầu
+        (async function init() {
+            // =========================================
+            // ROLE GUARD: Chỉ cho phép user có role HSA vào phòng luyện HSA
+            // (Thi thử không cần role - đã chuyển sang /thi-thu/)
+            // =========================================
+            function checkHSARoleAccess() {
+                const user = RoleSystem ? RoleSystem.getCurrentUser() : null;
+                if (!user) return false;
+                const userRoles = Array.isArray(user.roles) ? user.roles : (user.role ? [user.role] : []);
+                const allowedRoles = ['HSA', 'admin', 'owner', 'qtv'];
+                return userRoles.some(r => allowedRoles.includes(r));
+            }
+
+            function showRoleBlocked(message) {
+                // Xóa nội dung cũ của trang
+                document.body.innerHTML = '';
+                document.body.style.margin = '0';
+                document.body.style.padding = '0';
+                document.body.style.minHeight = '100vh';
+                document.body.style.display = 'flex';
+                document.body.style.alignItems = 'center';
+                document.body.style.justifyContent = 'center';
+                document.body.style.background = '#070D1F';
+                
+                document.body.innerHTML = `
+                    <div style="max-width:520px;width:90%;text-align:center;background:rgba(255,255,255,0.05);border-radius:20px;padding:48px 40px;border:1px solid rgba(255,255,255,0.1);">
+                        <div style="font-size:72px;margin-bottom:20px;">🔒</div>
+                        <h1 style="font-size:24px;font-weight:800;margin:0 0 16px;color:#fff;">Phòng luyện HSA</h1>
+                        <p style="color:#94A3B8;line-height:1.7;margin:0 0 24px;font-size:15px;">${message}</p>
+                        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                            <a href="../index.html" style="padding:12px 24px;background:linear-gradient(135deg, #A78BFA, #8B5CF6);color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Về trang chủ</a>
+                            <a href="../account/dang-nhap.html" style="padding:12px 24px;background:rgba(255,255,255,0.1);color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Đăng nhập</a>
+                        </div>
+                    </div>`;
+            }
+
+            if (!checkHSARoleAccess()) {
+                const msg = 'Bạn cần có <b>quyền HSA</b> để truy cập Phòng luyện HSA.<br>Vui lòng liên hệ Admin để được kích hoạt.';
+                showRoleBlocked(msg);
+                return;
+            }
+
+            await refreshExamsFromFirebase();
+            // Render topic active mặc định
+            const active = document.querySelector('.topic-item.active');
+            renderExams(active ? active.dataset.topic : 'toan-dai-so');
+        })();
+
+        function updateNavAuthState() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            const navActions = document.getElementById('navActions');
+
+            if (currentUser) {
+                const isAdmin = (typeof RoleSystem !== 'undefined')
+                    ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                    : (currentUser.role === 'admin' || currentUser.role === 'owner' || currentUser.role === 'qtv');
+                navActions.innerHTML = `
+                    <div class="user-dropdown user-card-static">
+                        <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                            <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                            ${currentUser.fullname || currentUser.username}
+                        </span>
+                    </div>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                        <span></span><span></span><span></span>
+                    </button>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                const p = firebase.auth().signOut().catch(function(e){ console.warn('Firebase signOut error:', e); });
+                p.then(function(){ window.location.href = '../account/dang-nhap.html'; });
+            } else {
+                window.location.href = '../account/dang-nhap.html';
+            }
+        }
+
+        updateNavAuthState();
+
+        // Dropdown toggle on click
+        // [REMOVED] Dropdown toggle handler (handled by injected navbar script)
+
+        // Listen for userLogin event từ các trang khác (khi đăng nhập thành công)
+        window.addEventListener('userLogin', function(e) {
+            updateNavAuthState();
+        });
+
+        // Export updateNavAuthState ra global để các trang khác có thể gọi
+        window.updateNavAuthState = updateNavAuthState;
+
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.pageYOffset > 50); });
+    </script>
+
+        <script>
+        (function() {
+            function getCurrentUser() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.getSession === 'function') {
+                    return SessionSecurity.getSession();
+                }
+                try {
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function updateNavAuthState() {
+                const currentUser = getCurrentUser();
+                const navActions = document.getElementById('navActions');
+                if (!navActions) return;
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                        ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                        : (currentUser.role === 'admin' || currentUser.role === 'owner' || currentUser.role === 'qtv');
+                    const isLight = window.Theme && window.Theme.currentTheme === 'lightpremium';
+                    const themeName = isLight ? 'Chế độ sáng' : 'Chế độ tối';
+                    const themeIcon = isLight ? 'lucide:moon' : 'lucide:sun';
+
+                    navActions.innerHTML = `
+                        <div class="user-dropdown user-card-static">
+                            <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${escapeHtml(currentUser.fullname || currentUser.username || 'Tài khoản')}
+                            </span>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    `;
+                }
+            }
+
+            function performLogout() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.clearSession === 'function') {
+                    SessionSecurity.clearSession();
+                } else {
+                    localStorage.removeItem('currentUser');
+                }
+                try { localStorage.removeItem('sky_users'); sessionStorage.clear(); } catch(e) {}
+
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut().catch(function(e) { console.warn('signOut error:', e); })
+                        .finally(function() { window.location.href = '../account/dang-nhap.html'; });
+                } else {
+                    window.location.href = '../account/dang-nhap.html';
+                }
+            }
+
+            document.addEventListener('click', function(e) {
+                const noNavLink = e.target.closest('a[data-no-nav]');
+                if (noNavLink) { e.preventDefault(); return; }
+
+                const mobileBtn = e.target.closest('#mobileMenuBtn');
+                const navCenter = document.querySelector('.nav-center');
+                if (mobileBtn && navCenter) {
+                    navCenter.classList.toggle('active');
+                    mobileBtn.classList.toggle('active');
+                }
+            });
+
+            updateNavAuthState();
+
+            window.addEventListener('userLogin', updateNavAuthState);
+            window.addEventListener('userLogout', updateNavAuthState);
+
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                    updateNavAuthState();
+                }
+            });
+
+            window.addEventListener('themeChange', updateNavAuthState);
+
+            window.updateNavAuthState = updateNavAuthState;
+
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                window.addEventListener('scroll', () => {
+                    navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+                });
+            }
+        })();
+        </script>
+</body>
+</html>

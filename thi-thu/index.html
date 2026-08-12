@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Thi thử - SKY EDU (Miễn phí)</title>
+    <meta name="theme-color" content="#050B1A">
+
+    <!-- FOUC Prevention: Dark mode only -->
+    <script>
+    (function(){
+      var h = document.documentElement;
+      h.classList.add('dark-mode');
+      h.style.backgroundColor = '#070D1F';
+      h.style.colorScheme = 'dark';
+      h.style.visibility = 'hidden';
+      window.addEventListener('load', function(){
+        h.style.visibility = 'visible';
+      });
+      setTimeout(function(){
+        h.style.visibility = 'visible';
+      }, 800);
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background-color: #070D1F; }
+      body { margin: 0; background-color: #070D1F; color: #FFFFFF; }
+    </style>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%23F59E0B'/%3E%3Cpath d='M40 130h100v10H40z' fill='%23FCD34D'/%3E%3Cpath d='M50 90h80v8H50z' fill='%23FCD34D'/%3E%3Cpath d='M60 50h60v8H60z' fill='%23FCD34D'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap&subset=vietnamese&display=swap" rel="stylesheet">
+    <link rel="preload" href="../assets/css/premium-style.css" as="style">
+    <link rel="stylesheet" href="../assets/css/premium-style.css">
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+    <link rel="stylesheet" href="thi-thu.css">
+    <script src="../assets/js/theme.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+    <header class="navbar" id="navbar">
+        <div class="navbar-content">
+            <!-- Logo -->
+                <a href="../index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                <div class="logo-text">
+                    <span class="logo-title">SKY EDU</span>
+                    <span class="logo-subtitle">Fly Higher - Think Better</span>
+                </div>
+            </a>
+
+            <!-- Center Menu -->
+            <nav class="nav-center">
+                <ul class="nav-links">
+                    <li><a href="../index.html">Trang chủ</a></li>
+                    <li><a href="../khoa-hoc-pages/index.html">Khóa học</a></li>
+                    <li><a href="../quy-doi-diem.html">Quy đổi điểm</a></li>
+                    <li><a href="../phong-luyen-tsa/index.html">Phòng luyện TSA</a></li>
+                    <li><a href="../phong-luyen-hsa/index.html">Phòng luyện HSA</a></li>
+                    <li><a href="index.html" class="active">Thi thử</a></li>
+                    <li><a href="../dashboard.html">Dashboard</a></li>
+                </ul>
+            </nav>
+
+            <!-- Right Actions -->
+            <div class="nav-actions" id="navActions">
+                <a href="../account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                <a href="../account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+
+        <style>
+            .user-dropdown { position: relative; display: inline-block; }
+            .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+            .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+            .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+            .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+            .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+            @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+            .user-dropdown.open .user-dropdown-content { display: block; }
+            .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+            .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+            .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+            .dropdown-item:hover iconify-icon { color: #00D4FF; }
+            .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+            .dropdown-item.logout { color: #EF4444; }
+            .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+            .dropdown-item.admin-only { color: #FACC15; }
+            .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+        </style>
+    </header>
+
+    <!-- Background Effects -->
+    <div class="thi-thu-bg"></div>
+    <div class="thi-thu-bg-gradient"></div>
+    <div class="thi-thu-bg-grid"></div>
+    <div class="thi-thu-orb thi-thu-orb-1"></div>
+    <div class="thi-thu-orb thi-thu-orb-2"></div>
+    <div class="thi-thu-orb thi-thu-orb-3"></div>
+
+    <!-- Scripts được load theo đúng thứ tự -->
+    <script src="../firebase-config.js?v=2.2"></script>
+    <script src="../assets/js/core/role-system.js?v=2.2"></script>
+    <script src="../assets/js/core/session-security.js?v=2.2"></script>
+    <script src="../assets/js/exam-builder.js?v=2.2"></script>
+
+    <main class="page-content thi-thu-page">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge thi-thu-badge">
+                    <iconify-icon icon="lucide:gift" aria-hidden="true"></iconify-icon>
+                    <span>Miễn phí</span>
+                </div>
+                <h1 class="section-title">
+                    <span class="section-title-gradient">Thi thử TSA / HSA</span>
+                </h1>
+                <p class="section-desc">Đề thi thử được admin đăng tải - luyện tập không giới hạn, không cần mua gói.</p>
+            </div>
+
+            <!-- Tabs TSA / HSA -->
+            <div class="thi-thu-tabs" role="tablist">
+                <button class="thi-thu-tab active" role="tab" data-tab="tsa" aria-selected="true">
+                    <iconify-icon icon="lucide:target" aria-hidden="true"></iconify-icon>
+                    <span>Thi thử TSA</span>
+                </button>
+                <button class="thi-thu-tab" role="tab" data-tab="hsa" aria-selected="false">
+                    <iconify-icon icon="lucide:brain" aria-hidden="true"></iconify-icon>
+                    <span>Thi thử HSA</span>
+                </button>
+            </div>
+
+            <!-- Loading state -->
+            <div id="thiThuLoading" class="thi-thu-loading" style="display: none;">
+                <iconify-icon icon="lucide:loader-2" class="spin" aria-hidden="true"></iconify-icon>
+                <span>Đang tải đề thi...</span>
+            </div>
+
+            <!-- Empty state -->
+            <div id="thiThuEmpty" class="thi-thu-empty" style="display: none;">
+                <iconify-icon icon="lucide:inbox" aria-hidden="true"></iconify-icon>
+                <h3>Chưa có đề thi thử</h3>
+                <p>Admin sẽ sớm cập nhật các đề thi thử miễn phí. Vui lòng quay lại sau.</p>
+            </div>
+
+            <!-- Grid card đề thi -->
+            <div id="thiThuGrid" class="thi-thu-grid"></div>
+        </div>
+    </main>
+
+    <script src="thi-thu.js?v=2.0"></script>
+    <script>
+        // =========================================
+        // AUTH STATE - Cập nhật navbar khi đăng nhập/đăng xuất
+        // =========================================
+        (function() {
+            function getCurrentUser() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.getSession === 'function') {
+                    return SessionSecurity.getSession();
+                }
+                try {
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function updateNavAuthState() {
+                const currentUser = getCurrentUser();
+                const navActions = document.getElementById('navActions');
+                if (!navActions) return;
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                        ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                        : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+
+                    navActions.innerHTML = `
+                        <div class="user-dropdown user-card-static">
+                            <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${escapeHtml(currentUser.fullname || currentUser.username || 'Tài khoản')}
+                            </span>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    `;
+                }
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function performLogout() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.clearSession === 'function') {
+                    SessionSecurity.clearSession();
+                } else {
+                    localStorage.removeItem('currentUser');
+                }
+                try { localStorage.removeItem('sky_users'); sessionStorage.clear(); } catch(e) {}
+
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut().catch(function(e) { console.warn('signOut error:', e); })
+                        .finally(function() { window.location.href = '../account/dang-nhap.html'; });
+                } else {
+                    window.location.href = '../account/dang-nhap.html';
+                }
+            }
+
+            // Mobile menu
+            document.addEventListener('click', function(e) {
+                const mobileBtn = e.target.closest('#mobileMenuBtn');
+                const navCenter = document.querySelector('.nav-center');
+                if (mobileBtn && navCenter) {
+                    navCenter.classList.toggle('active');
+                    mobileBtn.classList.toggle('active');
+                }
+            });
+
+            // Sync auth state on load
+            updateNavAuthState();
+
+            // Listen for userLogin/userLogout events
+            window.addEventListener('userLogin', updateNavAuthState);
+            window.addEventListener('userLogout', updateNavAuthState);
+
+            // Listen for storage changes (cross-tab)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                    updateNavAuthState();
+                }
+            });
+
+            // Export for external use
+            window.updateNavAuthStateThiThu = updateNavAuthState;
+        })();
+    </script>
+</body>
+</html>

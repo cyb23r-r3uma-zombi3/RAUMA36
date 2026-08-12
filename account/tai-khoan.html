@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Hồ sơ cá nhân - SKY EDU</title>
+    <meta name="theme-color" content="#050B1A">
+
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#FDF2F8'; scheme = 'light'; pageBg = '#FDF2F8';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 600);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){
+          var b = document.body; if (b) b.classList.add('theme-ready');
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(show); });
+        });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="../assets/css/premium-style.css" as="style">
+    <link rel="stylesheet" href="../assets/css/premium-style.css">
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+    <link rel="prefetch" href="../index.html">
+    <link rel="prefetch" href="../dashboard.html">
+    <link rel="prefetch" href="../dashboard.html">
+    <link rel="prefetch" href="../khoa-hoc-pages/index.html">
+    <script src="../assets/js/theme.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <style>
+        :root { --page-bg: #070D1F; }
+        .page-bg { position: fixed; inset: 0; z-index: 0; background: var(--page-bg); }
+        .bg-gradient { position: fixed; top: -50%; left: 50%; transform: translateX(-50%); width: 150%; height: 100%; background: radial-gradient(ellipse at center top, rgba(0, 212, 255, 0.08) 0%, rgba(59, 130, 246, 0.05) 30%, transparent 70%); pointer-events: none; z-index: 0; }
+        .bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+        .floating-orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: float 20s ease-in-out infinite; }
+        .orb-1 { width: 500px; height: 500px; background: rgba(0, 212, 255, 0.08); top: 5%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(124, 77, 255, 0.06); bottom: 10%; right: -5%; animation-delay: -7s; }
+        .orb-3 { width: 280px; height: 280px; background: rgba(16, 185, 129, 0.09); top: 45%; left: 55%; animation-delay: -12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 25% { transform: translate(40px, -40px) scale(1.05); } 50% { transform: translate(-30px, 30px) scale(0.95); } 75% { transform: translate(30px, 40px) scale(1.02); } }
+
+        .page-wrapper { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+        .page-content { padding-top: 100px; padding-bottom: 60px; flex: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+        .page-title { font-size: 28px; font-weight: 800; color: #fff; }
+
+        .profile-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+
+        .profile-sidebar { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 32px; height: fit-content; }
+
+        .avatar-section { text-align: center; margin-bottom: 24px; }
+        .avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #00D4FF, #3B82F6); display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 800; color: #fff; margin: 0 auto 16px; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .avatar:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 212, 255, 0.4); }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 8px; font-size: 11px; font-weight: 600; opacity: 0; transition: opacity 0.3s; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .avatar:hover .avatar-overlay { opacity: 1; }
+
+        .user-name { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .user-role { display: inline-block; padding: 6px 16px; background: rgba(0, 212, 255, 0.15); color: #00D4FF; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .user-role.admin { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
+
+        .profile-info { margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .info-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; color: #94A3B8; font-size: 14px; }
+        .info-item iconify-icon { color: #00D4FF; font-size: 18px; }
+        .info-item strong { color: #fff; }
+
+        .profile-actions { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+        .action-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; border: none; }
+        .action-btn.primary { background: linear-gradient(135deg, #00D4FF, #3B82F6); color: #050B1A; }
+        .action-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 191, 255, 0.3); }
+        .action-btn.secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+        .action-btn.secondary:hover { background: rgba(255,255,255,0.12); }
+        .action-btn.danger { background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.2); }
+        .action-btn.danger:hover { background: rgba(239,68,68,0.25); }
+
+        .profile-main { display: flex; flex-direction: column; gap: 24px; }
+        .card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 28px; }
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .card-header iconify-icon { color: #00D4FF; font-size: 24px; }
+        .card-title { font-size: 18px; font-weight: 700; color: #fff; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .stat-card { background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(59, 130, 246, 0.05)); border: 1px solid rgba(0, 212, 255, 0.15); padding: 20px; border-radius: 14px; text-align: center; }
+        .stat-value { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+        .stat-label { font-size: 13px; color: #94A3B8; font-weight: 600; }
+
+        .history-list { display: flex; flex-direction: column; gap: 12px; }
+        .history-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; }
+        .history-info h4 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .history-info p { font-size: 12px; color: #64748B; }
+        .history-score { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: #64748B; }
+        .empty-state iconify-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+        .empty-state p { font-size: 14px; }
+
+        .tx-filter { outline: none; transition: all 0.2s; }
+        .tx-filter:focus { border-color: #00D4FF; box-shadow: 0 0 0 3px rgba(0,212,255,0.15); }
+        .tx-filter option { background: #0B1223; color: #fff; }
+        .tx-refresh-btn:hover { background: rgba(0,212,255,0.22); border-color: rgba(0,212,255,0.5); }
+
+        .tx-stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+        .tx-stat { background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; transition: all 0.25s; }
+        .tx-stat:hover { border-color: rgba(0,212,255,0.3); transform: translateY(-2px); }
+        .tx-stat-label { font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 6px; }
+        .tx-stat-value { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; }
+        .tx-stat-value.text-orange { color: #FBBF24; }
+        .tx-stat-value.text-blue { color: #38BDF8; }
+        .tx-stat-value.text-green { color: #34D399; }
+        .tx-stat-value.text-red { color: #F87171; }
+        .tx-stat-value.text-cyan { background: linear-gradient(135deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        .tx-list { display: flex; flex-direction: column; gap: 10px; }
+        .tx-item { display: grid; grid-template-columns: 48px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; transition: all 0.2s; }
+        .tx-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(0,212,255,0.2); }
+
+        .tx-item-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(139,92,246,0.1)); border: 1px solid rgba(0,212,255,0.25); display: flex; align-items: center; justify-content: center; color: #00D4FF; font-size: 22px; }
+        .tx-item-icon.verified { background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(52,211,153,0.08)); border-color: rgba(16,185,129,0.3); color: #34D399; }
+        .tx-item-icon.awaiting { background: linear-gradient(135deg, rgba(56,189,248,0.18), rgba(56,189,248,0.08)); border-color: rgba(56,189,248,0.3); color: #38BDF8; }
+        .tx-item-icon.pending { background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(251,191,36,0.08)); border-color: rgba(245,158,11,0.3); color: #FBBF24; }
+        .tx-item-icon.rejected { background: linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.08)); border-color: rgba(239,68,68,0.3); color: #F87171; }
+
+        .tx-item-info { min-width: 0; }
+        .tx-item-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .tx-item-code { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px; background: rgba(0,212,255,0.12); color: #00D4FF; letter-spacing: 0.5px; }
+        .tx-item-meta { font-size: 12px; color: #64748B; display: flex; gap: 12px; flex-wrap: wrap; }
+        .tx-item-meta span { display: inline-flex; align-items: center; gap: 4px; }
+        .tx-item-meta iconify-icon { font-size: 12px; }
+
+        .tx-item-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+        .tx-item-amount { font-size: 17px; font-weight: 800; color: #fff; }
+        .tx-item-status { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+        .tx-item-status .dot { width: 6px; height: 6px; border-radius: 50%; }
+        .tx-item-status.pending_payment { background: rgba(245,158,11,0.15); color: #FBBF24; }
+        .tx-item-status.pending_payment .dot { background: #FBBF24; box-shadow: 0 0 6px #FBBF24; }
+        .tx-item-status.awaiting_verification { background: rgba(56,189,248,0.15); color: #38BDF8; }
+        .tx-item-status.awaiting_verification .dot { background: #38BDF8; box-shadow: 0 0 6px #38BDF8; animation: txDotPulse 1.5s ease-in-out infinite; }
+        .tx-item-status.verified { background: rgba(16,185,129,0.15); color: #34D399; }
+        .tx-item-status.verified .dot { background: #34D399; }
+        .tx-item-status.rejected { background: rgba(239,68,68,0.15); color: #F87171; }
+        .tx-item-status.rejected .dot { background: #F87171; }
+
+        @keyframes txDotPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
+
+        .tx-empty { text-align: center; padding: 40px 20px; color: #64748B; }
+        .tx-empty iconify-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; display: block; }
+        .tx-empty p { font-size: 14px; margin-bottom: 4px; }
+        .tx-empty a { color: #00D4FF; text-decoration: none; font-weight: 600; }
+        .tx-empty a:hover { text-decoration: underline; }
+
+        @media (max-width: 1024px) {
+            .main-container { padding-top: 80px; }
+            .profile-grid { gap: 20px; }
+            .stats-grid { gap: 14px; }
+        }
+        @media (max-width: 968px) {
+            .profile-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .tx-item { grid-template-columns: 40px 1fr; row-gap: 8px; }
+            .tx-item-right { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; padding-left: 54px; }
+            .page-header { padding: 16px; }
+        }
+        @media (max-width: 768px) {
+            .main-container { padding-top: 68px; padding: 68px 16px 20px; }
+            .page-header { padding: 12px 14px; }
+            .profile-card { padding: 20px; }
+            .profile-avatar { width: 80px; height: 80px; font-size: 32px; }
+            .profile-name { font-size: 20px; }
+            .profile-email { font-size: 13px; }
+            .profile-role { font-size: 11px; padding: 3px 8px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .stat-card { padding: 14px; }
+            .stat-value { font-size: 22px; }
+            .stat-label { font-size: 11px; }
+            .section-title { font-size: 16px; }
+            .history-list { padding: 12px; }
+            .tx-item { padding: 12px; }
+        }
+        @media (max-width: 600px) {
+            .main-container { padding-top: 60px; padding: 60px 12px 16px; }
+            .profile-card { padding: 16px; flex-direction: column; text-align: center; }
+            .profile-avatar { width: 70px; height: 70px; font-size: 28px; }
+            .profile-name { font-size: 18px; }
+            .profile-info { align-items: center; }
+            .stats-grid { gap: 8px; }
+            .stat-card { padding: 12px; }
+            .stat-value { font-size: 20px; }
+            .stat-label { font-size: 10px; }
+            .history-list { padding: 10px; }
+            .tx-item { padding: 10px; gap: 10px; }
+            .tx-icon { width: 32px; height: 32px; font-size: 14px; }
+        }
+        @media (max-width: 480px) {
+            .main-container { padding-top: 52px; padding: 52px 10px 14px; }
+            .page-header { flex-direction: column; gap: 16px; align-items: flex-start; padding: 10px 12px; }
+            .profile-card { padding: 14px; }
+            .profile-avatar { width: 60px; height: 60px; font-size: 24px; }
+            .profile-name { font-size: 16px; }
+            .profile-email { font-size: 12px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .stat-card { padding: 10px; border-radius: 8px; }
+            .stat-value { font-size: 18px; }
+            .stat-label { font-size: 9px; }
+            .history-list { padding: 8px; border-radius: 8px; }
+            .section-title { font-size: 14px; padding: 8px; }
+            .tx-item { padding: 8px; }
+            .tx-icon { width: 28px; height: 28px; font-size: 12px; }
+            .tx-text { font-size: 12px; }
+            .tx-amount { font-size: 13px; }
+            .tx-date { font-size: 10px; }
+        }
+        @media (max-width: 390px) {
+            .main-container { padding-top: 48px; }
+            .profile-card { padding: 12px; }
+            .profile-avatar { width: 50px; height: 50px; font-size: 20px; }
+            .profile-name { font-size: 14px; }
+            .stat-card { padding: 8px; }
+            .stat-value { font-size: 16px; }
+        }
+        @media (max-width: 360px) {
+            .main-container { padding-top: 44px; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) and (orientation: landscape) {
+            .profile-grid { grid-template-columns: 1fr 1fr; }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .main-container { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-bg"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="page-wrapper">
+        <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <a href="../index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher – Think Better</span>
+                    </div>
+                </a>
+
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="../index.html">Trang chủ</a></li>
+                        <li><a href="../khoa-hoc-pages/index.html">Khóa học</a></li>
+                        <li><a href="../quy-doi-diem.html">Quy đổi điểm</a></li>
+                        <li><a href="../phong-luyen-tsa/index.html">Phòng luyện TSA</a></li>
+                        <li><a href="../phong-luyen-hsa/index.html">Phòng luyện HSA</a></li>
+                        <li><a href="../thi-thu/index.html">Thi thử</a></li>
+                        <li><a href="../dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <div class="nav-actions" id="navActions">
+                    <a href="../account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                    <a href="../account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                .user-dropdown { position: relative; display: inline-block; }
+                .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+                .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+                .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+                .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+                .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+                @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+                .user-dropdown.open .user-dropdown-content { display: block; }
+                .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+                .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+                .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+                .dropdown-item:hover iconify-icon { color: #00D4FF; }
+                .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+                .dropdown-item.logout { color: #EF4444; }
+                .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+                .dropdown-item.admin-only { color: #FACC15; }
+                .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+            </style>
+        </header>
+
+        <main class="page-content">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Hồ sơ cá nhân</h1>
+                    <a href="../index.html" class="action-btn secondary" style="padding: 10px 20px;">
+                        <iconify-icon icon="lucide:arrow-left" aria-hidden="true"></iconify-icon> Về trang chủ
+                    </a>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="profile-sidebar">
+                        <div class="avatar-section">
+                            <div class="avatar" id="userAvatar" onclick="document.getElementById('avatarInput').click()">
+                                A
+                                <div class="avatar-overlay"><iconify-icon icon="lucide:camera" aria-hidden="true"></iconify-icon> Đổi ảnh</div>
+                            </div>
+                            <input type="file" id="avatarInput" accept="image/*" onchange="changeAvatar(event)" style="display:none;">
+                            <div class="user-name" id="userName">Người dùng</div>
+                            <span class="user-role" id="userRole">Thành viên</span>
+                        </div>
+
+                        <div class="profile-info">
+                            <div class="info-item"><iconify-icon icon="lucide:mail" aria-hidden="true"></iconify-icon><span id="userEmail">email@example.com</span></div>
+                            <div class="info-item"><iconify-icon icon="lucide:calendar" aria-hidden="true"></iconify-icon><span>Tham gia: <strong id="joinDate">01/01/2026</strong></span></div>
+                            <div class="info-item"><iconify-icon icon="lucide:globe" aria-hidden="true"></iconify-icon><span>IP: <strong id="userIP">N/A</strong></span></div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <a href="doi-mat-khau.html" class="action-btn primary"><iconify-icon icon="lucide:lock" aria-hidden="true"></iconify-icon> Đổi mật khẩu</a>
+                            <a href="#" class="action-btn secondary" id="adminBtn" style="display:none;"><iconify-icon icon="lucide:settings" aria-hidden="true"></iconify-icon> Admin Panel</a>
+                            <button type="button" class="action-btn danger" onclick="logout()"><iconify-icon icon="lucide:log-out" aria-hidden="true"></iconify-icon> Đăng xuất</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-main">
+                        <div class="card">
+                            <div class="card-header">
+                                <iconify-icon icon="lucide:bar-chart-2" aria-hidden="true"></iconify-icon>
+                                <h3 class="card-title">Thống kê học tập</h3>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-card"><div class="stat-value" id="totalExams">0</div><div class="stat-label">Đã làm</div></div>
+                                <div class="stat-card"><div class="stat-value" id="avgScore">0%</div><div class="stat-label">Điểm TB</div></div>
+                                <div class="stat-card"><div class="stat-value" id="bestScore">0%</div><div class="stat-label">Điểm cao nhất</div></div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 12px;">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <iconify-icon icon="lucide:receipt" aria-hidden="true"></iconify-icon>
+                                    <h3 class="card-title">Lịch sử giao dịch</h3>
+                                </div>
+                                <div style="display:flex; gap: 8px; align-items:center;">
+                                    <select id="txFilterStatus" class="tx-filter" style="padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 12px; cursor: pointer;">
+                                        <option value="">Tất cả trạng thái</option>
+                                        <option value="pending_payment">Chờ thanh toán</option>
+                                        <option value="awaiting_verification">Chờ xác minh</option>
+                                        <option value="verified">Đã xác minh</option>
+                                        <option value="rejected">Đã từ chối</option>
+                                    </select>
+                                    <button type="button" class="tx-refresh-btn" id="txRefreshBtn" title="Làm mới" aria-label="Làm mới danh sách giao dịch" style="display:inline-flex; align-items:center; gap: 4px; padding: 6px 12px; background: rgba(0,212,255,0.12); color: #00D4FF; border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                        <iconify-icon icon="lucide:refresh-cw" width="14" height="14" aria-hidden="true"></iconify-icon> Làm mới
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="txStats" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 18px;"></div>
+                            <div id="txList">
+                                <div class="empty-state">
+                                    <iconify-icon icon="lucide:wallet" aria-hidden="true"></iconify-icon>
+                                    <p>Chưa có giao dịch nào</p>
+                                    <p style="font-size: 12px; margin-top: 4px;">Đăng ký khóa học tại <a href="../khoa-hoc-pages/index.html">trang Khóa học</a> để bắt đầu.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <iconify-icon icon="lucide:clock" aria-hidden="true"></iconify-icon>
+                                <h3 class="card-title">Lịch sử làm bài</h3>
+                            </div>
+                            <div id="historyList">
+                                <div class="empty-state">
+                                    <iconify-icon icon="lucide:file-text" aria-hidden="true"></iconify-icon>
+                                    <p>Chưa có lịch sử làm bài</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.pageYOffset > 50); });
+
+        function updateNavAuthState() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const navActions = document.getElementById('navActions');
+
+            if (currentUser) {
+                const isAdmin = (typeof RoleSystem !== 'undefined')
+                    ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                    : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                navActions.innerHTML = `
+                    <div class="user-dropdown user-card-static">
+                        <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                            <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                            ${currentUser.fullname || currentUser.username}
+                        </span>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                const p = firebase.auth().signOut().catch(function(e){ console.warn('Firebase signOut error:', e); });
+                p.then(function(){ window.location.href = 'dang-nhap.html'; });
+            } else {
+                window.location.href = 'dang-nhap.html';
+            }
+        }
+
+        updateNavAuthState();
+    </script>
+
+    <script src="../assets/js/registration-flow-tester.js"></script>
+
+    <script>
+        (function() {
+            function getCurrentUser() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.getSession === 'function') {
+                    return SessionSecurity.getSession();
+                }
+                try {
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function updateNavAuthState() {
+                const currentUser = getCurrentUser();
+                const navActions = document.getElementById('navActions');
+                if (!navActions) return;
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                        ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                        : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                    const isLight = window.Theme && window.Theme.currentTheme === 'lightpremium';
+                    const themeName = isLight ? 'Chế độ tối' : 'Chế độ sáng';
+                    const themeIcon = isLight ? 'lucide:moon' : 'lucide:sun';
+
+                    navActions.innerHTML = `
+                        <div class="user-dropdown user-card-static">
+                            <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${escapeHtml(currentUser.fullname || currentUser.username || 'Tài khoản')}
+                            </span>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    `;
+                }
+            }
+
+            function performLogout() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.clearSession === 'function') {
+                    SessionSecurity.clearSession();
+                } else {
+                    localStorage.removeItem('currentUser');
+                }
+                try { localStorage.removeItem('sky_users'); sessionStorage.clear(); } catch(e) {}
+
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut().catch(function(e) { console.warn('signOut error:', e); })
+                        .finally(function() { window.location.href = '../account/dang-nhap.html'; });
+                } else {
+                    window.location.href = '../account/dang-nhap.html';
+                }
+            }
+
+            document.addEventListener('click', function(e) {
+                const mobileBtn = e.target.closest('#mobileMenuBtn');
+                const navCenter = document.querySelector('.nav-center');
+                if (mobileBtn && navCenter) {
+                    navCenter.classList.toggle('active');
+                    mobileBtn.classList.toggle('active');
+                }
+            });
+
+            updateNavAuthState();
+            window.addEventListener('userLogin', updateNavAuthState);
+            window.addEventListener('userLogout', updateNavAuthState);
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                    updateNavAuthState();
+                }
+            });
+            window.addEventListener('themeChange', updateNavAuthState);
+            window.updateNavAuthState = updateNavAuthState;
+
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                window.addEventListener('scroll', () => {
+                    navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

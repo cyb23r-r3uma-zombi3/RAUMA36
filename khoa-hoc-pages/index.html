@@ -1,0 +1,3516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Khóa học - SKY EDU</title>
+    <meta name="theme-color" content="#040816">
+    
+    <!-- FOUC Prevention: Apply theme synchronously before CSS loads -->
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#FDF2F8'; scheme = 'light'; pageBg = '#FDF2F8';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        // Wait for body to exist then set its bg immediately
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        // Re-apply body bg before reveal to ensure correct color
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 1200);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){
+          var b = document.body; if (b) b.classList.add('theme-ready');
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(show); });
+        });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- Theme System -->
+    <script src="../assets/js/theme.js"></script>
+
+    <style>
+        /* =========================================
+           SKY EDU - Premium SaaS Education 2026
+           ========================================= */
+
+        /* Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
+        /* =========================================
+           CSS VARIABLES
+           ========================================= */
+        :root {
+            --bg-primary: #040816;
+            --bg-card: #0B1223;
+            --bg-card-hover: #0F1629;
+            
+            --accent-cyan: #00D4FF;
+            --accent-blue: #3B82F6;
+            --accent-violet: #8B5CF6;
+            
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            
+            --text-primary: #FFFFFF;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            
+            --radius-lg: 24px;
+            
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.05);
+            --shadow-card-hover: 0 20px 50px rgba(59, 130, 246, 0.15), 0 0 0 1px rgba(59, 130, 246, 0.2), 0 0 40px rgba(0, 212, 255, 0.08);
+            --shadow-glow: 0 0 20px rgba(0, 212, 255, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+            
+            /* Premium Variables */
+            --dark-navy: #040816;
+            --glass-bg: rgba(4, 8, 22, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --gradient-primary: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+        }
+
+        /* =========================================
+           RESET & BASE
+           ========================================= */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* =========================================
+           BACKGROUND EFFECTS
+           ========================================= */
+        .page-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: var(--bg-primary);
+            pointer-events: none;
+        }
+        .floating-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+            animation: orb-float 22s ease-in-out infinite;
+        }
+        .orb-1 { width: 600px; height: 600px; background: rgba(0, 212, 255, 0.1); top: -10%; left: -10%; }
+        .orb-2 { width: 500px; height: 500px; background: rgba(139, 92, 246, 0.09); bottom: -5%; right: -8%; animation-delay: -8s; }
+        .orb-3 { width: 350px; height: 350px; background: rgba(16, 185, 129, 0.07); top: 40%; left: 52%; animation-delay: -14s; }
+        @keyframes orb-float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(40px, -50px) scale(1.06); }
+            50% { transform: translate(-30px, 30px) scale(0.94); }
+            75% { transform: translate(30px, 50px) scale(1.03); }
+        }
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0, 212, 255, 0.06) 0%, rgba(139, 92, 246, 0.03) 50%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* =========================================
+           LAYOUT
+           ========================================= */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* =========================================
+           NAVBAR (Premium Style from Homepage)
+           ========================================= */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            z-index: 1000;
+            background: rgba(7, 13, 31, 0.65);
+            backdrop-filter: blur(32px) saturate(180%);
+            -webkit-backdrop-filter: blur(32px) saturate(180%);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.12);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 1px 0 rgba(0, 191, 255, 0.06),
+                0 0 40px rgba(0, 191, 255, 0.03);
+        }
+
+        .navbar::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(0, 191, 255, 0.3) 20%, 
+                rgba(96, 165, 250, 0.5) 50%, 
+                rgba(0, 191, 255, 0.3) 80%, 
+                transparent 100%);
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(7, 13, 31, 0.92);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.5),
+                0 0 60px rgba(0, 191, 255, 0.06),
+                0 1px 0 rgba(0, 191, 255, 0.08);
+            border-bottom-color: rgba(0, 212, 255, 0.20);
+        }
+
+        .navbar.scrolled::before {
+            opacity: 0.8;
+        }
+
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-wrap:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            filter: drop-shadow(0 0 12px rgba(0, 191, 255, 0.5)) drop-shadow(0 0 24px rgba(96, 165, 250, 0.3));
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        .logo-wrap:hover .logo-icon {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 18px rgba(0, 191, 255, 0.7)) drop-shadow(0 0 36px rgba(96, 165, 250, 0.5));
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #60A5FA 0%, #00D4FF 50%, #A78BFA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 191, 255, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        .logo-subtitle {
+            font-size: 10px;
+            color: rgba(139, 148, 158, 0.9);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .logo-wrap:hover .logo-subtitle {
+            color: rgba(0, 212, 255, 0.9);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+            flex-wrap: nowrap;
+        }
+
+        .nav-links li a {
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(203, 213, 225, 0.85);
+            border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: -0.01em;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+
+        .nav-links li a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.12), rgba(96, 165, 250, 0.12));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: inherit;
+        }
+
+        .nav-links li a:hover {
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .nav-links li a:hover::before {
+            opacity: 1;
+        }
+
+        .nav-links li a.active {
+            color: var(--white);
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(96, 165, 250, 0.15));
+            box-shadow: 0 0 0 1px rgba(0, 191, 255, 0.25) inset, 0 4px 12px rgba(0, 191, 255, 0.2);
+            text-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
+            text-decoration: none;
+        }
+
+        /* Navbar buttons (dark mode) - synced with premium-style.css */
+        .btn-ghost {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #94A3B8;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .btn-ghost:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .btn-primary-sm {
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0A1426;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            background: linear-gradient(135deg, #00D4FF, #3B82F6);
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+        }
+        .btn-primary-sm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 191, 255, 0.4);
+        }
+
+        /* =========================================
+           MAIN CONTENT
+           ========================================= */
+        .main {
+            padding-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        /* =========================================
+           SECTION HEADER
+           ========================================= */
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-top: 40px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .section-title-line {
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title-line::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-violet), transparent);
+            border-radius: 3px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6), 0 0 40px rgba(139, 92, 246, 0.4);
+        }
+
+        /* =========================================
+           COURSES GRID
+           ========================================= */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        /* =========================================
+           COURSE CARD
+           ========================================= */
+        .course-card {
+            position: relative;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.4), rgba(139, 92, 246, 0.4), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .course-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: radial-gradient(ellipse at bottom, rgba(0, 212, 255, 0.03) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .course-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .course-card:hover::before,
+        .course-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Center Card - 5% larger */
+        .course-card.center-card {
+            transform: scale(1.05);
+            z-index: 2;
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+
+        .course-card.center-card:hover {
+            transform: scale(1.05) translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        /* Card Badge - HOT */
+        .course-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Card Icon - 3D Style */
+        .course-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(139, 92, 246, 0.15));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .course-icon iconify-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            color: var(--accent-cyan);
+            position: relative;
+            z-index: 1;
+        }
+
+        .course-icon.violet iconify-icon {
+            color: var(--accent-violet);
+        }
+
+        .course-icon.blue iconify-icon {
+            color: var(--accent-blue);
+        }
+
+        /* Card Content */
+        .course-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+            line-height: 1.3;
+        }
+
+        .course-price {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .course-features {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .course-features li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .course-features li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+            border-radius: 50%;
+        }
+
+        /* Card Footer */
+        .course-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .course-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .course-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .course-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        /* Light mode override for button text */
+        html.light .course-btn,
+        html.light-premium-mode .course-btn,
+        .light .course-btn {
+            color: #FFFFFF !important;
+        }
+
+        .course-btn:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .course-btn.gradient {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+            color: white;
+            border: none;
+        }
+
+        .course-btn.gradient:hover {
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .course-btn iconify-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .course-btn:hover iconify-icon {
+            transform: translateX(4px);
+        }
+
+        /* =========================================
+           INFO CARDS SECTION
+           ========================================= */
+        .info-section {
+            margin-bottom: 40px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .info-icon iconify-icon {
+            font-size: 24px;
+        }
+
+        .info-icon.cyan {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .info-icon.blue {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .info-icon.violet {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-left: 0;
+        }
+
+        .info-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* =========================================
+           ANIMATIONS
+           ========================================= */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        .stagger-6 { transition-delay: 0.6s; }
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+        @media (max-width: 1200px) {
+            .courses-grid { gap: 24px; }
+            .course-card { padding: 28px; }
+        }
+        @media (max-width: 1024px) {
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .course-card.center-card {
+                grid-column: span 2;
+                transform: scale(1.02);
+            }
+            .course-card.center-card:hover {
+                transform: scale(1.02) translateY(-8px);
+            }
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .info-grid .info-card:last-child {
+                grid-column: span 2;
+                max-width: 400px;
+                justify-self: center;
+            }
+            .section-title { font-size: 36px; }
+            .section-desc { font-size: 16px; }
+        }
+        @media (max-width: 912px) {
+            .section-title { font-size: 32px; }
+            .section-desc { font-size: 15px; margin-bottom: 28px; }
+            .course-card { padding: 24px; }
+            .course-name { font-size: 18px; }
+            .course-price { font-size: 22px; }
+            .info-grid .info-card { padding: 20px; }
+            .info-card h3 { font-size: 16px; }
+            .info-card p { font-size: 13px; }
+        }
+        @media (max-width: 768px) {
+            .nav-center { display: none; }
+            .btn-ghost { display: none; }
+            .mobile-menu-btn { display: flex; }
+            .section-title { font-size: 28px; }
+            .section-header { margin-bottom: 32px; }
+            .courses-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .course-card.center-card {
+                grid-column: span 1;
+                transform: none;
+                border-color: rgba(139, 92, 246, 0.2);
+            }
+            .course-card { padding: 20px; }
+            .course-name { font-size: 16px; }
+            .course-price { font-size: 20px; }
+            .course-tagline { font-size: 12px; }
+            .course-desc { font-size: 13px; }
+            .course-meta { gap: 8px; font-size: 11px; }
+            .course-btn { padding: 10px 18px; font-size: 13px; }
+            .info-grid { grid-template-columns: 1fr; }
+            .info-grid .info-card:last-child { grid-column: span 1; max-width: none; }
+            .info-card { padding: 16px; }
+            .info-card h3 { font-size: 14px; }
+            .info-card p { font-size: 12px; }
+            .main { padding-bottom: 60px; }
+            .courses-grid { margin-bottom: 60px; }
+        }
+        @media (max-width: 600px) {
+            .section-title { font-size: 24px; }
+            .section-desc { font-size: 14px; margin-bottom: 24px; }
+            .section-header { margin-bottom: 24px; }
+            .course-card { padding: 16px; border-radius: 12px; }
+            .course-name { font-size: 15px; }
+            .course-price { font-size: 18px; }
+            .course-tagline { font-size: 11px; }
+            .course-desc { font-size: 12px; line-height: 1.4; }
+            .course-meta { gap: 6px; font-size: 10px; flex-wrap: wrap; }
+            .course-btn { padding: 8px 14px; font-size: 12px; border-radius: 8px; }
+            .info-card { padding: 14px; border-radius: 10px; }
+            .info-card h3 { font-size: 13px; }
+            .info-card p { font-size: 11px; }
+            .info-card iconify-icon { font-size: 20px; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 0 12px; }
+            .section-title { font-size: 20px; }
+            .section-desc { font-size: 13px; margin-bottom: 20px; }
+            .section-header { padding-top: 16px; margin-bottom: 20px; }
+            .course-card { padding: 14px; border-radius: 10px; }
+            .course-name { font-size: 14px; }
+            .course-price { font-size: 16px; }
+            .course-tagline { font-size: 10px; }
+            .course-desc { font-size: 11px; }
+            .course-meta { font-size: 9px; gap: 4px; }
+            .course-btn { padding: 7px 12px; font-size: 11px; }
+            .info-card { padding: 12px; border-radius: 8px; }
+            .info-card h3 { font-size: 12px; }
+            .info-card p { font-size: 10px; }
+            .info-card iconify-icon { font-size: 18px; }
+            .main { padding-bottom: 50px; }
+            .courses-grid { margin-bottom: 50px; }
+        }
+        @media (max-width: 390px) {
+            .section-title { font-size: 18px; }
+            .course-card { padding: 12px; }
+            .course-name { font-size: 13px; }
+            .course-price { font-size: 15px; }
+            .course-btn { padding: 6px 10px; font-size: 10px; }
+        }
+        @media (max-width: 360px) {
+            .section-title { font-size: 16px; }
+            .course-card { padding: 10px; }
+            .course-name { font-size: 12px; }
+            .course-price { font-size: 14px; }
+        }
+        @media (max-width: 768px) and (orientation: landscape) {
+            .courses-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+            .info-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .main { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+        }
+        @media (max-width: 768px) {
+            input[type="text"], input[type="email"], input[type="password"], 
+            input[type="number"], input[type="search"], textarea {
+                font-size: 16px !important;
+            }
+        }
+
+            .section-header {
+                padding-top: 24px;
+                margin-bottom: 32px;
+            }
+
+            .course-card {
+                padding: 20px;
+            }
+
+            .course-icon {
+                width: 56px;
+                height: 56px;
+            }
+
+            .course-icon iconify-icon {
+                font-size: 28px;
+            }
+
+            .info-card {
+                padding: 20px;
+            }
+        }
+
+        /* =========================================
+           PACKAGE CODE BADGE
+           ========================================= */
+        .package-code {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            border-radius: 50px;
+            text-transform: uppercase;
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.15);
+        }
+
+        .package-code::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        .course-card.center-card .package-code {
+            color: #A78BFA;
+            background: rgba(139, 92, 246, 0.12);
+            border-color: rgba(139, 92, 246, 0.45);
+            box-shadow: 0 0 16px rgba(139, 92, 246, 0.25);
+        }
+
+        .course-card.center-card .package-code::before {
+            background: #A78BFA;
+            box-shadow: 0 0 8px #A78BFA;
+        }
+
+        /* =========================================
+           REGISTRATION MODAL
+        ========================================= */
+        .reg-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(4, 8, 22, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            animation: regOverlayFade 0.25s ease;
+        }
+
+        .reg-overlay.open {
+            display: flex;
+        }
+
+        @keyframes regOverlayFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .reg-modal {
+            position: relative;
+            width: 100%;
+            max-width: 460px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: linear-gradient(160deg, #0B1223 0%, #050B1A 100%);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 212, 255, 0.15);
+            animation: regModalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes regModalIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .reg-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #94A3B8;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reg-close:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #EF4444;
+            transform: rotate(90deg);
+        }
+
+        .reg-header {
+            margin-bottom: 24px;
+            padding-right: 40px;
+        }
+
+        .reg-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .reg-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+            /* Cho phép tự xuống dòng thay vì tràn hoặc bị cắt */
+            word-break: keep-all;
+            overflow-wrap: break-word;
+            white-space: normal;
+        }
+
+        .reg-subtitle {
+            font-size: 14.5px;
+            color: #94A3B8;
+            line-height: 1.6;
+            margin: 0;
+            letter-spacing: 0.1px;
+        }
+
+        .reg-package-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: rgba(0, 212, 255, 0.06);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .reg-package-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .reg-package-name span {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #94A3B8;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .reg-package-price {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            white-space: nowrap;
+        }
+
+        .reg-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .reg-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .reg-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #CBD5E1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.2px;
+            font-feature-settings: "ss01" on, "cv11" on;
+        }
+
+        .reg-label iconify-icon {
+            font-size: 14px;
+            color: var(--accent-cyan);
+        }
+
+        .reg-input,
+        .reg-select {
+            width: 100%;
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 500;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            outline: none;
+            letter-spacing: 0.15px;
+            font-feature-settings: "ss01" on, "cv11" on;
+        }
+
+        .reg-input::placeholder {
+            color: #64748B;
+        }
+
+        .reg-input:focus,
+        .reg-select:focus {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+        }
+
+        .reg-input.invalid,
+        .reg-select.invalid {
+            border-color: #EF4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .reg-error {
+            font-size: 12.5px;
+            color: #FCA5A5;
+            display: none;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+
+        .reg-error.show {
+            display: block;
+        }
+
+        .reg-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 14px;
+            padding-right: 38px;
+            cursor: pointer;
+        }
+
+        .reg-select option {
+            background: #0B1223;
+            color: #FFFFFF;
+        }
+
+        .reg-submit {
+            margin-top: 8px;
+            padding: 14px 20px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            color: #0A1426;
+            background: linear-gradient(135deg, #00D4FF, #3B82F6);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 24px rgba(0, 191, 255, 0.3);
+        }
+
+        .reg-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 191, 255, 0.45);
+        }
+
+        .reg-submit:active {
+            transform: translateY(0);
+        }
+
+        .reg-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .reg-note {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #64748B;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* QR / Success view */
+        .reg-qr {
+            display: none;
+            text-align: center;
+        }
+
+        .reg-qr.show {
+            display: block;
+        }
+
+        .reg-form.hide {
+            display: none;
+        }
+
+        .reg-success-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #10B981, #059669);
+            border-radius: 50%;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .reg-success-icon iconify-icon {
+            color: #FFFFFF;
+            font-size: 32px;
+        }
+
+        .reg-qr-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin: 0 0 8px 0;
+        }
+
+        .reg-qr-subtitle {
+            font-size: 14px;
+            color: #94A3B8;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+        }
+
+        .reg-qr-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 18px;
+            padding: 4px;
+            background: #FFFFFF;
+            border-radius: 18px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
+            overflow: hidden;
+            min-height: 280px;
+            max-height: 520px;
+            cursor: zoom-in;
+        }
+
+        .reg-qr-img {
+            display: block;
+            max-width: 100%;
+            max-height: 500px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            background: #FFFFFF;
+        }
+
+        .reg-qr-tip {
+            text-align: center;
+            font-size: 12px;
+            color: #94A3B8;
+            margin: -10px 0 18px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .reg-qr-tip iconify-icon { color: #00D4FF; }
+
+        .reg-qr-meta {
+            background: rgba(0, 212, 255, 0.06);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .reg-qr-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .reg-qr-meta-row + .reg-qr-meta-row {
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .reg-qr-meta-label {
+            color: #94A3B8;
+        }
+
+        .reg-qr-meta-value {
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        .reg-qr-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .reg-qr-btn {
+            flex: 1;
+            padding: 12px 16px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: #E2E8F0;
+        }
+
+        .reg-qr-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .reg-qr-btn.primary {
+            background: linear-gradient(135deg, #00D4FF, #3B82F6);
+            color: #0A1426;
+            border: none;
+        }
+
+        .reg-qr-btn.primary:hover {
+            box-shadow: 0 8px 20px rgba(0, 191, 255, 0.35);
+        }
+
+        @media (max-width: 480px) {
+            .reg-modal {
+                padding: 24px 20px;
+            }
+            .reg-title { font-size: 20px; }
+            .reg-qr-box { max-height: 380px; }
+            .reg-qr-img { max-height: 360px; }
+        }
+
+        /* =========================================
+           PENDING VERIFICATION VIEW
+           ========================================= */
+        .reg-pending {
+            display: none;
+            text-align: center;
+        }
+
+        .reg-pending.show {
+            display: block;
+            animation: regPendingIn 0.4s ease;
+        }
+
+        @keyframes regPendingIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reg-pending-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(251, 191, 36, 0.1));
+            border: 2px solid rgba(245, 158, 11, 0.4);
+            border-radius: 50%;
+            color: #FBBF24;
+            animation: regPendingPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes regPendingPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 0 14px rgba(245, 158, 11, 0); }
+        }
+
+        .reg-pending-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .reg-pending-subtitle {
+            font-size: 14px;
+            color: #94A3B8;
+            margin: 0 0 20px 0;
+            line-height: 1.6;
+        }
+
+        .reg-pending-subtitle strong {
+            color: #00D4FF;
+        }
+
+        .reg-pending-meta {
+            background: rgba(0, 212, 255, 0.06);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .reg-pending-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 0;
+            font-size: 13px;
+        }
+
+        .reg-pending-row + .reg-pending-row {
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .reg-pending-label {
+            color: #94A3B8;
+        }
+
+        .reg-pending-value {
+            color: #FFFFFF;
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-all;
+        }
+
+        .reg-pending-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(245, 158, 11, 0.15);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .reg-pending-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #FBBF24;
+            box-shadow: 0 0 8px #FBBF24;
+            animation: regPendingDotPulse 1.4s ease-in-out infinite;
+        }
+
+        @keyframes regPendingDotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .reg-pending-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding: 14px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .reg-pending-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            color: #64748B;
+            font-size: 11px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .reg-pending-step-num {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #64748B;
+            font-size: 12px;
+            font-weight: 800;
+            z-index: 1;
+        }
+
+        .reg-pending-step + .reg-pending-step::before {
+            content: '';
+            position: absolute;
+            top: 13px;
+            left: -50%;
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            z-index: 0;
+        }
+
+        .reg-pending-step.done .reg-pending-step-num {
+            background: linear-gradient(135deg, #10B981, #34D399);
+            border-color: transparent;
+            color: #FFFFFF;
+        }
+
+        .reg-pending-step.done {
+            color: #10B981;
+        }
+
+        .reg-pending-step.active .reg-pending-step-num {
+            background: linear-gradient(135deg, #F59E0B, #FBBF24);
+            border-color: transparent;
+            color: #1a1f2e;
+            animation: regPendingPulse 2s ease-in-out infinite;
+        }
+
+        .reg-pending-step.active {
+            color: #FBBF24;
+        }
+
+        .reg-pending-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ===== QR Lightbox (click to zoom) ===== */
+        .qr-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 24px;
+            cursor: zoom-out;
+            animation: qrLightboxFade 0.2s ease;
+        }
+        .qr-lightbox.show { display: flex; }
+        @keyframes qrLightboxFade { from { opacity: 0; } to { opacity: 1; } }
+
+        .qr-lightbox-inner {
+            position: relative;
+            max-width: min(720px, 95vw);
+            max-height: 95vh;
+            background: #FFFFFF;
+            border-radius: 18px;
+            padding: 14px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            cursor: default;
+            animation: qrLightboxPop 0.25s ease;
+        }
+        @keyframes qrLightboxPop {
+            from { transform: scale(0.92); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+
+        .qr-lightbox-img {
+            display: block;
+            max-width: 100%;
+            max-height: 85vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .qr-lightbox-close {
+            position: absolute;
+            top: -14px;
+            right: -14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: #fff;
+            border: 3px solid #050B1A;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
+            transition: transform 0.2s;
+        }
+        .qr-lightbox-close:hover { transform: scale(1.1); }
+
+        .qr-lightbox-hint {
+            position: absolute;
+            bottom: -38px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* =========================================
+           REGISTRATION MODAL — LIGHT THEME
+           ========================================= */
+        /* Áp dụng cho mọi dạng light marker: body.light, html.light, .light */
+        body.light .reg-modal,
+        html.light .reg-modal,
+        .light .reg-modal {
+            background: linear-gradient(160deg, #FFFFFF 0%, #F4F8FF 100%);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow:
+                0 30px 80px rgba(15, 23, 42, 0.18),
+                0 0 0 1px rgba(0, 212, 255, 0.08),
+                0 0 60px rgba(59, 130, 246, 0.08);
+            color: #0F172A;
+        }
+
+        body.light .reg-overlay,
+        html.light .reg-overlay,
+        .light .reg-overlay {
+            background: rgba(15, 23, 42, 0.45);
+        }
+
+        body.light .reg-close,
+        html.light .reg-close,
+        .light .reg-close {
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            color: #475569;
+        }
+
+        body.light .reg-close:hover,
+        html.light .reg-close:hover,
+        .light .reg-close:hover {
+            background: #FEE2E2;
+            border-color: #FCA5A5;
+            color: #DC2626;
+        }
+
+        body.light .reg-eyebrow,
+        html.light .reg-eyebrow,
+        .light .reg-eyebrow {
+            background: #ECFEFF;
+            border-color: #A5F3FC;
+            color: #0E7490;
+        }
+
+        body.light .reg-title,
+        html.light .reg-title,
+        .light .reg-title {
+            /* Dùng màu chữ đậm rõ ràng — không dùng gradient text để tránh chữ trong suốt */
+            color: #0F172A;
+            -webkit-text-fill-color: #0F172A;
+            background: none;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            /* Cho phép tự xuống dòng đẹp nếu modal hẹp */
+            word-break: keep-all;
+            overflow-wrap: break-word;
+            line-height: 1.3;
+        }
+
+        body.light .reg-subtitle,
+        html.light .reg-subtitle,
+        .light .reg-subtitle {
+            color: #475569;
+            line-height: 1.65;
+        }
+
+        body.light .reg-package-info,
+        html.light .reg-package-info,
+        .light .reg-package-info {
+            background: linear-gradient(135deg, #ECFEFF 0%, #EFF6FF 100%);
+            border: 1px solid #BAE6FD;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.08);
+        }
+
+        body.light .reg-package-name,
+        html.light .reg-package-name,
+        .light .reg-package-name {
+            color: #0F172A;
+        }
+
+        body.light .reg-package-name span,
+        html.light .reg-package-name span,
+        .light .reg-package-name span {
+            color: #64748B;
+        }
+
+        body.light .reg-package-price,
+        html.light .reg-package-price,
+        .light .reg-package-price {
+            color: #0E7490;
+            text-shadow: 0 1px 2px rgba(14, 165, 233, 0.12);
+        }
+
+        body.light .reg-label,
+        html.light .reg-label,
+        .light .reg-label {
+            color: #1E293B;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        body.light .reg-input,
+        body.light .reg-select,
+        html.light .reg-input,
+        html.light .reg-select,
+        .light .reg-input,
+        .light .reg-select {
+            color: #0F172A;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+
+        body.light .reg-input::placeholder,
+        html.light .reg-input::placeholder,
+        .light .reg-input::placeholder {
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        body.light .reg-input:hover,
+        body.light .reg-select:hover,
+        html.light .reg-input:hover,
+        html.light .reg-select:hover,
+        .light .reg-input:hover,
+        .light .reg-select:hover {
+            border-color: #93C5FD;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+        }
+
+        body.light .reg-input:focus,
+        body.light .reg-select:focus,
+        html.light .reg-input:focus,
+        html.light .reg-select:focus,
+        .light .reg-input:focus,
+        .light .reg-select:focus {
+            border-color: #0EA5E9;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+        }
+
+        body.light .reg-input.invalid,
+        body.light .reg-select.invalid,
+        html.light .reg-input.invalid,
+        html.light .reg-select.invalid,
+        .light .reg-input.invalid,
+        .light .reg-select.invalid {
+            border-color: #EF4444;
+            background: #FEF2F2;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+        }
+
+        body.light .reg-error,
+        html.light .reg-error,
+        .light .reg-error {
+            color: #DC2626;
+            font-weight: 500;
+        }
+
+        body.light .reg-select,
+        html.light .reg-select,
+        .light .reg-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+
+        body.light .reg-select option,
+        html.light .reg-select option,
+        .light .reg-select option {
+            background: #FFFFFF;
+            color: #0F172A;
+        }
+
+        body.light .reg-submit,
+        html.light .reg-submit,
+        .light .reg-submit {
+            color: #FFFFFF;
+            background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #6366F1 100%);
+            box-shadow: 0 10px 28px rgba(14, 165, 233, 0.35);
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        body.light .reg-submit:hover,
+        html.light .reg-submit:hover,
+        .light .reg-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(14, 165, 233, 0.5);
+        }
+
+        body.light .reg-note,
+        html.light .reg-note,
+        .light .reg-note {
+            color: #64748B;
+        }
+
+        /* QR view — light */
+        body.light .reg-qr-title,
+        html.light .reg-qr-title,
+        .light .reg-qr-title {
+            color: #0F172A;
+            background: linear-gradient(135deg, #0F172A 0%, #1E40AF 60%, #0E7490 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        body.light .reg-qr-subtitle,
+        html.light .reg-qr-subtitle,
+        .light .reg-qr-subtitle {
+            color: #475569;
+            line-height: 1.7;
+        }
+
+        body.light .reg-qr-subtitle strong,
+        html.light .reg-qr-subtitle strong,
+        .light .reg-qr-subtitle strong {
+            color: #0E7490;
+        }
+
+        body.light .reg-qr-meta,
+        html.light .reg-qr-meta,
+        .light .reg-qr-meta {
+            background: linear-gradient(135deg, #F0F9FF 0%, #EFF6FF 100%);
+            border: 1px solid #BAE6FD;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.08);
+        }
+
+        body.light .reg-qr-meta-label,
+        html.light .reg-qr-meta-label,
+        .light .reg-qr-meta-label {
+            color: #64748B !important;
+            font-weight: 500;
+        }
+
+        body.light .reg-qr-meta-value,
+        html.light .reg-qr-meta-value,
+        .light .reg-qr-meta-value {
+            color: #0F172A !important;
+            font-weight: 600;
+        }
+
+        body.light .reg-qr-tip,
+        html.light .reg-qr-tip,
+        .light .reg-qr-tip {
+            color: #64748B;
+        }
+
+        body.light .reg-qr-btn,
+        html.light .reg-qr-btn,
+        .light .reg-qr-btn {
+            background: #F1F5F9;
+            border: 1.5px solid #E2E8F0;
+            color: #1E293B;
+            font-weight: 600;
+        }
+
+        body.light .reg-qr-btn:hover,
+        html.light .reg-qr-btn:hover,
+        .light .reg-qr-btn:hover {
+            background: #E2E8F0;
+            border-color: #CBD5E1;
+        }
+
+        body.light .reg-qr-btn.primary,
+        html.light .reg-qr-btn.primary,
+        .light .reg-qr-btn.primary {
+            background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
+            color: #FFFFFF;
+            border: none;
+            box-shadow: 0 8px 22px rgba(14, 165, 233, 0.35);
+        }
+
+        body.light .reg-qr-btn.primary:hover,
+        html.light .reg-qr-btn.primary:hover,
+        .light .reg-qr-btn.primary:hover {
+            box-shadow: 0 12px 28px rgba(14, 165, 233, 0.5);
+        }
+
+        /* Pending view — light */
+        body.light .reg-pending-title,
+        html.light .reg-pending-title,
+        .light .reg-pending-title {
+            color: #0F172A;
+        }
+
+        body.light .reg-pending-subtitle,
+        html.light .reg-pending-subtitle,
+        .light .reg-pending-subtitle {
+            color: #475569;
+        }
+
+        body.light .reg-pending-subtitle strong,
+        html.light .reg-pending-subtitle strong,
+        .light .reg-pending-subtitle strong {
+            color: #0E7490;
+        }
+
+        body.light .reg-pending-meta,
+        html.light .reg-pending-meta,
+        .light .reg-pending-meta {
+            background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+            border: 1px solid #FDE68A;
+        }
+
+        body.light .reg-pending-label,
+        html.light .reg-pending-label,
+        .light .reg-pending-label {
+            color: #92400E;
+        }
+
+        body.light .reg-pending-value,
+        html.light .reg-pending-value,
+        .light .reg-pending-value {
+            color: #0F172A;
+        }
+
+        body.light .reg-pending-row + .reg-pending-row,
+        html.light .reg-pending-row + .reg-pending-row,
+        .light .reg-pending-row + .reg-pending-row {
+            border-top: 1px dashed rgba(146, 64, 14, 0.18);
+        }
+
+        body.light .reg-pending-icon,
+        html.light .reg-pending-icon,
+        .light .reg-pending-icon {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            border: 2px solid #F59E0B;
+        }
+
+        body.light .reg-pending-icon iconify-icon,
+        html.light .reg-pending-icon iconify-icon,
+        .light .reg-pending-icon iconify-icon {
+            color: #B45309;
+        }
+
+        /* =========================================
+           LIGHT MODE OVERRIDES - FORCE WHITE TEXT
+           ========================================= */
+        html.light .course-btn,
+        html.light a.course-btn,
+        html.light button.course-btn,
+        html.light-premium-mode .course-btn,
+        html.light-premium-mode a.course-btn,
+        html.light-premium-mode button.course-btn,
+        body.light .course-btn,
+        body.light a.course-btn,
+        body.light button.course-btn,
+        .light .course-btn,
+        .light-premium-mode .course-btn {
+            background: #FFFFFF !important;
+            color: #BE185D !important;
+            -webkit-text-fill-color: #BE185D !important;
+            text-shadow: none !important;
+            border: 1.5px solid #F9A8D4 !important;
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            letter-spacing: 0.3px !important;
+            box-shadow: 0 2px 8px rgba(244, 114, 182, 0.15) !important;
+        }
+
+        /* Gói nổi bật (.course-btn.gradient) — cùng style outline, viền + chữ đậm hơn */
+        html.light .course-btn.gradient,
+        html.light a.course-btn.gradient,
+        html.light button.course-btn.gradient,
+        html.light-premium-mode .course-btn.gradient,
+        body.light .course-btn.gradient,
+        body.light a.course-btn.gradient,
+        body.light button.course-btn.gradient,
+        .light .course-btn.gradient,
+        .light-premium-mode .course-btn.gradient {
+            background: #FFFFFF !important;
+            color: #BE185D !important;
+            -webkit-text-fill-color: #BE185D !important;
+            text-shadow: none !important;
+            border: 2px solid #F472B6 !important;
+            font-weight: 800 !important;
+            font-size: 15px !important;
+            letter-spacing: 0.4px !important;
+            box-shadow: 0 4px 14px rgba(244, 114, 182, 0.25) !important;
+        }
+
+        html.light .course-btn *,
+        html.light a.course-btn *,
+        html.light button.course-btn *,
+        html.light-premium-mode .course-btn *,
+        html.light-premium-mode a.course-btn *,
+        html.light-premium-mode button.course-btn *,
+        body.light .course-btn *,
+        body.light a.course-btn *,
+        body.light button.course-btn *,
+        .light .course-btn *,
+        .light-premium-mode .course-btn * {
+            color: #BE185D !important;
+            -webkit-text-fill-color: #BE185D !important;
+            text-shadow: none !important;
+        }
+
+        html.light .course-btn iconify-icon,
+        html.light-premium-mode .course-btn iconify-icon,
+        body.light .course-btn iconify-icon,
+        .light .course-btn iconify-icon,
+        .light-premium-mode .course-btn iconify-icon {
+            color: #BE185D !important;
+            filter: none;
+        }
+
+        html.light .course-btn:hover,
+        html.light-premium-mode .course-btn:hover,
+        body.light .course-btn:hover,
+        html.light .course-btn.gradient:hover,
+        body.light .course-btn.gradient:hover,
+        .light .course-btn.gradient:hover,
+        .light-premium-mode .course-btn.gradient:hover {
+            background: #FDF2F8 !important;
+            color: #9D174D !important;
+            -webkit-text-fill-color: #9D174D !important;
+            border-color: #EC4899 !important;
+            box-shadow: 0 8px 22px rgba(236, 72, 153, 0.3) !important;
+            transform: translateY(-2px);
+        }
+
+        html.light .course-btn:hover *,
+        body.light .course-btn:hover *,
+        .light .course-btn:hover *,
+        html.light .course-btn:hover iconify-icon,
+        body.light .course-btn:hover iconify-icon,
+        .light .course-btn:hover iconify-icon {
+            color: #9D174D !important;
+            -webkit-text-fill-color: #9D174D !important;
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="page-bg"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <!-- Logo -->
+                <a href="../index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher • Think Better</span>
+                    </div>
+                </a>
+
+                <!-- Center Menu -->
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="../index.html">Trang chủ</a></li>
+                        <li><a href="../khoa-hoc-pages/index.html" class="active">Khóa học</a></li>
+                        <li><a href="../quy-doi-diem.html">Quy đổi điểm</a></li>
+                        <li><a href="../phong-luyen-tsa/index.html">Phòng luyện TSA</a></li>
+                        <li><a href="../phong-luyen-hsa/index.html">Phòng luyện HSA</a></li>
+                        <li><a href="../thi-thu/index.html">Thi thử</a></li>
+                        <li><a href="../dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="nav-actions" id="navActions">
+                    <a href="../account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                    <a href="../account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                .user-dropdown { position: relative; display: inline-block; }
+                .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+                .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+                .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+                .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+                .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+                @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+                .user-dropdown.open .user-dropdown-content { display: block; }
+                .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+                .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+                .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+                .dropdown-item:hover iconify-icon { color: #00D4FF; }
+                .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+                .dropdown-item.logout { color: #EF4444; }
+                .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+                .dropdown-item.admin-only { color: #FACC15; }
+                .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+            </style>
+        </header>
+
+        <style>
+                .user-dropdown { position: relative; display: inline-block; }
+                .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+                .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+                .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+                .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+                .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+                @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+                .user-dropdown.open .user-dropdown-content { display: block; }
+                .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+                .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+                .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+                .dropdown-item:hover iconify-icon { color: #00D4FF; }
+                .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+                .dropdown-item.logout { color: #EF4444; }
+                .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+                .dropdown-item.logout iconify-icon { color: #EF4444; }
+                .dropdown-item.admin-only { color: #FACC15; }
+                .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+        </style>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Section Header -->
+                <div class="section-header fade-up">
+                    <h1 class="section-title">
+                        Danh sách <span class="section-title-line">khóa học nổi bật</span>
+                    </h1>
+                </div>
+
+                <!-- Courses Grid -->
+                <div class="courses-grid">
+                    <!-- Card 1: Gói Chuyên Đề (TSA01) -->
+                    <div class="course-card fade-up stagger-1" data-package-code="TSA01" data-package-name="Gói Chuyên Đề" data-package-price="179000">
+                        <span class="package-code">TSA01</span>
+                        <div class="course-icon">
+                            <iconify-icon icon="lucide:book-open" aria-hidden="true"></iconify-icon>
+                        </div>
+                        <h3 class="course-name">Gói Chuyên Đề</h3>
+                        <div class="course-price">179.000 VND</div>
+                        <ul class="course-features">
+                            <li>Hệ thống chuyên đề bám sát cấu trúc TSA</li>
+                            <li>Bài tập tự luyện có lời giải chi tiết</li>
+                            <li>File viết tay độc quyền cho từng chuyên đề</li>
+                        </ul>
+                        <div class="course-footer">
+                            <span class="course-status">
+                                <span class="course-status-dot"></span>
+                                Đang cập nhật
+                            </span>
+                            <a href="#" class="course-btn js-register-btn">
+                                Liên hệ đăng ký
+                                <iconify-icon icon="lucide:external-link" aria-hidden="true"></iconify-icon>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Phòng Luyện Đề (TSA02) -->
+                    <div class="course-card fade-up stagger-2" data-package-code="TSA02" data-package-name="Phòng Luyện Đề" data-package-price="239000">
+                        <span class="package-code">TSA02</span>
+                        <div class="course-icon blue">
+                            <iconify-icon icon="lucide:monitor" aria-hidden="true"></iconify-icon>
+                        </div>
+                        <h3 class="course-name">Phòng Luyện Đề</h3>
+                        <div class="course-price">239.000 VND</div>
+                        <ul class="course-features">
+                            <li>Giao diện mô phỏng kỳ thi chuẩn cấu trúc</li>
+                            <li>Video chữa chi tiết từng bộ đề</li>
+                            <li>Thống kê, phân tích kết quả và gợi ý cải thiện</li>
+                        </ul>
+                        <div class="course-footer">
+                            <span class="course-status">
+                                <span class="course-status-dot"></span>
+                                Đang cập nhật
+                            </span>
+                            <a href="#" class="course-btn js-register-btn">
+                                Liên hệ đăng ký
+                                <iconify-icon icon="lucide:external-link" aria-hidden="true"></iconify-icon>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Combo Phòng Luyện và Chuyên Đề (TSA03 - HOT) -->
+                    <div class="course-card center-card fade-up stagger-3" data-package-code="TSA03" data-package-name="Combo Phòng Luyện và Chuyên Đề" data-package-price="379000">
+                        <span class="course-badge">HOT</span>
+                        <span class="package-code">TSA03</span>
+                        <div class="course-icon violet">
+                            <iconify-icon icon="lucide:crown" aria-hidden="true"></iconify-icon>
+                        </div>
+                        <h3 class="course-name">Combo Phòng Luyện<br>và Chuyên Đề</h3>
+                        <div class="course-price">379.000 VND</div>
+                        <ul class="course-features">
+                            <li>Toàn bộ quyền lợi gói chuyên đề</li>
+                            <li>Phòng luyện chuẩn cấu trúc kỳ thi TSA</li>
+                            <li>Hệ thống đề nâng cao và dự đoán</li>
+                            <li>Video chữa chi tiết từng đề thi thử</li>
+                        </ul>
+                        <div class="course-footer">
+                            <span class="course-status">
+                                <span class="course-status-dot"></span>
+                                Đang cập nhật
+                            </span>
+                            <a href="#" class="course-btn gradient js-register-btn">
+                                Liên hệ đăng ký
+                                <iconify-icon icon="lucide:external-link" aria-hidden="true"></iconify-icon>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Cards Section -->
+                <div class="info-section">
+                    <div class="info-grid">
+                        <!-- Info Card 1: Khóa học -->
+                        <div class="info-card fade-up stagger-4">
+                            <div class="info-icon cyan">
+                                <iconify-icon icon="lucide:book-marked" style="color: var(--accent-cyan);" aria-hidden="true"></iconify-icon>
+                            </div>
+                            <h4 class="info-title">Khóa học</h4>
+                            <ul class="info-list">
+                                <li>Hệ thống bài tập từ cơ bản đến nâng cao</li>
+                                <li>Bổ trợ kiến thức lớp 10 và 11</li>
+                            </ul>
+                        </div>
+
+                        <!-- Info Card 2: Phòng luyện TSA -->
+                        <div class="info-card fade-up stagger-5">
+                            <div class="info-icon blue">
+                                <iconify-icon icon="lucide:target" style="color: var(--accent-blue);" aria-hidden="true"></iconify-icon>
+                            </div>
+                            <h4 class="info-title">Phòng luyện TSA</h4>
+                            <ul class="info-list">
+                                <li>Giao diện mô phỏng chuẩn cấu trúc kỳ thi</li>
+                                <li>Bộ đề nền tảng</li>
+                                <li>Bộ đề nâng cao</li>
+                                <li>Bộ đề dự đoán</li>
+                            </ul>
+                        </div>
+
+                        <!-- Info Card 3: Ưu đãi -->
+                        <div class="info-card fade-up stagger-6">
+                            <div class="info-icon violet">
+                                <iconify-icon icon="lucide:gift" style="color: var(--accent-violet);" aria-hidden="true"></iconify-icon>
+                            </div>
+                            <h4 class="info-title">Ưu đãi</h4>
+                            <ul class="info-list">
+                                <li>🎁 <strong>Tặng khóa BỔ TRỢ CASIO</strong> có mentor 40+ toán TSA hướng dẫn</li>
+                                <li>🎁 <strong>Tặng Ebook full các câu hỏi thi TSA năm 2025 và 2026</strong></li>
+                                <li>🎁 <strong>Tặng các đề LaTeX từ sách Cẩm nang</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- =========================================
+         REGISTRATION MODAL
+    ========================================= -->
+    <!-- QR Lightbox (click to zoom) -->
+    <div class="qr-lightbox" id="qrLightbox" role="dialog" aria-modal="true">
+        <div class="qr-lightbox-inner">
+            <button type="button" class="qr-lightbox-close" id="qrLightboxClose" aria-label="Đóng" title="Đóng">
+                <iconify-icon icon="lucide:x" width="18" height="18" aria-hidden="true"></iconify-icon>
+            </button>
+            <img class="qr-lightbox-img" id="qrLightboxImg" alt="Mã QR thanh toán (phóng to)">
+            <div class="qr-lightbox-hint">Bấm ra ngoài hoặc nhấn ESC để đóng</div>
+        </div>
+    </div>
+
+    <div class="reg-overlay" id="regOverlay" role="dialog" aria-modal="true" aria-labelledby="regTitle">
+        <div class="reg-modal">
+            <button type="button" class="reg-close" id="regCloseBtn" aria-label="Đóng" title="Đóng">
+                <iconify-icon icon="lucide:x" width="18" height="18" aria-hidden="true"></iconify-icon>
+            </button>
+
+            <div class="reg-header">
+                <span class="reg-eyebrow">
+                    <iconify-icon icon="lucide:sparkles" width="12" height="12" aria-hidden="true"></iconify-icon>
+                    Đăng ký gói học
+                </span>
+                <h2 class="reg-title" id="regTitle">Hoàn tất đăng ký của bạn</h2>
+                <p class="reg-subtitle">Vui lòng điền thông tin bên dưới để tiến hành thanh toán và kích hoạt khóa học.</p>
+            </div>
+
+            <div class="reg-package-info">
+                <div class="reg-package-name">
+                    <span id="regPackageCode">TSA01</span>
+                    <span id="regPackageName">Gói Chuyên Đề</span>
+                </div>
+                <div class="reg-package-price" id="regPackagePrice">179.000 VND</div>
+            </div>
+
+            <form class="reg-form" id="regForm" novalidate>
+                <div class="reg-field">
+                    <label class="reg-label" for="regName">
+                        <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                        Họ và tên
+                    </label>
+                    <input class="reg-input" type="text" id="regName" name="name" placeholder="Nhập họ và tên đầy đủ" autocomplete="name" required>
+                    <div class="reg-error" id="err-name">Vui lòng nhập họ và tên.</div>
+                </div>
+
+                <div class="reg-field">
+                    <label class="reg-label" for="regPhone">
+                        <iconify-icon icon="lucide:phone" aria-hidden="true"></iconify-icon>
+                        Số điện thoại
+                    </label>
+                    <input class="reg-input" type="tel" id="regPhone" name="phone" placeholder="VD: 0987 654 321" autocomplete="tel" required>
+                    <div class="reg-error" id="err-phone">Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số).</div>
+                </div>
+
+                <div class="reg-field">
+                    <label class="reg-label" for="regGmail">
+                        <iconify-icon icon="lucide:mail" aria-hidden="true"></iconify-icon>
+                        Gmail sử dụng YouTube
+                    </label>
+                    <input class="reg-input" type="email" id="regGmail" name="gmail" placeholder="example@gmail.com" autocomplete="email" required>
+                    <div class="reg-error" id="err-gmail">Vui lòng nhập địa chỉ Gmail hợp lệ.</div>
+                </div>
+
+                <div class="reg-field">
+                    <label class="reg-label" for="regProvince">
+                        <iconify-icon icon="lucide:map-pin" aria-hidden="true"></iconify-icon>
+                        Tỉnh / Thành phố
+                    </label>
+                    <select class="reg-select" id="regProvince" name="province" required>
+                        <option value="">-- Chọn tỉnh / thành phố --</option>
+                        <option>Hà Nội</option>
+                        <option>TP. Hồ Chí Minh</option>
+                        <option>Hải Phòng</option>
+                        <option>Đà Nẵng</option>
+                        <option>Cần Thơ</option>
+                        <option>Bình Dương</option>
+                        <option>Đồng Nai</option>
+                        <option>Khánh Hòa</option>
+                        <option>Quảng Ninh</option>
+                        <option>Thanh Hóa</option>
+                        <option>Nghệ An</option>
+                        <option>Thừa Thiên Huế</option>
+                        <option>Bắc Ninh</option>
+                        <option>Hải Dương</option>
+                        <option>Hưng Yên</option>
+                        <option>Long An</option>
+                        <option>Tiền Giang</option>
+                        <option>Bà Rịa - Vũng Tàu</option>
+                        <option>Quảng Nam</option>
+                        <option>Quảng Ngãi</option>
+                        <option>Phú Thọ</option>
+                        <option>Vĩnh Phúc</option>
+                        <option>Thái Bình</option>
+                        <option>Nam Định</option>
+                        <option>Hà Nam</option>
+                        <option>Ninh Bình</option>
+                        <option>Lâm Đồng</option>
+                        <option>Đắk Lắk</option>
+                        <option>Đồng Tháp</option>
+                        <option>An Giang</option>
+                        <option>Kiên Giang</option>
+                        <option>Tây Ninh</option>
+                        <option>Bình Phước</option>
+                        <option>Bình Thuận</option>
+                        <option>Ninh Thuận</option>
+                        <option>Khác</option>
+                    </select>
+                    <div class="reg-error" id="err-province">Vui lòng chọn tỉnh / thành phố.</div>
+                </div>
+
+                <div class="reg-field">
+                    <label class="reg-label" for="regSchool">
+                        <iconify-icon icon="lucide:graduation-cap" aria-hidden="true"></iconify-icon>
+                        Trường
+                    </label>
+                    <input class="reg-input" type="text" id="regSchool" name="school" placeholder="VD: THPT Chuyên Hà Nội - Amsterdam" autocomplete="off" required>
+                    <div class="reg-error" id="err-school">Vui lòng nhập tên trường.</div>
+                </div>
+
+                <button type="submit" class="reg-submit" id="regSubmitBtn">
+                    Tiếp tục thanh toán
+                    <iconify-icon icon="lucide:arrow-right" width="18" height="18" aria-hidden="true"></iconify-icon>
+                </button>
+
+                <p class="reg-note">Sau khi đăng ký, bạn sẽ nhận được mã QR để thanh toán. Vui lòng giữ lại thông tin để được hỗ trợ.</p>
+            </form>
+
+            <!-- QR / Success view -->
+            <div class="reg-qr" id="regQrView">
+                <div class="reg-success-icon">
+                    <iconify-icon icon="lucide:check" width="34" height="34" aria-hidden="true"></iconify-icon>
+                </div>
+                <h3 class="reg-qr-title">Quét mã QR để thanh toán</h3>
+                <p class="reg-qr-subtitle">Vui lòng quét mã QR bên dưới bằng ứng dụng ngân hàng hoặc ví điện tử. Sau khi chuyển khoản thành công, ấn <strong>Hoàn tất thanh toán</strong> để gửi yêu cầu xác minh.</p>
+
+                <div class="reg-qr-box" id="regQrBox" title="Bấm để phóng to">
+                    <img class="reg-qr-img" id="regQrImg" alt="Mã QR thanh toán">
+                </div>
+
+                <div class="reg-qr-tip">
+                    <iconify-icon icon="lucide:maximize-2" width="14" height="14" aria-hidden="true"></iconify-icon>
+                    Bấm vào ảnh để phóng to rõ hơn
+                </div>
+
+                <div class="reg-qr-meta">
+                    <div class="reg-qr-meta-row">
+                        <span class="reg-qr-meta-label">Họ tên</span>
+                        <span class="reg-qr-meta-value" id="qrName">—</span>
+                    </div>
+                    <div class="reg-qr-meta-row">
+                        <span class="reg-qr-meta-label">Số điện thoại</span>
+                        <span class="reg-qr-meta-value" id="qrPhone">—</span>
+                    </div>
+                    <div class="reg-qr-meta-row">
+                        <span class="reg-qr-meta-label">Gói đăng ký</span>
+                        <span class="reg-qr-meta-value" id="qrPackage">—</span>
+                    </div>
+                    <div class="reg-qr-meta-row">
+                        <span class="reg-qr-meta-label">Số tiền</span>
+                        <span class="reg-qr-meta-value" id="qrAmount">—</span>
+                    </div>
+                    <div class="reg-qr-meta-row">
+                        <span class="reg-qr-meta-label">Nội dung CK</span>
+                        <span class="reg-qr-meta-value" id="qrContent">—</span>
+                    </div>
+                </div>
+
+                <div class="reg-qr-actions">
+                    <button type="button" class="reg-qr-btn" id="regBackBtn">
+                        <iconify-icon icon="lucide:arrow-left" width="16" height="16" aria-hidden="true"></iconify-icon>
+                        Chỉnh sửa
+                    </button>
+                    <button type="button" class="reg-qr-btn primary" id="regDoneBtn">
+                        Hoàn tất thanh toán
+                        <iconify-icon icon="lucide:check-circle" width="16" height="16" aria-hidden="true"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pending Verification View -->
+            <div class="reg-pending" id="regPendingView">
+                <div class="reg-pending-icon">
+                    <iconify-icon icon="lucide:hourglass" width="40" height="40" aria-hidden="true"></iconify-icon>
+                </div>
+                <h3 class="reg-pending-title">Đã gửi yêu cầu xác minh!</h3>
+                <p class="reg-pending-subtitle">Hệ thống đang chờ admin xác minh thanh toán của bạn. Bạn có thể đóng cửa sổ này và theo dõi trong mục <strong>Lịch sử giao dịch</strong> tại trang cá nhân.</p>
+
+                <div class="reg-pending-meta">
+                    <div class="reg-pending-row">
+                        <span class="reg-pending-label">Mã đăng ký</span>
+                        <span class="reg-pending-value" id="pendingId">—</span>
+                    </div>
+                    <div class="reg-pending-row">
+                        <span class="reg-pending-label">Gói đăng ký</span>
+                        <span class="reg-pending-value" id="pendingPackage">—</span>
+                    </div>
+                    <div class="reg-pending-row">
+                        <span class="reg-pending-label">Số tiền</span>
+                        <span class="reg-pending-value" id="pendingAmount">—</span>
+                    </div>
+                    <div class="reg-pending-row">
+                        <span class="reg-pending-label">Nội dung CK</span>
+                        <span class="reg-pending-value" id="pendingContent">—</span>
+                    </div>
+                    <div class="reg-pending-row">
+                        <span class="reg-pending-label">Trạng thái</span>
+                        <span class="reg-pending-value">
+                            <span class="reg-pending-badge">
+                                <span class="reg-pending-dot"></span>
+                                Chờ xác minh
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="reg-pending-steps">
+                    <div class="reg-pending-step done">
+                        <span class="reg-pending-step-num">1</span>
+                        <span class="reg-pending-step-text">Đã đăng ký</span>
+                    </div>
+                    <div class="reg-pending-step active">
+                        <span class="reg-pending-step-num">2</span>
+                        <span class="reg-pending-step-text">Chờ admin xác minh</span>
+                    </div>
+                    <div class="reg-pending-step">
+                        <span class="reg-pending-step-num">3</span>
+                        <span class="reg-pending-step-text">Cấp role & kích hoạt</span>
+                    </div>
+                </div>
+
+                <div class="reg-pending-actions">
+                    <button type="button" class="reg-qr-btn" id="regPendingBackBtn">
+                        <iconify-icon icon="lucide:arrow-left" width="16" height="16" aria-hidden="true"></iconify-icon>
+                        Quay lại QR
+                    </button>
+                    <button type="button" class="reg-qr-btn primary" id="regPendingCloseBtn">
+                        Đóng
+                        <iconify-icon icon="lucide:x" width="16" height="16" aria-hidden="true"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================
+        // NAVBAR SCROLL EFFECT
+        // =========================================
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // =========================================
+        // MOBILE MENU TOGGLE
+        // =========================================
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navCenter = document.querySelector('.nav-center');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navCenter.classList.toggle('active');
+                mobileMenuBtn.classList.toggle('active');
+            });
+        }
+
+        // =========================================
+        // INTERSECTION OBSERVER - Fade Animations
+        // =========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-up').forEach(el => {
+                observer.observe(el);
+            });
+
+            // User auth state
+            function updateNavAuthState() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const navActions = document.getElementById('navActions');
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                        ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                        : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                    navActions.innerHTML = `
+                        <div class="user-dropdown user-card-static">
+                            <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${currentUser.fullname || currentUser.username}
+                            </span>
+                        </div>
+                    `;
+                }
+            }
+
+            function logout() {
+                localStorage.removeItem('currentUser');
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    const p = firebase.auth().signOut().catch(function(e){ console.warn('Firebase signOut error:', e); });
+                    p.then(function(){ window.location.href = '../account/dang-nhap.html'; });
+                } else {
+                    window.location.href = '../account/dang-nhap.html';
+                }
+            }
+
+            updateNavAuthState();
+
+            // Dropdown toggle on click
+            // [REMOVED] Dropdown toggle handler (handled by injected navbar script)
+
+            // =========================================
+            // REGISTRATION MODAL LOGIC
+            // =========================================
+            (function initRegistrationModal() {
+                const overlay = document.getElementById('regOverlay');
+                const closeBtn = document.getElementById('regCloseBtn');
+                const form = document.getElementById('regForm');
+                const submitBtn = document.getElementById('regSubmitBtn');
+                const qrView = document.getElementById('regQrView');
+                const backBtn = document.getElementById('regBackBtn');
+                const doneBtn = document.getElementById('regDoneBtn');
+                const qrImg = document.getElementById('regQrImg');
+                const pendingView = document.getElementById('regPendingView');
+                const pendingBackBtn = document.getElementById('regPendingBackBtn');
+                const pendingCloseBtn = document.getElementById('regPendingCloseBtn');
+                const pendingIdEl = document.getElementById('pendingId');
+                const pendingPkgEl = document.getElementById('pendingPackage');
+                const pendingAmountEl = document.getElementById('pendingAmount');
+                const pendingContentEl = document.getElementById('pendingContent');
+
+                const pkgCodeEl = document.getElementById('regPackageCode');
+                const pkgNameEl = document.getElementById('regPackageName');
+                const pkgPriceEl = document.getElementById('regPackagePrice');
+
+                const fields = {
+                    name: document.getElementById('regName'),
+                    phone: document.getElementById('regPhone'),
+                    gmail: document.getElementById('regGmail'),
+                    province: document.getElementById('regProvince'),
+                    school: document.getElementById('regSchool')
+                };
+
+                const errors = {
+                    name: document.getElementById('err-name'),
+                    phone: document.getElementById('err-phone'),
+                    gmail: document.getElementById('err-gmail'),
+                    province: document.getElementById('err-province'),
+                    school: document.getElementById('err-school')
+                };
+
+                let currentPackage = {
+                    code: 'TSA01',
+                    name: 'Gói Chuyên Đề',
+                    price: 179000,
+                    priceLabel: '179.000 VND'
+                };
+                let currentRegistration = null;
+
+                // Bank info used for QR fallback (VietQR + qrserver).
+                // Hoisted here so admins can change it in one place.
+                const SKYEDU_BANK = {
+                    bin: '970422',
+                    accountNumber: '0392724357',
+                    accountName: 'SKY EDU'
+                };
+
+                function formatVND(amount) {
+                    return amount.toLocaleString('vi-VN') + ' VND';
+                }
+
+                function openModal(pkg) {
+                    currentPackage = pkg;
+                    currentRegistration = null;
+                    pkgCodeEl.textContent = pkg.code;
+                    pkgNameEl.textContent = pkg.name;
+                    pkgPriceEl.textContent = pkg.priceLabel;
+                    resetForm();
+                    showFormView();
+                    overlay.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                    setTimeout(() => fields.name && fields.name.focus(), 200);
+                }
+
+                function closeModal() {
+                    overlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                    currentRegistration = null;
+                }
+
+                function showFormView() {
+                    form.classList.remove('hide');
+                    qrView.classList.remove('show');
+                    pendingView.classList.remove('show');
+                }
+
+                function showQrView() {
+                    form.classList.add('hide');
+                    qrView.classList.add('show');
+                    pendingView.classList.remove('show');
+                }
+
+                function showPendingView(reg) {
+                    if (reg) {
+                        currentRegistration = reg;
+                        pendingIdEl.textContent = reg.id || '—';
+                        pendingPkgEl.textContent = `${reg.code} - ${reg.packageName || reg.name || ''}`;
+                        pendingAmountEl.textContent = formatVND(reg.price);
+                        pendingContentEl.textContent = reg.transferContent || '—';
+                    }
+                    form.classList.add('hide');
+                    qrView.classList.remove('show');
+                    pendingView.classList.add('show');
+                }
+
+                function resetForm() {
+                    form.reset();
+                    Object.keys(fields).forEach(k => fields[k].classList.remove('invalid'));
+                    Object.keys(errors).forEach(k => errors[k].classList.remove('show'));
+                }
+
+                function validateGmail(value) {
+                    const v = (value || '').trim().toLowerCase();
+                    return /^[a-z0-9._%+-]+@gmail\.com$/.test(v);
+                }
+
+                function validatePhone(value) {
+                    const v = (value || '').replace(/[\s.-]/g, '');
+                    return /^0\d{9,10}$/.test(v);
+                }
+
+                function validate() {
+                    let ok = true;
+                    const nameVal = fields.name.value.trim();
+                    const phoneVal = fields.phone.value.trim();
+                    const gmailVal = fields.gmail.value.trim();
+                    const provinceVal = fields.province.value;
+                    const schoolVal = fields.school.value.trim();
+
+                    if (!nameVal) {
+                        fields.name.classList.add('invalid');
+                        errors.name.classList.add('show');
+                        ok = false;
+                    } else {
+                        fields.name.classList.remove('invalid');
+                        errors.name.classList.remove('show');
+                    }
+
+                    if (!validatePhone(phoneVal)) {
+                        fields.phone.classList.add('invalid');
+                        errors.phone.classList.add('show');
+                        ok = false;
+                    } else {
+                        fields.phone.classList.remove('invalid');
+                        errors.phone.classList.remove('show');
+                    }
+
+                    if (!validateGmail(gmailVal)) {
+                        fields.gmail.classList.add('invalid');
+                        errors.gmail.classList.add('show');
+                        ok = false;
+                    } else {
+                        fields.gmail.classList.remove('invalid');
+                        errors.gmail.classList.remove('show');
+                    }
+
+                    if (!provinceVal) {
+                        fields.province.classList.add('invalid');
+                        errors.province.classList.add('show');
+                        ok = false;
+                    } else {
+                        fields.province.classList.remove('invalid');
+                        errors.province.classList.remove('show');
+                    }
+
+                    if (!schoolVal) {
+                        fields.school.classList.add('invalid');
+                        errors.school.classList.add('show');
+                        ok = false;
+                    } else {
+                        fields.school.classList.remove('invalid');
+                        errors.school.classList.remove('show');
+                    }
+
+                    return ok;
+                }
+
+                // Live validation - clear error as user types
+                Object.keys(fields).forEach(key => {
+                    const el = fields[key];
+                    el.addEventListener('input', () => {
+                        el.classList.remove('invalid');
+                        if (errors[key]) errors[key].classList.remove('show');
+                    });
+                    el.addEventListener('change', () => {
+                        el.classList.remove('invalid');
+                        if (errors[key]) errors[key].classList.remove('show');
+                    });
+                });
+
+                // Facebook Page URL for registration
+                const FACEBOOK_PAGE_URL = 'https://www.facebook.com/profile.php?id=61590532648304';
+
+                // Open Facebook on "Liên hệ đăng ký" click
+                document.querySelectorAll('.js-register-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Open Facebook Page in new tab
+                        window.open(FACEBOOK_PAGE_URL, '_blank', 'noopener,noreferrer');
+                    });
+                });
+
+                // Close modal
+                closeBtn.addEventListener('click', closeModal);
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === overlay) closeModal();
+                });
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+                        closeModal();
+                    }
+                });
+
+                // Form submit
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    if (!validate()) {
+                        // focus first invalid
+                        const firstInvalid = form.querySelector('.invalid');
+                        if (firstInvalid) firstInvalid.focus();
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    const originalHtml = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<iconify-icon icon="lucide:loader-2" width="18" height="18" style="animation: spin 1s linear infinite;" aria-hidden="true"></iconify-icon> Đang xử lý...';
+
+                    // [FIX] Đảm bảo Firebase Auth session trước khi đăng ký
+                    async function ensureAuthAndSubmit() {
+                        try {
+                            // Tạo data object trước để có thể cập nhật Firebase UID
+                            const transferContent = `${currentPackage.code} ${fields.phone.value.replace(/[\s.-]/g, '').slice(-6)}`;
+                            const data = {
+                                name: fields.name.value.trim(),
+                                phone: fields.phone.value.trim(),
+                                gmail: fields.gmail.value.trim(),
+                                province: fields.province.value,
+                                school: fields.school.value.trim(),
+                                code: currentPackage.code,
+                                packageName: currentPackage.name,
+                                price: currentPackage.price,
+                                transferContent: transferContent
+                            };
+                            
+                            // Thử lấy userId từ localStorage (user đã đăng nhập)
+                            try {
+                                const cu = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                                if (cu) {
+                                    data.userId = cu.uid || cu.id || null;
+                                    data.username = cu.username || cu.email || null;
+                                    data.userEmail = cu.email || cu.gmail || null;
+                                    data.linkedAccount = !!data.userId;
+                                }
+                            } catch (e) { /* ignore */ }
+                            
+                            // Bước 1: Kiểm tra Firebase Auth
+                            let fbAuth = null;
+                            try {
+                                if (firebase && firebase.auth) {
+                                    fbAuth = firebase.auth();
+                                }
+                            } catch (authErr) {
+                                console.warn('[KhoaHoc] Firebase auth not available:', authErr);
+                            }
+
+                            // Bước 2: Nếu chưa đăng nhập, sử dụng anonymous auth
+                            if (fbAuth) {
+                                const currentUser = fbAuth.currentUser;
+                                if (!currentUser) {
+                                    console.log('[KhoaHoc] No authenticated user, signing in anonymously...');
+                                    try {
+                                        const anonResult = await fbAuth.signInAnonymously();
+                                        console.log('[KhoaHoc] Anonymous auth success, uid:', anonResult.user.uid);
+                                        // [FIX] Cập nhật data object với Firebase UID từ anonymous auth
+                                        data.userId = anonResult.user.uid;
+                                        data.username = 'anonymous_' + anonResult.user.uid.slice(0, 8);
+                                        data.linkedAccount = false;
+                                        data.userEmail = null;
+                                    } catch (anonErr) {
+                                        console.warn('[KhoaHoc] Anonymous auth failed:', anonErr);
+                                        // Vẫn tiếp tục vì Firebase Rules có thể cho phép ghi không cần auth
+                                    }
+                                } else {
+                                    console.log('[KhoaHoc] Already authenticated, uid:', currentUser.uid);
+                                    // [FIX] Cập nhật data object với Firebase UID từ logged-in user
+                                    if (!data.userId) {
+                                        data.userId = currentUser.uid;
+                                    }
+                                }
+                            }
+
+                            // Bước 3: Tiến hành submit registration
+                            await submitRegistration(data);
+                        } catch (err) {
+                            console.error('[KhoaHoc] Error in ensureAuthAndSubmit:', err);
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalHtml;
+                        }
+                    }
+
+                    async function submitRegistration(data) {
+                        try {
+                            // Simulate brief processing
+                            const transferContent = `${currentPackage.code} ${fields.phone.value.replace(/[\s.-]/g, '').slice(-6)}`;
+
+                            // [FIX] Sử dụng data đã được chuẩn bị sẵn với Firebase UID
+                            // data đã được tạo trong ensureAuthAndSubmit() với userId từ Firebase Auth
+
+                            // Save registration via RegistrationSync (Firebase-first, localStorage mirror).
+                            // RegistrationSync handles id minting, status default, user-link, and tx mirror.
+                            data.transferContent = transferContent;
+                            const _onSaveResult = function(result) {
+                                // Show a non-blocking toast if the Firebase save failed
+                                // so the user knows the admin might not see their row.
+                                if (result && result.source === 'local-only') {
+                                    var msg = 'Đã lưu cục bộ nhưng KHÔNG đẩy được lên Firebase: ' +
+                                        (result.error || 'unknown') +
+                                        '. Vui lòng liên hệ admin hoặc thử lại sau.';
+                                    try {
+                                        if (typeof window.showToast === 'function') {
+                                            window.showToast(msg, 'error', 8000);
+                                        } else {
+                                            // Inline toast fallback (no extra CSS needed)
+                                            var t = document.createElement('div');
+                                            t.textContent = msg;
+                                            t.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:99999;max-width:90vw;padding:12px 18px;border-radius:10px;background:#7f1d1d;color:#fff;font:14px system-ui;box-shadow:0 8px 24px rgba(0,0,0,.4);';
+                                            document.body.appendChild(t);
+                                            setTimeout(function(){ try { t.remove(); } catch (e) {} }, 8000);
+                                        }
+                                    } catch (e) { console.error('[KhoaHoc] toast error', e); }
+                                } else if (result && result.success) {
+                                    try {
+                                        if (typeof window.showToast === 'function') {
+                                            window.showToast('Đã gửi đăng ký lên máy chủ. Admin sẽ xác minh sau.', 'success', 5000);
+                                        } else {
+                                            var t2 = document.createElement('div');
+                                            t2.textContent = 'Đã gửi đăng ký lên máy chủ. Admin sẽ xác minh sau.';
+                                            t2.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:99999;max-width:90vw;padding:12px 18px;border-radius:10px;background:#064e3b;color:#fff;font:14px system-ui;box-shadow:0 8px 24px rgba(0,0,0,.4);';
+                                            document.body.appendChild(t2);
+                                            setTimeout(function(){ try { t2.remove(); } catch (e) {} }, 5000);
+                                        }
+                                    } catch (e) {}
+                                }
+                            };
+                            try {
+                                if (typeof RegistrationSync !== 'undefined' && RegistrationSync.save) {
+                                    RegistrationSync.save(data).then(_onSaveResult).catch(function(err) {
+                                        console.warn('[KhoaHoc] RegistrationSync.save failed:', err);
+                                        _onSaveResult({ success: false, source: 'local-only', error: (err && err.message) || String(err) });
+                                    });
+                                } else {
+                                    // Fallback when firebase-config.js didn't load (offline file:// or CDN outage)
+                                    const list = JSON.parse(localStorage.getItem('skyedu_registrations') || '[]');
+                                    data.id = data.id || ('REG-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 5).toUpperCase());
+                                    data.createdAt = data.createdAt || new Date().toISOString();
+                                    data.status = data.status || 'pending_payment';
+                                    try {
+                                        const cu = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                                        if (cu && !data.userId) {
+                                            data.userId = cu.uid || cu.id || cu.username || null;
+                                            data.username = cu.username || null;
+                                            data.linkedAccount = !!data.userId;
+                                            data.userEmail = cu.email || cu.gmail || null;
+                                        }
+                                    } catch (e) { /* ignore */ }
+                                    list.push(data);
+                                    localStorage.setItem('skyedu_registrations', JSON.stringify(list));
+                                    if (data.userId) {
+                                        const txKey = 'skyedu_transactions_' + data.userId;
+                                        const txList = JSON.parse(localStorage.getItem(txKey) || '[]');
+                                        txList.push({ ...data });
+                                        localStorage.setItem(txKey, JSON.stringify(txList));
+                                    }
+                                }
+                                currentRegistration = data;
+                            } catch (err) {
+                                console.warn('Could not save registration', err);
+                            }
+
+                            // Use local QR image first (provided by admin), fall back to VietQR API if missing
+                            const localQr = `../assets/images/qr/${data.code}.png`;
+                            qrImg.src = localQr;
+                            qrImg.onerror = function() {
+                                // Fallback to VietQR (auto-generated QR)
+                                const qrUrl = `https://img.vietqr.io/image/${SKYEDU_BANK.bin}-${SKYEDU_BANK.accountNumber}-compact2.png?amount=${data.price}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(SKYEDU_BANK.accountName)}`;
+                                qrImg.src = qrUrl;
+                                qrImg.onerror = function() {
+                                    // Final fallback to generic QR generator
+                                    const fallback = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+                                        `SKY EDU | ${data.code} | ${data.packageName} | ${formatVND(data.price)} | SDT:${data.phone} | Noi dung: ${transferContent}`
+                                    )}`;
+                                    qrImg.src = fallback;
+                                };
+                            };
+
+                            document.getElementById('qrName').textContent = data.name;
+                            document.getElementById('qrPhone').textContent = data.phone;
+                            document.getElementById('qrPackage').textContent = `${data.code} - ${data.packageName}`;
+                            document.getElementById('qrAmount').textContent = formatVND(data.price);
+                            document.getElementById('qrContent').textContent = transferContent;
+
+                            showQrView();
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalHtml;
+                        } catch (err) {
+                            console.error('[KhoaHoc] Error in submitRegistration:', err);
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalHtml;
+                        }
+                    }
+
+                    // Start the auth + submit flow
+                    ensureAuthAndSubmit();
+                });
+
+                backBtn.addEventListener('click', showFormView);
+                doneBtn.addEventListener('click', function() {
+                    // "Hoàn tất thanh toán" -> update status to awaiting verification and show pending view
+                    if (currentRegistration) {
+                        const awaitingSince = new Date().toISOString();
+                        if (typeof RegistrationSync !== 'undefined' && RegistrationSync.markAwaiting) {
+                            RegistrationSync.markAwaiting(currentRegistration.id, awaitingSince).catch(function(err) {
+                                console.warn('[KhoaHoc] RegistrationSync.markAwaiting failed:', err);
+                            });
+                        } else {
+                            // Offline fallback (mirror the update locally)
+                            try {
+                                const list = JSON.parse(localStorage.getItem('skyedu_registrations') || '[]');
+                                const idx = list.findIndex(r => r.id === currentRegistration.id);
+                                if (idx >= 0) {
+                                    list[idx].status = 'awaiting_verification';
+                                    list[idx].awaitingSince = awaitingSince;
+                                    localStorage.setItem('skyedu_registrations', JSON.stringify(list));
+                                    const cu = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                                    if (cu) {
+                                        const txKey = 'skyedu_transactions_' + (cu.id || cu.uid || cu.username);
+                                        const txList = JSON.parse(localStorage.getItem(txKey) || '[]');
+                                        const txIdx = txList.findIndex(r => r.id === currentRegistration.id);
+                                        if (txIdx >= 0) {
+                                            txList[txIdx].status = 'awaiting_verification';
+                                            txList[txIdx].awaitingSince = awaitingSince;
+                                            localStorage.setItem(txKey, JSON.stringify(txList));
+                                        }
+                                    }
+                                }
+                            } catch (e) { /* ignore */ }
+                        }
+                        // Keep the in-memory copy in sync regardless of which path ran
+                        currentRegistration.status = 'awaiting_verification';
+                        currentRegistration.awaitingSince = awaitingSince;
+
+                        // Notify all admins about the new registration
+                        if (typeof AdminNotificationService !== 'undefined' && AdminNotificationService.notifyNewRegistration) {
+                            AdminNotificationService.notifyNewRegistration(currentRegistration).catch(function(err) {
+                                console.warn('[KhoaHoc] AdminNotificationService failed:', err);
+                            });
+                        }
+                    }
+                    showPendingView(currentRegistration);
+                });
+
+                if (pendingBackBtn) {
+                    pendingBackBtn.addEventListener('click', function() {
+                        if (currentRegistration) {
+                            if (typeof RegistrationSync !== 'undefined' && RegistrationSync.update) {
+                                RegistrationSync.update(currentRegistration.id, { status: 'pending_payment' }).catch(function() {});
+                            }
+                            currentRegistration.status = 'pending_payment';
+                            // Local mirror fallback so the in-page state stays consistent
+                            try {
+                                const list = JSON.parse(localStorage.getItem('skyedu_registrations') || '[]');
+                                const idx = list.findIndex(x => x.id === currentRegistration.id);
+                                if (idx >= 0) {
+                                    list[idx].status = 'pending_payment';
+                                    localStorage.setItem('skyedu_registrations', JSON.stringify(list));
+                                }
+                            } catch (e) { /* ignore */ }
+                        }
+                        showQrView();
+                    });
+                }
+                if (pendingCloseBtn) {
+                    pendingCloseBtn.addEventListener('click', closeModal);
+                }
+
+                // QR lightbox (click to zoom in) — clearer view of the QR
+                const qrBox = document.getElementById('regQrBox');
+                const lightbox = document.getElementById('qrLightbox');
+                const lightboxImg = document.getElementById('qrLightboxImg');
+                const lightboxClose = document.getElementById('qrLightboxClose');
+
+                function openLightbox(src) {
+                    if (!lightbox || !src) return;
+                    lightboxImg.src = src;
+                    lightbox.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                }
+                function closeLightbox() {
+                    if (!lightbox) return;
+                    lightbox.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+
+                if (qrBox) {
+                    qrBox.addEventListener('click', function() {
+                        if (qrImg && qrImg.src) openLightbox(qrImg.src);
+                    });
+                }
+                if (lightboxClose) {
+                    lightboxClose.addEventListener('click', closeLightbox);
+                }
+                if (lightbox) {
+                    lightbox.addEventListener('click', function(e) {
+                        // close when clicking backdrop (not the inner container)
+                        if (e.target === lightbox) closeLightbox();
+                    });
+                }
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && lightbox && lightbox.classList.contains('show')) {
+                        closeLightbox();
+                    }
+                });
+            })();
+        });
+
+        // =========================================================
+        //   SKYEDU REGISTRATION SELF-TEST
+        //   Usage: open khoa-hoc-pages/index.html?selftest=1
+        //   Or paste this in DevTools console:
+        //     skyeduSelftest()
+        //   It writes a probe registration to Firebase, reads it back,
+        //   and renders the result on screen so you can see exactly
+        //   why admin does/doesn't see your registration.
+        // =========================================================
+        (function() {
+            function getAuth() {
+                try { return firebase.auth().currentUser; } catch (e) { return null; }
+            }
+            function getDb() {
+                try { return firebase.database(); } catch (e) { return null; }
+            }
+            async function runProbe() {
+                const lines = [];
+                const log = (label, ok, detail) => {
+                    lines.push({ label, ok, detail });
+                    console[(ok === true ? 'log' : ok === false ? 'error' : 'warn')](
+                        '[skyeduSelftest]', label, '=>', detail
+                    );
+                };
+
+                const auth = getAuth();
+                const db = getDb();
+                if (!db) {
+                    log('firebase.database()', false, 'Không khởi tạo được. Kiểm tra firebase-config.js đã load chưa.');
+                    return lines;
+                }
+                log('firebase.database()', true, 'OK');
+
+                if (!auth) {
+                    log('Auth state', 'warn', 'Chưa đăng nhập (currentUser = null). Bạn vẫn có thể đăng ký khóa học; rule mới cho phép tạo mới.');
+                } else {
+                    log('Auth state', true, 'uid = ' + auth.uid + ' (' + (auth.email || 'no email') + ')');
+                }
+
+                // Probe write
+                const probeId = 'SELFTEST-' + Date.now().toString(36).toUpperCase();
+                const probeData = {
+                    id: probeId,
+                    name: '[selftest] probe',
+                    phone: '0000000000',
+                    gmail: 'selftest@skyedu.local',
+                    province: 'N/A',
+                    school: 'N/A',
+                    code: 'TSA01',
+                    packageName: 'Self-test probe',
+                    price: 0,
+                    status: 'pending_payment',
+                    transferContent: 'SELFTEST',
+                    createdAt: new Date().toISOString()
+                };
+                if (auth) {
+                    probeData.userId = auth.uid;
+                    probeData.linkedAccount = true;
+                }
+                const cu = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                if (cu && cu.username) probeData.username = cu.username;
+
+                log('Probe id', true, probeId);
+
+                try {
+                    await db.ref('registrations/' + probeId).set(probeData);
+                    log('WRITE /registrations/' + probeId, true, 'Không có lỗi. Rule đã cho phép ghi.');
+                } catch (e) {
+                    log('WRITE /registrations/' + probeId, false,
+                        'PERMISSION DENIED — rule chưa deploy. Code: ' + (e && e.code) + ' | Msg: ' + (e && e.message));
+                    return lines;
+                }
+
+                // Probe read-back
+                try {
+                    const snap = await db.ref('registrations/' + probeId).once('value');
+                    if (snap && snap.val()) {
+                        log('READ back', true, 'Đã đọc lại record. Admin listener sẽ thấy row này.');
+                    } else {
+                        log('READ back', false, 'Record biến mất sau khi ghi?');
+                    }
+                } catch (e) {
+                    log('READ back', false, (e && e.code) + ' ' + (e && e.message));
+                }
+
+                // Count registrations total
+                try {
+                    const all = await db.ref('registrations').once('value');
+                    const count = all.numChildren();
+                    log('Total registrations in DB', count > 0 ? 'warn' : false,
+                        'Có ' + count + ' record. Nếu = 0 → rule chặn mọi ghi; > 0 nhưng admin vẫn không thấy → admin chưa reload.');
+                } catch (e) {
+                    log('Count registrations', false, (e && e.code) + ' ' + (e && e.message));
+                }
+
+                return lines;
+            }
+
+            window.skyeduSelftest = async function() {
+                const lines = await runProbe();
+                // Render overlay
+                let overlay = document.getElementById('skyedu-selftest-overlay');
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.id = 'skyedu-selftest-overlay';
+                    overlay.style.cssText = [
+                        'position:fixed', 'top:20px', 'right:20px', 'z-index:99999',
+                        'max-width:480px', 'max-height:80vh', 'overflow:auto',
+                        'background:#0f172a', 'color:#e2e8f0', 'border-radius:12px',
+                        'padding:16px', 'font:13px/1.45 system-ui,sans-serif',
+                        'box-shadow:0 10px 40px rgba(0,0,0,.4)', 'border:1px solid #334155'
+                    ].join(';');
+                    const closeBtn = document.createElement('button');
+                    closeBtn.textContent = '×';
+                    closeBtn.style.cssText = 'position:absolute;top:8px;right:10px;background:transparent;color:#94a3b8;border:none;font-size:20px;cursor:pointer;';
+                    closeBtn.onclick = () => overlay.remove();
+                    overlay.appendChild(closeBtn);
+                    document.body.appendChild(overlay);
+                }
+                overlay.innerHTML = '';
+                // Re-add close button
+                const cb = document.createElement('button');
+                cb.textContent = '×';
+                cb.style.cssText = 'position:absolute;top:8px;right:10px;background:transparent;color:#94a3b8;border:none;font-size:20px;cursor:pointer;';
+                cb.onclick = () => overlay.remove();
+                overlay.appendChild(cb);
+
+                const title = document.createElement('div');
+                title.textContent = 'SkyEdu Registration Self-test';
+                title.style.cssText = 'font-weight:700;font-size:15px;margin-bottom:10px;color:#f8fafc;';
+                overlay.appendChild(title);
+
+                for (const { label, ok, detail } of lines) {
+                    const row = document.createElement('div');
+                    row.style.cssText = 'margin:6px 0;padding:8px;border-radius:8px;background:' +
+                        (ok === true ? '#064e3b' : ok === false ? '#7f1d1d' : '#78350f') + ';';
+                    const icon = ok === true ? '✅' : ok === false ? '❌' : '⚠️';
+                    row.innerHTML = '<div style="font-weight:600;">' + icon + ' ' + escapeHtml(label) + '</div>' +
+                        '<div style="margin-top:3px;opacity:.85;">' + escapeHtml(detail || '') + '</div>';
+                    overlay.appendChild(row);
+                }
+
+                const hint = document.createElement('div');
+                hint.style.cssText = 'margin-top:12px;padding:10px;border-radius:8px;background:#1e293b;color:#cbd5e1;font-size:12px;';
+                hint.innerHTML = 'Nếu thấy <b style="color:#fca5a5;">PERMISSION DENIED</b> → rule chưa deploy. ' +
+                    'Mở <a href="https://console.firebase.google.com/project/skyedu-b80a1/database/skyedu-b80a1-default-rtdb/rules" target="_blank" style="color:#60a5fa;">Firebase Console → Rules</a> ' +
+                    'và paste rule mới (xem database.rules.json), rồi bấm Publish.';
+                overlay.appendChild(hint);
+                return lines;
+            };
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            }
+
+            // Auto-run when ?selftest=1 is in URL
+            if (typeof window !== 'undefined' && /[?&]selftest=1\b/.test(window.location.search || '')) {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(function() { window.skyeduSelftest(); }, 800);
+                });
+            }
+        })();
+    </script>
+
+        <script>
+        (function() {
+            function getCurrentUser() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.getSession === 'function') {
+                    return SessionSecurity.getSession();
+                }
+                try {
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function updateNavAuthState() {
+                const currentUser = getCurrentUser();
+                const navActions = document.getElementById('navActions');
+                if (!navActions) return;
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                        ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                        : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                    const isLight = window.Theme && window.Theme.currentTheme === 'lightpremium';
+                    const themeName = isLight ? 'Chế độ tối' : 'Chế độ sÃ¡ng';
+                    const themeIcon = isLight ? 'lucide:moon' : 'lucide:sun';
+
+                    navActions.innerHTML = `
+                        <div class="user-dropdown user-card-static">
+                            <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${escapeHtml(currentUser.fullname || currentUser.username || 'Tài khoản')}
+                            </span>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    `;
+                }
+            }
+
+            function performLogout() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.clearSession === 'function') {
+                    SessionSecurity.clearSession();
+                } else {
+                    localStorage.removeItem('currentUser');
+                }
+                try { localStorage.removeItem('sky_users'); sessionStorage.clear(); } catch(e) {}
+
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut().catch(function(e) { console.warn('signOut error:', e); })
+                        .finally(function() { window.location.href = '../account/dang-nhap.html'; });
+                } else {
+                    window.location.href = '../account/dang-nhap.html';
+                }
+            }
+
+            document.addEventListener('click', function(e) {
+                const noNavLink = e.target.closest('a[data-no-nav]');
+                if (noNavLink) { e.preventDefault(); return; }
+
+                const mobileBtn = e.target.closest('#mobileMenuBtn');
+                const navCenter = document.querySelector('.nav-center');
+                if (mobileBtn && navCenter) {
+                    navCenter.classList.toggle('active');
+                    mobileBtn.classList.toggle('active');
+                }
+            });
+
+            updateNavAuthState();
+
+            window.addEventListener('userLogin', updateNavAuthState);
+            window.addEventListener('userLogout', updateNavAuthState);
+
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                    updateNavAuthState();
+                }
+            });
+
+            window.addEventListener('themeChange', updateNavAuthState);
+
+            window.updateNavAuthState = updateNavAuthState;
+
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                window.addEventListener('scroll', () => {
+                    navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+                });
+            }
+        })();
+        </script>
+</body>
+</html>

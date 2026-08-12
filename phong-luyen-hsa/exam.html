@@ -1,0 +1,2336 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng luyện HSA - SKY EDU</title>
+
+    <script>
+    (function(){
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          html.style.backgroundColor = '#FDF2F8';
+          html.style.colorScheme = 'light';
+        } else {
+          html.classList.add('dark-mode');
+          html.style.backgroundColor = '#070D1F';
+          html.style.colorScheme = 'dark';
+        }
+        html.style.visibility = 'hidden';
+        window.addEventListener('load', function(){ html.style.visibility = 'visible'; });
+        setTimeout(function(){ html.style.visibility = 'visible'; }, 800);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){ var b = document.body; if (b) b.classList.add('theme-ready'); }
+        document.addEventListener('DOMContentLoaded', function(){ requestAnimationFrame(function(){ requestAnimationFrame(show); }); });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            startup: {
+                ready: function() {
+                    MathJax.startup.defaultReady();
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../assets/js/infty-fix.js" defer></script>
+
+    <link rel="stylesheet" href="../assets/css/premium-style.css">
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="../assets/js/theme.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <script src="../assets/js/core/role-system.js?v=1.0"></script>
+    <script src="../assets/js/question-types.js?v=3.2"></script>
+
+    <script>
+    window.__isMockExam = true;
+    </script>
+
+    <style>
+        :root {
+            --primary: #1677FF;
+            --primary-hover: #0958D9;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --border: #E2E8F0;
+            --text: #0F172A;
+            --text-secondary: #64748B;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --hsa-primary: #A78BFA;
+            --hsa-secondary: #8B5CF6;
+            --hsa-gradient: linear-gradient(135deg, #A78BFA, #8B5CF6);
+            --navy: #051A39;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .intro-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #070D1F;
+            overflow: hidden;
+        }
+
+        .intro-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(167, 139, 250, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .intro-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        html.light .intro-overlay,
+        html.light-premium-mode .intro-overlay {
+            background: #ffffff;
+        }
+
+        html.light .intro-bg,
+        html.light-premium-mode .intro-bg {
+            background:
+                radial-gradient(ellipse 90% 60% at 50% -10%, rgba(99, 102, 241, 0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 50% at 20% 90%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 85% 75%, rgba(168, 139, 250, 0.1) 0%, transparent 50%);
+        }
+
+        html.light .intro-grid,
+        html.light-premium-mode .intro-grid {
+            background-image:
+                linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+        }
+
+        html.light .intro-card,
+        html.light-premium-mode .intro-card {
+            background: #ffffff;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(99, 102, 241, 0.12);
+            box-shadow: 
+                0 20px 60px rgba(99, 102, 241, 0.15),
+                0 0 1px rgba(99, 102, 241, 0.1);
+        }
+
+        html.light .intro-logo svg,
+        html.light-premium-mode .intro-logo svg {
+            filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.3));
+        }
+
+        html.light .intro-logo-sub,
+        html.light-premium-mode .intro-logo-sub {
+            color: #6B7280;
+        }
+
+        html.light .intro-badge,
+        html.light-premium-mode .intro-badge {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            color: white;
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.25);
+        }
+
+        html.light .intro-title,
+        html.light-premium-mode .intro-title {
+            color: #111827;
+            font-size: 40px;
+        }
+        
+        html.light .intro-title span,
+        html.light-premium-mode .intro-title span {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        html.light .intro-desc,
+        html.light-premium-mode .intro-desc {
+            color: #6B7280;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        html.light .intro-stat-label,
+        html.light-premium-mode .intro-stat-label {
+            color: #9CA3AF;
+        }
+
+        html.light .intro-stat-value,
+        html.light-premium-mode .intro-stat-value {
+            color: #1F2937;
+        }
+
+        html.light .intro-info-item,
+        html.light-premium-mode .intro-info-item {
+            background: linear-gradient(135deg, #F9FAFB, #F3F4F6);
+            border: 1px solid #E5E7EB;
+        }
+
+        html.light .intro-info-label,
+        html.light-premium-mode .intro-info-label {
+            color: #9CA3AF;
+        }
+
+        html.light .intro-info-value,
+        html.light-premium-mode .intro-info-value {
+            color: #111827;
+        }
+
+        html.light .intro-divider,
+        html.light-premium-mode .intro-divider {
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+        }
+
+        html.light .intro-rules,
+        html.light-premium-mode .intro-rules {
+            background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+            border-radius: 12px;
+        }
+
+        html.light .intro-rules-item,
+        html.light-premium-mode .intro-rules-item {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        html.light .intro-rules-item iconify-icon,
+        html.light-premium-mode .intro-rules-item iconify-icon {
+            color: #6366F1;
+        }
+
+        html.light .intro-btn,
+        html.light-premium-mode .intro-btn {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.35);
+            border: none;
+        }
+
+        html.light .intro-btn:hover,
+        html.light-premium-mode .intro-btn:hover {
+            box-shadow: 0 16px 48px rgba(99, 102, 241, 0.45);
+            transform: translateY(-3px);
+        }
+
+        html.light .intro-warning,
+        html.light-premium-mode .intro-warning {
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+        }
+
+        html.light .intro-warning-text,
+        html.light-premium-mode .intro-warning-text {
+            color: #4338CA;
+        }
+
+        html.light .intro-countdown-label,
+        html.light-premium-mode .intro-countdown-label {
+            color: #9CA3AF;
+        }
+
+        @keyframes introFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes introPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .intro-card {
+            position: relative;
+            z-index: 2;
+            width: 540px;
+            max-width: 94vw;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 28px;
+            padding: 56px 44px;
+            text-align: center;
+            animation: introFadeIn 0.6s ease-out;
+        }
+
+        .intro-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .intro-logo svg {
+            width: 56px;
+            height: 56px;
+            filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.4));
+        }
+
+        .intro-logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .intro-logo-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--hsa-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .intro-logo-sub {
+            font-size: 11px;
+            font-weight: 500;
+            color: #94A3B8;
+            letter-spacing: 0.5px;
+        }
+
+        .intro-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #A78BFA;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 24px;
+        }
+
+        .intro-badge iconify-icon {
+            font-size: 16px;
+        }
+
+        .intro-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .intro-title span {
+            background: var(--hsa-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-desc {
+            font-size: 15px;
+            color: #94A3B8;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .intro-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.3), transparent);
+            margin: 0 0 32px;
+        }
+
+        .intro-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .intro-info-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .intro-info-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .intro-info-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .intro-countdown {
+            margin-bottom: 32px;
+        }
+
+        .intro-countdown-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #94A3B8;
+            margin-bottom: 12px;
+        }
+
+        .intro-countdown-number {
+            font-size: 72px;
+            font-weight: 800;
+            background: var(--hsa-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            animation: introPulse 1s ease-in-out infinite;
+        }
+
+        .intro-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            height: 56px;
+            background: var(--hsa-gradient);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(167, 139, 250, 0.3);
+        }
+
+        .intro-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(167, 139, 250, 0.4);
+        }
+
+        .intro-btn iconify-icon {
+            font-size: 20px;
+        }
+
+        .exam-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .exam-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo svg {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.3));
+        }
+
+        .header-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-logo-title {
+            font-size: 18px;
+            font-weight: 800;
+            background: var(--hsa-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-logo-sub {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 32px;
+            background: var(--border);
+        }
+
+        .header-exam-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-exam-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .header-exam-topic {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--hsa-primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--hsa-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .header-user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .header-timer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+        }
+
+        .header-timer iconify-icon {
+            font-size: 20px;
+            color: var(--danger);
+        }
+
+        .header-timer-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--danger);
+            font-variant-numeric: tabular-nums;
+            font-family: 'Inter', monospace;
+        }
+
+        .header-timer.warning {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.4);
+            animation: timerPulse 1s ease-in-out infinite;
+        }
+
+        .header-timer.warning .header-timer-value {
+            color: var(--danger);
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .question-navigator {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 72px;
+            z-index: 100;
+            width: 100%;
+            padding: 0;
+        }
+
+        .navigator-numbers,
+        .navigator-answers {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .navigator-numbers::-webkit-scrollbar,
+        .navigator-answers::-webkit-scrollbar {
+            display: none;
+        }
+
+        .navigator-num {
+            flex: 0 0 2%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--bg);
+        }
+
+        .navigator-num:hover {
+            color: var(--primary);
+            background: rgba(22, 119, 255, 0.08);
+        }
+
+        .navigator-num.answered {
+            display: none;
+        }
+
+        .navigator-ans {
+            flex: 0 0 2%;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--card);
+        }
+
+        .navigator-ans:hover {
+            background: rgba(22, 119, 255, 0.05);
+        }
+
+        .navigator-ans {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .navigator-ans.answered {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .navigator-ans.unanswered {
+            display: none;
+        }
+
+        .navigator-dot:hover {
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        .exam-main {
+            flex: 1;
+            padding: 0;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .exam-container {
+            max-width: 100%;
+            width: 100%;
+            padding: 24px 32px;
+        }
+
+        .questions-grid {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            padding: 0 32px;
+        }
+
+        .question-item {
+            padding: 12px 0;
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+        }
+
+        .question-item-header {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 0;
+        }
+
+        .question-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, var(--hsa-primary), #8B5CF6);
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .question-badge iconify-icon {
+            font-size: 12px;
+        }
+
+        .question-stem {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .question-image {
+            margin: 10px 0 0 0;
+            text-align: center;
+        }
+
+        .question-image img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .question-image img:hover {
+            opacity: 0.9;
+        }
+
+        .answer-section {
+            margin-top: 12px;
+            margin-left: 0;
+        }
+
+        .question-stem {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        .question-image {
+            margin: 0 0 16px;
+            text-align: center;
+        }
+
+        .question-image img {
+            max-width: 100%;
+            max-height: 200px;
+            display: inline-block;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .answer-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .answer-option:hover {
+            background: rgba(167, 139, 250, 0.05);
+            border-radius: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+            margin-left: -8px;
+            margin-right: -8px;
+        }
+
+        .answer-option.selected .answer-marker {
+            color: var(--hsa-primary);
+        }
+
+        .answer-option.selected .answer-radio {
+            background: var(--hsa-primary);
+            border-color: var(--hsa-primary);
+        }
+
+        .answer-option.selected .answer-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .answer-option.selected .answer-text {
+            color: var(--hsa-primary);
+            font-weight: 600;
+        }
+
+        .answer-marker {
+            flex-shrink: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            min-width: 24px;
+        }
+
+        .answer-radio {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .answer-text {
+            flex: 1;
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        .answer-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .answer-checkbox:hover {
+            background: rgba(167, 139, 250, 0.05);
+            border-radius: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+            margin-left: -8px;
+            margin-right: -8px;
+        }
+
+        .answer-checkbox.selected .answer-checkbox-marker {
+            background: var(--hsa-primary);
+            border-color: var(--hsa-primary);
+        }
+
+        .answer-checkbox.selected .answer-checkbox-marker::after {
+            content: '✓';
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .answer-checkbox.selected .answer-text {
+            color: var(--hsa-primary);
+            font-weight: 600;
+        }
+
+        .answer-checkbox-marker {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .answer-fill-input {
+            display: inline-block;
+            min-width: 100px;
+            padding: 4px 12px;
+            border: none;
+            border-bottom: 2px solid var(--border);
+            background: transparent;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text);
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .answer-fill-input:focus {
+            border-bottom-color: var(--hsa-primary);
+        }
+
+        .fill-input-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .fill-input-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .fill-input {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--card);
+            color: var(--text);
+            transition: all 0.2s ease;
+            width: 120px;
+        }
+
+        .fill-input:focus {
+            outline: none;
+            border-color: var(--hsa-primary);
+            box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.15);
+        }
+
+        html.light .fill-input,
+        html.light-premium-mode .fill-input {
+            background: #ffffff;
+            color: #111;
+            border: 1px solid #e5e7eb;
+        }
+
+        html.light .fill-input:focus,
+        html.light-premium-mode .fill-input:focus {
+            border-color: #6366F1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+        }
+
+        html.light .fill-input-label,
+        html.light-premium-mode .fill-input-label {
+            color: #4B5563;
+        }
+        
+        html.light .exam-main,
+        html.light-premium-mode .exam-main {
+            background: #ffffff;
+        }
+
+        html.light .questions-container,
+        html.light-premium-mode .questions-container {
+            background: #ffffff;
+        }
+
+        html.light .question-card,
+        html.light-premium-mode .question-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+        }
+
+        html.light .question-number,
+        html.light-premium-mode .question-number {
+            color: #6366F1;
+        }
+
+        html.light .question-text,
+        html.light-premium-mode .question-text {
+            color: #1F2937;
+        }
+
+        html.light .question-content,
+        html.light-premium-mode .question-content {
+            color: #374151;
+        }
+
+        html.light .answer-option,
+        html.light-premium-mode .answer-option {
+            background: transparent;
+            border: none;
+        }
+
+        html.light .answer-option:hover,
+        html.light-premium-mode .answer-option:hover {
+            border-color: transparent;
+            background: transparent;
+        }
+
+        html.light .answer-option.selected,
+        html.light-premium-mode .answer-option.selected {
+            border-color: transparent;
+            background: transparent;
+        }
+
+        html.light .answer-text,
+        html.light-premium-mode .answer-text {
+            color: #374151;
+        }
+
+        html.light .answer-option.selected .answer-text,
+        html.light-premium-mode .answer-option.selected .answer-text {
+            color: #6366F1;
+            font-weight: 600;
+        }
+
+        html.light .question-navigator,
+        html.light-premium-mode .question-navigator {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        html.light .navigator-num,
+        html.light-premium-mode .navigator-num {
+            background: #ffffff;
+            color: #6B7280;
+        }
+
+        html.light .navigator-num:hover,
+        html.light-premium-mode .navigator-num:hover {
+            background: #F3F4F6;
+        }
+
+        html.light .navigator-num.current,
+        html.light-premium-mode .navigator-num.current {
+            background: #6366F1;
+            color: white;
+        }
+
+        html.light .navigator-num.visited,
+        html.light-premium-mode .navigator-num.visited {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366F1;
+        }
+
+        html.light .submit-section,
+        html.light-premium-mode .submit-section {
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        html.light .submit-btn,
+        html.light-premium-mode .submit-btn {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        }
+
+        .fill-input:focus {
+            outline: none;
+            border-color: var(--hsa-primary);
+            box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.15);
+        }
+
+        .fill-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .submit-section {
+            padding: 32px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            background: var(--card);
+            margin-top: 24px;
+        }
+
+        .submit-section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .submit-stats {
+            display: none;
+        }
+
+        .unanswered-list {
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .submit-stat {
+            text-align: center;
+        }
+
+        .submit-stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .submit-stat-value.answered {
+            color: var(--success);
+        }
+
+        .submit-stat-value.unanswered {
+            color: var(--danger);
+        }
+
+        .submit-stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 200px;
+            height: 52px;
+            padding: 0 32px;
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
+        }
+
+        .submit-btn iconify-icon {
+            font-size: 20px;
+        }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            gap: 16px;
+            color: var(--text-secondary);
+        }
+
+        .loading-state iconify-icon {
+            font-size: 48px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-state p {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .no-exam-msg {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px;
+            text-align: center;
+        }
+
+        .no-exam-msg h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .no-exam-msg p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .no-exam-msg a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--hsa-gradient);
+            color: #fff;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .submit-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .submit-modal-overlay.show {
+            display: flex;
+        }
+
+        .submit-modal-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 32px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+        }
+
+        .submit-modal-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(139, 92, 246, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .submit-modal-icon iconify-icon {
+            font-size: 36px;
+            color: var(--hsa-primary);
+        }
+
+        .submit-modal-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .submit-modal-desc {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .submit-modal-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .submit-modal-stat {
+            text-align: center;
+            padding: 16px;
+            background: #F8FAFC;
+            border-radius: 12px;
+        }
+
+        .submit-modal-stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .submit-modal-stat-value.success { color: var(--success); }
+        .submit-modal-stat-value.danger { color: var(--danger); }
+
+        .submit-modal-stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .submit-modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .submit-modal-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .submit-modal-btn.cancel {
+            background: #F1F5F9;
+            color: var(--text);
+            border: none;
+        }
+
+        .submit-modal-btn.cancel:hover {
+            background: #E2E8F0;
+        }
+
+        .submit-modal-btn.confirm {
+            background: var(--hsa-gradient);
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
+        }
+
+        .submit-modal-btn.confirm:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(167, 139, 250, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .header-exam-info {
+                display: none;
+            }
+
+            .header-divider {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .exam-header {
+                height: 64px;
+                padding: 0 16px;
+            }
+
+            .header-logo svg {
+                width: 32px;
+                height: 32px;
+            }
+
+            .header-logo-title {
+                font-size: 16px;
+            }
+
+            .header-logo-sub {
+                display: none;
+            }
+
+            .header-user-name {
+                display: none;
+            }
+
+            .header-timer {
+                padding: 8px 12px;
+            }
+
+            .header-timer-value {
+                font-size: 20px;
+            }
+
+            .question-navigator {
+                top: 64px;
+                padding: 12px 16px;
+            }
+
+            .navigator-dot {
+                flex: 1;
+                height: 32px;
+                font-size: 11px;
+            }
+
+            .exam-main {
+                padding: 16px;
+            }
+
+            .question-item {
+                padding: 14px 16px;
+            }
+
+            .question-item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .question-stem {
+                font-size: 14px;
+            }
+
+            .submit-section {
+                padding: 24px 16px;
+            }
+
+            .submit-stats {
+                gap: 24px;
+            }
+
+            .submit-stat-value {
+                font-size: 24px;
+            }
+
+            .intro-card {
+                padding: 32px 24px;
+            }
+
+            .intro-title {
+                font-size: 24px;
+            }
+
+            .intro-countdown-number {
+                font-size: 56px;
+            }
+
+            .intro-info {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-modal-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-right {
+                gap: 12px;
+            }
+
+            .header-timer iconify-icon {
+                display: none;
+            }
+
+            .navigator-num {
+                flex: 0 0 4%;
+                height: 36px;
+                font-size: 12px;
+            }
+
+            .navigator-ans {
+                flex: 0 0 4%;
+                height: 28px;
+                font-size: 10px;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+        }
+
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .exam-footer {
+                padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            }
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-item {
+            animation: fadeSlideIn 0.3s ease-out;
+        }
+
+        .exam-wrapper,
+        .exam-main,
+        #examMain,
+        .questions-grid,
+        #questionsContainer,
+        .question-item,
+        .question-card,
+        .exam-header,
+        #examHeader,
+        .question-navigator,
+        #questionNavigator,
+        .submit-section,
+        #submitSection,
+        .loading-state,
+        #loadingState,
+        .no-exam-msg,
+        #noExamState {
+            background-color: #ffffff !important;
+            background-image: none !important;
+        }
+
+        .exam-main,
+        #examMain,
+        .questions-grid,
+        #questionsContainer,
+        .question-item,
+        .question-card {
+            color: #0F172A !important;
+        }
+
+        .exam-main .question-stem,
+        .exam-main .question-text,
+        .exam-main .question-content,
+        .exam-main .answer-text,
+        .exam-main .answer-option {
+            color: #0F172A !important;
+        }
+
+        .header-exam-name,
+        .header-user-name,
+        .header-timer,
+        .navigator-num {
+            color: #0F172A;
+        }
+
+        .exam-header,
+        #examHeader {
+            border-bottom: 1px solid #e5e7eb !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-navigator,
+        #questionNavigator {
+            border-bottom: 1px solid #e5e7eb !important;
+        }
+
+        .submit-section,
+        #submitSection {
+            border-top: 1px solid #e5e7eb !important;
+        }
+
+        .navigator-num {
+            background: #ffffff !important;
+            color: #6B7280 !important;
+        }
+
+        .navigator-num:hover {
+            background: #F3F4F6 !important;
+            color: #6366F1 !important;
+        }
+
+        .navigator-num.current {
+            background: #6366F1 !important;
+            color: #ffffff !important;
+        }
+
+        .navigator-num.visited {
+            background: rgba(99, 102, 241, 0.1) !important;
+            color: #6366F1 !important;
+        }
+
+        .answer-option:hover {
+            background: rgba(167, 139, 250, 0.08) !important;
+        }
+
+        .answer-option.selected {
+            background: rgba(99, 102, 241, 0.08) !important;
+        }
+
+        .answer-option.selected .answer-text {
+            color: #6366F1 !important;
+            font-weight: 600 !important;
+        }
+
+        .mjx-c221E.sky-infty {
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-bg"></div>
+        <div class="intro-grid"></div>
+
+        <div class="intro-card">
+            <div class="intro-logo">
+                <svg width="56" height="56" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="hsaLogoGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#EC4899"/>
+                            <stop offset="100%" stop-color="#A855F7"/>
+                        </linearGradient>
+                        <linearGradient id="hsaLogoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#F472B6"/>
+                            <stop offset="100%" stop-color="#7C3AED"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="url(#hsaLogoGrad1)"/>
+                    <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="url(#hsaLogoGrad2)"/>
+                </svg>
+                <div class="intro-logo-text">
+                    <span class="intro-logo-title">SKY EDU</span>
+                    <span class="intro-logo-sub">Fly Higher • Think Better</span>
+                </div>
+            </div>
+
+            <div class="intro-badge">
+                <iconify-icon icon="lucide:graduation-cap"></iconify-icon>
+                Phòng luyện HSA
+            </div>
+
+            <h1 class="intro-title">Tư duy <span>định lượng</span></h1>
+
+            <p class="intro-desc">
+                Bài thi đánh giá năng lực tư duy định lượng theo cấu trúc HSA.
+                <br>Hãy chuẩn bị kỹ trước khi bắt đầu.
+            </p>
+
+            <div class="intro-divider"></div>
+
+            <div class="intro-info">
+                <div class="intro-info-item">
+                    <div class="intro-info-label">Thời gian làm bài</div>
+                    <div class="intro-info-value" id="introTime">60 phút</div>
+                </div>
+                <div class="intro-info-item">
+                    <div class="intro-info-label">Số câu hỏi</div>
+                    <div class="intro-info-value" id="introQuestions">—</div>
+                </div>
+            </div>
+
+            <div class="intro-countdown">
+                <div class="intro-countdown-label">Bắt đầu sau</div>
+                <div class="intro-countdown-number" id="introCountdown">60</div>
+            </div>
+
+            <button class="intro-btn" id="introStartBtn" onclick="startExamFromIntro()">
+                <iconify-icon icon="lucide:play"></iconify-icon>
+                Bắt đầu làm bài
+            </button>
+        </div>
+    </div>
+
+    <header class="exam-header" id="examHeader" style="display: none;">
+        <div class="header-left">
+            <div class="header-logo">
+                <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#EC4899"/>
+                    <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#A855F7"/>
+                </svg>
+                <div class="header-logo-text">
+                    <span class="header-logo-title">SKY EDU</span>
+                    <span class="header-logo-sub">Phòng luyện HSA</span>
+                </div>
+            </div>
+
+            <div class="header-divider"></div>
+
+            <div class="header-exam-info">
+                <span class="header-exam-name" id="headerExamName">—</span>
+                <span class="header-exam-topic">Tư duy định lượng</span>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="header-user">
+                <div class="header-user-avatar" id="headerUserAvatar">—</div>
+                <span class="header-user-name" id="headerUserName">—</span>
+            </div>
+
+            <div class="header-timer" id="headerTimer">
+                <iconify-icon icon="lucide:clock"></iconify-icon>
+                <span class="header-timer-value" id="headerTimerValue">—:—</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="question-navigator" id="questionNavigator" style="display: none;">
+        <div class="navigator-numbers" id="navigatorNumbers"></div>
+        <div class="navigator-answers" id="navigatorAnswers"></div>
+    </div>
+
+    <main class="exam-main" id="examMain" style="display: none;">
+            <div id="loadingState" class="loading-state">
+                <iconify-icon icon="lucide:loader-2"></iconify-icon>
+                <p>Đang tải câu hỏi...</p>
+            </div>
+
+            <div id="noExamState" class="no-exam-msg" style="display: none;">
+                <h3>Chưa có đề thi</h3>
+                <p>Vui lòng tạo đề thi từ phần Tạo đề trước khi vào phòng luyện.</p>
+                <a href="index.html">
+                    <iconify-icon icon="lucide:arrow-left"></iconify-icon>
+                    Quay lại phòng luyện
+                </a>
+            </div>
+
+            <div id="questionsContainer" class="questions-grid" style="width: 100%;"></div>
+        </main>
+
+    <div class="submit-section" id="submitSection" style="display: none;">
+        <div class="submit-section-inner">
+            <div class="unanswered-list" id="unansweredList"></div>
+            <button type="button" class="submit-btn" onclick="confirmSubmit()">
+                <iconify-icon icon="lucide:send"></iconify-icon>
+                Nộp bài ngay
+            </button>
+        </div>
+    </div>
+
+    <div class="submit-modal-overlay" id="submitModal">
+        <div class="submit-modal-card">
+            <div class="submit-modal-icon">
+                <iconify-icon icon="lucide:clipboard-check"></iconify-icon>
+            </div>
+            <h2 class="submit-modal-title">Xác nhận nộp bài</h2>
+            <p class="submit-modal-desc">Bạn có chắc chắn muốn nộp bài không?<br>Sau khi nộp sẽ không thể sửa đổi.</p>
+
+            <div class="submit-modal-stats">
+                <div class="submit-modal-stat">
+                    <div class="submit-modal-stat-value" id="modalAnswered">0</div>
+                    <div class="submit-modal-stat-label">Đã làm</div>
+                </div>
+                <div class="submit-modal-stat">
+                    <div class="submit-modal-stat-value danger" id="modalUnanswered">0</div>
+                    <div class="submit-modal-stat-label">Chưa làm</div>
+                </div>
+                <div class="submit-modal-stat">
+                    <div class="submit-modal-stat-value" id="modalTotal">0</div>
+                    <div class="submit-modal-stat-label">Tổng cộng</div>
+                </div>
+            </div>
+
+            <div class="submit-modal-actions">
+                <button type="button" class="submit-modal-btn cancel" onclick="closeSubmitModal()"> Quay lại</button>
+                <button type="button" class="submit-modal-btn confirm" onclick="executeSubmit()">Nộp bài ngay</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        let questions = [];
+        let answers = {};
+        let flagged = {};
+        let visited = new Set();
+        let totalTime = 0;
+        let timeLeft = 0;
+        let timerInterval = null;
+        let examData = null;
+        let introCountdownInterval = null;
+        let introCountdown = 60;
+
+        function loadExam() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const examIdParam = urlParams.get('examId');
+
+                function onExamLoaded(examDataRaw) {
+                    if (!examDataRaw || !examDataRaw.questions || examDataRaw.questions.length === 0) {
+                        showNoExam();
+                        return;
+                    }
+
+                    window.__examData = examDataRaw;
+                    examData = examDataRaw;
+
+                    if (!examData.options) {
+                        examData.options = {
+                            showAnswers: true,
+                            showExplanation: true,
+                            shuffleQuestions: false,
+                            shuffleOptions: false
+                        };
+                    }
+
+                    questions = examDataRaw.questions;
+                    totalTime = (examDataRaw.timeMinutes || 60) * 60;
+                    timeLeft = totalTime;
+
+                    if (examDataRaw.name) {
+                        document.title = examDataRaw.name + ' - SKY EDU';
+                        document.getElementById('headerExamName').textContent = examDataRaw.name;
+                    }
+
+                    document.getElementById('introTime').textContent = (examDataRaw.timeMinutes || 60) + ' phút';
+                    document.getElementById('introQuestions').textContent = questions.length + ' câu';
+
+                    let userName = '—';
+                    let userInitial = '—';
+                    try {
+                        const cu = (typeof SessionSecurity !== 'undefined')
+                            ? SessionSecurity.getSession()
+                            : (() => { try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (e) { return null; } })();
+                        if (cu && (cu.fullname || cu.displayName)) {
+                            userName = cu.fullname || cu.displayName;
+                            userInitial = userName.charAt(0).toUpperCase();
+                        }
+                    } catch (e) {}
+                    if (userName === '—') {
+                        userName = localStorage.getItem('sky_user_name') || localStorage.getItem('user_name') || '—';
+                        userInitial = userName.charAt(0).toUpperCase();
+                    }
+                    document.getElementById('headerUserName').textContent = userName;
+                    document.getElementById('headerUserAvatar').textContent = userInitial;
+
+                    showIntroScreen();
+                }
+
+                function loadFromFirebase(examId) {
+                    if (typeof firebase === 'undefined' || !firebase.database) {
+                        return Promise.reject(new Error('Firebase not loaded'));
+                    }
+                    const db = firebase.database();
+                    const tryGet = (path) => db.ref(path + '/' + examId).once('value')
+                        .then(snap => snap.exists() ? snap.val() : null);
+                    return tryGet('phongluyen_exams').then(v => v || tryGet('exams'));
+                }
+
+                if (!examIdParam) {
+                    showNoExam();
+                    return;
+                }
+
+                const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+                Promise.race([loadFromFirebase(examIdParam), timeout])
+                    .then(data => {
+                        if (!data) { showNoExam(); return; }
+                        onExamLoaded(data);
+                    })
+                    .catch(() => {
+                        showNoExam();
+                    });
+
+            } catch (e) {
+                console.error('[Exam] Load error:', e);
+                showNoExam();
+            }
+        }
+
+        function showIntroScreen() {
+            document.getElementById('introOverlay').style.display = 'flex';
+            introCountdown = 60;
+            document.getElementById('introCountdown').textContent = introCountdown;
+
+            introCountdownInterval = setInterval(() => {
+                introCountdown--;
+                document.getElementById('introCountdown').textContent = introCountdown;
+
+                if (introCountdown <= 0) {
+                    clearInterval(introCountdownInterval);
+                    startExamFromIntro();
+                }
+            }, 1000);
+        }
+
+        function startExamFromIntro() {
+            if (introCountdownInterval) {
+                clearInterval(introCountdownInterval);
+            }
+
+            const overlay = document.getElementById('introOverlay');
+            overlay.style.transition = 'opacity 0.3s ease';
+            overlay.style.opacity = '0';
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                document.getElementById('examHeader').style.display = 'flex';
+                document.getElementById('questionNavigator').style.display = 'block';
+                document.getElementById('examMain').style.display = 'block';
+                document.getElementById('submitSection').style.display = 'block';
+
+                renderAllQuestions();
+                startTotalTimer();
+                startExam();
+            }, 300);
+        }
+
+        function forceExamMode() {
+        }
+
+        function renderAllQuestions() {
+            forceExamMode();
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('questionsContainer').style.display = 'flex';
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            questions.forEach((q, i) => {
+                const item = createQuestionElement(q, i);
+                container.appendChild(item);
+            });
+
+            renderNavigator();
+
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([container]).catch(function(err) {
+                    console.log('MathJax typeset error:', err);
+                });
+            }
+        }
+
+        function createQuestionElement(q, index) {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.id = 'question-item-' + q.id;
+            div.setAttribute('data-qid', q.id);
+
+            const header = document.createElement('div');
+            header.className = 'question-item-header';
+
+            const badge = document.createElement('div');
+            badge.className = 'question-badge';
+            badge.innerHTML = '<iconify-icon icon="lucide:file-question"></iconify-icon> Câu ' + (index + 1);
+            header.appendChild(badge);
+
+            const stem = document.createElement('div');
+            stem.className = 'question-stem';
+            stem.innerHTML = q.content || q.stem || '';
+            header.appendChild(stem);
+
+            div.appendChild(header);
+
+            if (q.image) {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'question-image';
+                const img = document.createElement('img');
+                img.src = q.image;
+                img.onclick = () => openImageViewer(q.image);
+                imgDiv.appendChild(img);
+                div.appendChild(imgDiv);
+            }
+
+            const answerSection = document.createElement('div');
+            answerSection.className = 'answer-section';
+
+            const qType = q.type || 'mcq_single';
+
+            if (qType === 'mcq_multi') {
+                (q.options || []).forEach((opt, optIdx) => {
+                    const optDiv = document.createElement('div');
+                    optDiv.className = 'answer-checkbox' + (isOptionSelected(q.id, optIdx) ? ' selected' : '');
+                    optDiv.setAttribute('data-qid', q.id);
+                    optDiv.setAttribute('data-option', optIdx);
+
+                    const marker = document.createElement('div');
+                    marker.className = 'answer-checkbox-marker';
+                    optDiv.appendChild(marker);
+
+                    const text = document.createElement('div');
+                    text.className = 'answer-text';
+                    text.textContent = opt;
+                    optDiv.appendChild(text);
+
+                    optDiv.onclick = () => toggleMultiAnswer(q.id, optIdx, optDiv);
+                    answerSection.appendChild(optDiv);
+                });
+            } else if (qType === 'fill' || qType === 'input' || qType === 'fill_blank' || qType === 'short_answer') {
+                const inputWrapper = document.createElement('div');
+                inputWrapper.className = 'fill-input-wrapper';
+
+                const label = document.createElement('span');
+                label.className = 'fill-input-label';
+                label.textContent = 'Đáp án:';
+                inputWrapper.appendChild(label);
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'fill-input';
+                input.value = answers[q.id] || '';
+                input.setAttribute('data-qid', q.id);
+                input.oninput = (e) => {
+                    answers[q.id] = e.target.value;
+                    visited.add(q.id);
+                    renderNavigator();
+                };
+                input.onblur = () => {
+                    if (input.value.trim()) {
+                        visited.add(q.id);
+                        renderNavigator();
+                    }
+                };
+
+                inputWrapper.appendChild(input);
+                answerSection.appendChild(inputWrapper);
+            } else {
+                const options = q.options || ['Đúng', 'Sai'];
+                options.forEach((opt, optIdx) => {
+                    const optDiv = document.createElement('div');
+                    optDiv.className = 'answer-option' + (isOptionSelected(q.id, optIdx) ? ' selected' : '');
+                    optDiv.setAttribute('data-qid', q.id);
+                    optDiv.setAttribute('data-option', optIdx);
+
+                    const marker = document.createElement('div');
+                    marker.className = 'answer-marker';
+                    marker.textContent = '(' + String.fromCharCode(65 + optIdx) + ')';
+                    optDiv.appendChild(marker);
+
+                    const radio = document.createElement('div');
+                    radio.className = 'answer-radio';
+                    optDiv.appendChild(radio);
+
+                    const text = document.createElement('div');
+                    text.className = 'answer-text';
+                    text.textContent = opt;
+                    optDiv.appendChild(text);
+
+                    optDiv.onclick = () => selectAnswer(q.id, optIdx, optDiv);
+                    answerSection.appendChild(optDiv);
+                });
+            }
+
+            div.appendChild(answerSection);
+
+            return div;
+        }
+
+        function isOptionSelected(qid, optIdx) {
+            const ans = answers[qid];
+            if (Array.isArray(ans)) {
+                return ans.includes(optIdx);
+            }
+            return ans === optIdx;
+        }
+
+        function selectAnswer(qid, optIdx, element) {
+            answers[qid] = optIdx;
+            visited.add(qid);
+
+            const container = element.closest('.question-item');
+            if (container) {
+                container.querySelectorAll('.answer-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                element.classList.add('selected');
+            }
+
+            renderNavigator();
+        }
+
+        function toggleMultiAnswer(qid, optIdx, element) {
+            if (!answers[qid]) {
+                answers[qid] = [];
+            }
+
+            const idx = answers[qid].indexOf(optIdx);
+            if (idx > -1) {
+                answers[qid].splice(idx, 1);
+                element.classList.remove('selected');
+            } else {
+                answers[qid].push(optIdx);
+                element.classList.add('selected');
+            }
+
+            if (answers[qid].length > 0) {
+                visited.add(qid);
+            }
+
+            renderNavigator();
+        }
+
+        function toggleFlag(qid) {
+            if (flagged[qid]) {
+                delete flagged[qid];
+            } else {
+                flagged[qid] = true;
+            }
+
+            const flagBtn = document.querySelector(`.question-flag-btn[data-qid="${qid}"]`);
+            if (flagBtn) {
+                if (flagged[qid]) {
+                    flagBtn.classList.add('flagged');
+                } else {
+                    flagBtn.classList.remove('flagged');
+                }
+            }
+
+            renderNavigator();
+        }
+
+        function renderNavigator() {
+            const numbersContainer = document.getElementById('navigatorNumbers');
+            const answersContainer = document.getElementById('navigatorAnswers');
+            if (!numbersContainer || !answersContainer) return;
+
+            let numbersHtml = '';
+            let answersHtml = '';
+
+            questions.forEach((q, i) => {
+                const ans = answers[q.id];
+                const isAnswered = ans !== undefined && ans !== null && ans !== '';
+                let ansText = '';
+
+                if (isAnswered) {
+                    const qType = q.type || 'mcq_single';
+                    if (qType === 'mcq_multi') {
+                        if (Array.isArray(ans) && ans.length > 0) {
+                            ansText = ans.map(idx => String.fromCharCode(65 + idx)).join(',');
+                        } else if (typeof ans === 'string' && ans.trim()) {
+                            ansText = ans;
+                        }
+                    } else if (qType === 'fill' || qType === 'input' || qType === 'fill_blank' || qType === 'short_answer') {
+                        ansText = ans;
+                    } else {
+                        ansText = String.fromCharCode(65 + ans);
+                    }
+                }
+
+                const numClass = isAnswered ? 'navigator-num answered' : 'navigator-num';
+                numbersHtml += `<div class="${numClass}" onclick="scrollToQuestion('${q.id}')">${i + 1}</div>`;
+
+                const ansClass = isAnswered ? 'navigator-ans answered' : 'navigator-ans unanswered';
+                const displayText = isAnswered ? `${i + 1},${ansText}` : `${i + 1},—`;
+                answersHtml += `<div class="${ansClass}" onclick="scrollToQuestion('${q.id}')">${displayText}</div>`;
+            });
+
+            numbersContainer.innerHTML = numbersHtml;
+            answersContainer.innerHTML = answersHtml;
+            updateUnansweredList();
+        }
+
+        function isQuestionAnswered(q) {
+            if (!visited.has(q.id)) return false;
+            const ans = answers[q.id];
+            if (ans === undefined || ans === null || ans === '') return false;
+
+            if (Array.isArray(ans)) {
+                return ans.length > 0;
+            }
+            return true;
+        }
+
+        function scrollToQuestion(qid) {
+            const item = document.getElementById('question-item-' + qid);
+            if (item) {
+                item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function updateUnansweredList() {
+            const container = document.getElementById('unansweredList');
+            if (!container) return;
+
+            const unanswered = questions.filter((q, i) => !isQuestionAnswered(q));
+
+            if (unanswered.length === 0) {
+                container.innerHTML = '';
+            } else {
+                const nums = unanswered.map((q, i) => {
+                    return questions.indexOf(q) + 1;
+                }).join(' ');
+                container.innerHTML = `Chưa làm: ${nums}`;
+            }
+        }
+
+        function startTotalTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    if (timeLeft === 0) {
+                        clearInterval(timerInterval);
+                        autoSubmit();
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            const display = `${m}:${s.toString().padStart(2, '0')}`;
+            document.getElementById('headerTimerValue').textContent = display;
+
+            const timer = document.getElementById('headerTimer');
+            if (timeLeft <= 300) {
+                timer.classList.add('warning');
+            } else {
+                timer.classList.remove('warning');
+            }
+        }
+
+        function confirmSubmit() {
+            const answered = Object.keys(answers).filter(k =>
+                answers[k] !== undefined && answers[k] !== '' && answers[k] !== null &&
+                (Array.isArray(answers[k]) ? answers[k].length > 0 : true)
+            ).length;
+            document.getElementById('modalAnswered').textContent = answered;
+            document.getElementById('modalUnanswered').textContent = questions.length - answered;
+            document.getElementById('modalTotal').textContent = questions.length;
+            document.getElementById('submitModal').classList.add('show');
+        }
+
+        function closeSubmitModal() {
+            document.getElementById('submitModal').classList.remove('show');
+        }
+
+        function autoSubmit() {
+            executeSubmit();
+        }
+
+        function executeSubmit() {
+            closeSubmitModal();
+
+            try {
+                const answeredCount = Object.keys(answers).filter(k =>
+                    answers[k] !== undefined && answers[k] !== '' && answers[k] !== null &&
+                    (Array.isArray(answers[k]) ? answers[k].length > 0 : true)
+                ).length;
+
+                const userAnswersByQid = {};
+                const normalizedAnswers = {};
+
+                questions.forEach((q, i) => {
+                    const ans = answers[q.id];
+                    userAnswersByQid[q.id] = ans;
+                    normalizedAnswers[`q${i + 1}`] = ans;
+                });
+
+                let correct = 0;
+                const perQuestion = [];
+
+                if (typeof QuestionTypes !== 'undefined' && typeof QuestionTypes.grade === 'function') {
+                    questions.forEach((q, i) => {
+                        const userAns = normalizedAnswers[`q${i + 1}`];
+                        console.log('[DEBUG grade call]', { qType: q.type, qId: q.id, userAnswer: userAns, correctAnswer: q.correctAnswer });
+                        const r = QuestionTypes.grade(q, userAns);
+                        if (r && r.correct) correct++;
+                        perQuestion.push(r || { correct: false });
+                    });
+                }
+
+                const validated = false;
+                let totalPoints = 0, earnedPoints = 0;
+
+                questions.forEach((q) => {
+                    const pts = q.points || 1;
+                    totalPoints += pts;
+                    if (typeof QuestionTypes !== 'undefined' && typeof QuestionTypes.grade === 'function') {
+                        const r = QuestionTypes.grade(q, answers[q.id]);
+                        if (r && r.partial > 0) earnedPoints += r.partial;
+                    }
+                });
+
+                const score = totalPoints > 0 ? (earnedPoints / totalPoints) * 10 : 0;
+                const wrong = Math.max(0, answeredCount - correct);
+
+                const result = {
+                    examId: examData ? examData.id : '',
+                    examName: examData ? examData.name : 'Phòng luyện HSA',
+                    completedAt: new Date().toISOString(),
+                    score: score,
+                    correct: correct,
+                    wrong: wrong,
+                    skipped: Math.max(0, questions.length - answeredCount),
+                    answered: answeredCount,
+                    total: questions.length,
+                    questions: questions,
+                    answers: normalizedAnswers,
+                    userAnswers: userAnswersByQid,
+                    totalTime: totalTime,
+                    timeUsed: totalTime - timeLeft,
+                    timeSpent: totalTime - timeLeft,
+                    validated: validated,
+                    perQuestion: perQuestion,
+                    scoringSource: 'client-unvalidated',
+                    options: examData && examData.options ? examData.options : { showAnswers: true, showExplanation: true }
+                };
+
+                try {
+                    localStorage.setItem('examResult', JSON.stringify(result));
+                    localStorage.setItem('examResultHSA', JSON.stringify(result));
+                    if (examData) {
+                        localStorage.setItem('__current_exam_data', JSON.stringify(examData));
+                    }
+                } catch (e) {}
+
+                try {
+                    sessionStorage.setItem('examResultHSA', JSON.stringify(result));
+                } catch (e) {}
+                
+                window.location.href = 'result.html';
+
+            } catch (e) {
+                alert('Lỗi khi nộp bài: ' + e.message);
+            }
+        }
+
+        function startExam() {
+            console.log('[exam] HSA exam started');
+        }
+
+        function showNoExam() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('questionsContainer').style.display = 'none';
+            document.getElementById('noExamState').style.display = 'block';
+            document.getElementById('introOverlay').style.display = 'none';
+        }
+
+        function openImageViewer(src) {
+            const viewer = window.open(src, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(loadExam, 100);
+        });
+    </script>
+</body>
+</html>

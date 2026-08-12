@@ -1,0 +1,2772 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Phòng luyện TSA - SKY EDU</title>
+    <meta name="theme-color" content="#050B1A">
+    
+    <!-- FOUC Prevention: Apply theme synchronously before CSS loads -->
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#FDF2F8'; scheme = 'light'; pageBg = '#FDF2F8';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        // Wait for body to exist then set its bg immediately
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        // Re-apply body bg before reveal to ensure correct color
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 600);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){
+          var b = document.body; if (b) b.classList.add('theme-ready');
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(show); });
+        });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="../assets/css/premium-style.css" as="style">
+
+    <!-- Premium CSS -->
+    <link rel="stylesheet" href="../assets/css/premium-style.css">
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+
+    <!-- Theme System -->
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/core/role-system.js"></script>
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- TsaTopics (13 chuyên đề + Đề thực chiến) — single source of truth -->
+    <script src="../assets/js/tsa-topics.js"></script>
+    <script src="../assets/js/exam-builder.js"></script>
+
+    <!-- Firebase SDK (chỉ dùng để sync exams nếu có) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+
+    <style>
+        /* =========================================
+           PAGE VARIABLES
+           ========================================= */
+        :root {
+            --page-bg: #070D1F;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-bright: #FFFFFF;
+            --text-light: #E2E8F0;
+            --text-muted: #94A3B8;
+            --accent: #00D4FF;
+            --accent-secondary: #3B82F6;
+            --accent-violet: #8B5CF6;
+        }
+
+        /* =========================================
+           BACKGROUND EFFECTS
+           ========================================= */
+        .page-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: var(--page-bg);
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150%;
+            height: 100%;
+            background: radial-gradient(ellipse at center top, rgba(0, 212, 255, 0.12) 0%, rgba(59, 130, 246, 0.08) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        .floating-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(0, 212, 255, 0.12);
+            top: 5%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(59, 130, 246, 0.1);
+            bottom: 10%;
+            right: -5%;
+            animation-delay: -7s;
+        }
+
+        .orb-3 {
+            width: 280px;
+            height: 280px;
+            background: rgba(16, 185, 129, 0.09);
+            top: 45%;
+            left: 55%;
+            animation-delay: -12s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(40px, -40px) scale(1.05); }
+            50% { transform: translate(-30px, 30px) scale(0.95); }
+            75% { transform: translate(30px, 40px) scale(1.02); }
+        }
+
+        /* =========================================
+           PAGE WRAPPER
+           ========================================= */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* =========================================
+           MAIN LAYOUT
+           ========================================= */
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding-top: 100px;
+            gap: 32px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        /* =========================================
+           SECTION HEADER
+           ========================================= */
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+        }
+
+        .section-badge iconify-icon {
+            font-size: 16px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--text-bright);
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .section-title-gradient {
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-desc {
+            font-size: 17px;
+            color: var(--text-muted);
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        /* =========================================
+           LAYOUT: SIDEBAR + CONTENT
+           ========================================= */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 32px;
+            width: 100%;
+            align-items: start;
+        }
+
+        /* Khi màn hình vừa phải: bỏ cột phải để tránh chen chúc */
+        @media (max-width: 1480px) {
+            .layout-grid { grid-template-columns: 320px 1fr; }
+        }
+        /* Mobile / tablet: bỏ sidebar trái gọn lại */
+        @media (max-width: 980px) {
+            .layout-grid { grid-template-columns: 1fr; }
+            .layout-grid > .sidebar.topic-sidebar { position: static; }
+        }
+
+        /* =========================================
+           SIDEBAR
+           ========================================= */
+        .sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .sidebar-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .sidebar-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(59, 130, 246, 0.15));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-icon iconify-icon {
+            font-size: 24px;
+            color: var(--accent);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-bright);
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Topic List */
+        .topic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.2);
+            transform: translateX(4px);
+        }
+
+        .topic-item.active {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(59, 130, 246, 0.1));
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .topic-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--page-bg);
+            flex-shrink: 0;
+        }
+
+        .topic-item.active .topic-number {
+            background: var(--accent);
+        }
+
+        .topic-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .topic-item.active .topic-text {
+            color: var(--text-bright);
+        }
+
+        /* =========================================
+           MAIN CONTENT
+           ========================================= */
+        .main-content {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+            opacity: 0;
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .content-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .content-refresh-btn {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 200ms ease;
+        }
+        .content-refresh-btn:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: rotate(90deg);
+        }
+        .content-refresh-btn.spinning iconify-icon {
+            animation: refreshSpin 0.8s linear;
+        }
+        @keyframes refreshSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .content-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.15));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-icon iconify-icon {
+            font-size: 28px;
+            color: #A78BFA;
+        }
+
+        .content-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-bright);
+        }
+
+        .content-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Exam Grid */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .exam-card {
+            position: relative;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 20px;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .exam-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .exam-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.1);
+        }
+
+        .exam-card:hover::before {
+            opacity: 1;
+        }
+
+        .exam-card:hover .exam-start {
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            color: var(--page-bg);
+            transform: scale(1.02);
+        }
+
+        .exam-card-header {
+            padding: 20px 20px 0 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .exam-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .exam-badge.tsa {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(59, 130, 246, 0.15));
+            color: var(--accent);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .exam-badge.level {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .exam-badge.level.easy { color: #4ADE80; background: rgba(74, 222, 128, 0.1); border-color: rgba(74, 222, 128, 0.2); }
+        .exam-badge.level.medium { color: #FACC15; background: rgba(250, 204, 21, 0.1); border-color: rgba(250, 204, 21, 0.2); }
+        .exam-badge.level.hard { color: #F87171; background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.2); }
+
+        .exam-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(139, 92, 246, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .exam-icon iconify-icon {
+            font-size: 24px;
+            color: var(--accent);
+        }
+
+        .exam-content {
+            padding: 16px 20px;
+        }
+
+        .exam-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .exam-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .exam-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .exam-meta-item iconify-icon {
+            font-size: 14px;
+            color: var(--accent-secondary);
+        }
+
+        .exam-footer {
+            padding: 0 20px 20px 20px;
+        }
+
+        .exam-start {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .exam-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .exam-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .exam-stat iconify-icon {
+            font-size: 14px;
+            color: var(--accent-secondary);
+        }
+
+        .exam-stat-value {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* === Tài liệu đính kèm: 3 nút compact dưới "Vào thi ngay" === */
+        .exam-resources {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .exam-resources:has(.exam-res-btn:nth-child(2):last-child) { grid-template-columns: 1fr 1fr; }
+        .exam-resources:has(.exam-res-btn:only-child) { grid-template-columns: 1fr; }
+
+        .exam-res-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 200ms ease;
+            border: 1px solid transparent;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            z-index: 2;  /* nổi lên trên ::before của card */
+        }
+        .exam-res-btn iconify-icon {
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .exam-res-btn.video {
+            background: rgba(255, 68, 68, 0.08);
+            border-color: rgba(255, 68, 68, 0.25);
+            color: #FF6B6B;
+        }
+        .exam-res-btn.video:hover {
+            background: rgba(255, 68, 68, 0.18);
+            border-color: rgba(255, 68, 68, 0.5);
+            transform: translateY(-1px);
+        }
+        .exam-res-btn.exercise {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.25);
+            color: #F59E0B;
+        }
+        .exam-res-btn.exercise:hover {
+            background: rgba(245, 158, 11, 0.18);
+            border-color: rgba(245, 158, 11, 0.5);
+            transform: translateY(-1px);
+        }
+        .exam-res-btn.answer {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.25);
+            color: #10B981;
+        }
+        .exam-res-btn.answer:hover {
+            background: rgba(16, 185, 129, 0.18);
+            border-color: rgba(16, 185, 129, 0.5);
+            transform: translateY(-1px);
+        }
+        @media (max-width: 420px) {
+            .exam-resources { grid-template-columns: 1fr; }
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state iconify-icon {
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.08);
+            margin-bottom: 24px;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .empty-state h4 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .empty-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .empty-cta:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.15));
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+        
+        /* Tablet Large */
+        @media (max-width: 1280px) {
+            .layout-grid {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+        
+        /* Tablet */
+        @media (max-width: 1024px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                max-height: none;
+            }
+
+            .topic-list {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .main-container {
+                padding-top: 90px;
+            }
+            
+            .section-header {
+                margin-bottom: 32px;
+            }
+        }
+        
+        /* Tablet Portrait */
+        @media (max-width: 912px) {
+            .topic-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .exam-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding-top: 80px;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+            
+            .section-desc {
+                font-size: 15px;
+            }
+            
+            .section-badge {
+                font-size: 11px;
+                padding: 8px 16px;
+            }
+
+            .topic-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .topic-item {
+                padding: 12px 14px;
+                gap: 10px;
+            }
+            
+            .topic-number {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .topic-text {
+                font-size: 12px;
+            }
+
+            .exam-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .sidebar-card {
+                padding: 16px;
+            }
+            
+            .sidebar-header {
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+            }
+            
+            .sidebar-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .sidebar-icon iconify-icon {
+                font-size: 20px;
+            }
+            
+            .sidebar-title {
+                font-size: 16px;
+            }
+
+            .content-card {
+                padding: 16px;
+            }
+            
+            .content-header {
+                margin-bottom: 16px;
+                gap: 12px;
+            }
+            
+            .content-icon {
+                width: 44px;
+                height: 44px;
+            }
+            
+            .content-icon iconify-icon {
+                font-size: 22px;
+            }
+            
+            .content-title {
+                font-size: 18px;
+            }
+            
+            .exam-card {
+                border-radius: 16px;
+            }
+            
+            .exam-card-header {
+                padding: 16px 16px 0 16px;
+            }
+            
+            .exam-content {
+                padding: 12px 16px;
+            }
+            
+            .exam-footer {
+                padding: 0 16px 16px 16px;
+            }
+            
+            .exam-title {
+                font-size: 14px;
+            }
+            
+            .exam-meta {
+                gap: 8px;
+            }
+            
+            .exam-meta-item {
+                font-size: 11px;
+            }
+            
+            .exam-start {
+                padding: 12px;
+                font-size: 12px;
+            }
+            
+            .empty-state {
+                padding: 48px 24px;
+            }
+            
+            .empty-state iconify-icon {
+                font-size: 56px;
+            }
+            
+            .empty-state h4 {
+                font-size: 18px;
+            }
+        }
+        
+        /* Mobile Large */
+        @media (max-width: 600px) {
+            .main-container {
+                padding-top: 70px;
+            }
+            
+            .container {
+                padding: 0 14px;
+            }
+            
+            .section-header {
+                margin-bottom: 24px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .section-badge {
+                font-size: 10px;
+                padding: 6px 12px;
+            }
+            
+            .section-badge iconify-icon {
+                font-size: 14px;
+            }
+            
+            .section-desc {
+                font-size: 14px;
+            }
+            
+            .topic-list {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            
+            .topic-item {
+                padding: 10px 12px;
+            }
+            
+            .topic-number {
+                width: 26px;
+                height: 26px;
+                font-size: 11px;
+            }
+            
+            .topic-text {
+                font-size: 12px;
+            }
+            
+            .sidebar-card {
+                padding: 14px;
+            }
+            
+            .sidebar-header {
+                gap: 10px;
+            }
+            
+            .sidebar-icon {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .sidebar-icon iconify-icon {
+                font-size: 18px;
+            }
+            
+            .sidebar-title {
+                font-size: 14px;
+            }
+            
+            .sidebar-subtitle {
+                font-size: 11px;
+            }
+            
+            .content-card {
+                padding: 14px;
+                margin-bottom: 16px;
+            }
+            
+            .content-refresh-btn {
+                width: 34px;
+                height: 34px;
+            }
+            
+            .content-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .content-icon iconify-icon {
+                font-size: 20px;
+            }
+            
+            .content-title {
+                font-size: 16px;
+            }
+            
+            .content-subtitle {
+                font-size: 12px;
+            }
+            
+            .exam-grid {
+                gap: 12px;
+            }
+            
+            .exam-card {
+                padding: 14px;
+            }
+            
+            .exam-card-header {
+                margin-bottom: 10px;
+            }
+            
+            .exam-badge {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            
+            .exam-icon {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .exam-icon iconify-icon {
+                font-size: 18px;
+            }
+            
+            .exam-title {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+            
+            .exam-meta {
+                gap: 6px;
+            }
+            
+            .exam-meta-item {
+                font-size: 10px;
+            }
+            
+            .exam-meta-item iconify-icon {
+                font-size: 12px;
+            }
+            
+            .exam-start {
+                padding: 10px;
+                margin-top: 12px;
+                font-size: 12px;
+            }
+            
+            .exam-resources {
+                margin-top: 8px;
+            }
+            
+            .exam-res-btn {
+                padding: 6px 8px;
+                font-size: 10px;
+            }
+            
+            .empty-state {
+                padding: 40px 20px;
+            }
+            
+            .empty-state iconify-icon {
+                font-size: 48px;
+            }
+            
+            .empty-state h4 {
+                font-size: 16px;
+            }
+            
+            .empty-state p {
+                font-size: 13px;
+            }
+        }
+        
+        /* Mobile Normal */
+        @media (max-width: 480px) {
+            .main-container {
+                padding-top: 60px;
+            }
+            
+            .container {
+                padding: 0 12px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+                letter-spacing: -0.5px;
+            }
+            
+            .section-badge {
+                font-size: 9px;
+                padding: 5px 10px;
+            }
+            
+            .section-desc {
+                font-size: 13px;
+            }
+            
+            .sidebar-card {
+                padding: 12px;
+                border-radius: 16px;
+            }
+            
+            .sidebar-header {
+                margin-bottom: 12px;
+                padding-bottom: 10px;
+            }
+            
+            .sidebar-icon {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .sidebar-icon iconify-icon {
+                font-size: 16px;
+            }
+            
+            .sidebar-title {
+                font-size: 13px;
+            }
+            
+            .topic-item {
+                padding: 8px 10px;
+                gap: 8px;
+            }
+            
+            .topic-number {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+                border-radius: 8px;
+            }
+            
+            .topic-text {
+                font-size: 11px;
+            }
+            
+            .content-card {
+                padding: 12px;
+                border-radius: 16px;
+                margin-bottom: 14px;
+            }
+            
+            .content-header {
+                margin-bottom: 12px;
+                gap: 10px;
+            }
+            
+            .content-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 12px;
+            }
+            
+            .content-icon iconify-icon {
+                font-size: 18px;
+            }
+            
+            .content-title {
+                font-size: 15px;
+            }
+            
+            .content-subtitle {
+                font-size: 11px;
+            }
+            
+            .content-refresh-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+            }
+            
+            .exam-grid {
+                gap: 10px;
+            }
+            
+            .exam-card {
+                padding: 12px;
+                border-radius: 14px;
+            }
+            
+            .exam-card-header {
+                margin-bottom: 8px;
+                gap: 8px;
+            }
+            
+            .exam-badge {
+                font-size: 9px;
+                padding: 3px 6px;
+            }
+            
+            .exam-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 10px;
+            }
+            
+            .exam-icon iconify-icon {
+                font-size: 16px;
+            }
+            
+            .exam-title {
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+            
+            .exam-meta {
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            
+            .exam-meta-item {
+                font-size: 9px;
+            }
+            
+            .exam-meta-item iconify-icon {
+                font-size: 11px;
+            }
+            
+            .exam-start {
+                padding: 8px;
+                margin-top: 10px;
+                font-size: 11px;
+                border-radius: 8px;
+            }
+            
+            .exam-resources {
+                margin-top: 6px;
+                gap: 4px;
+            }
+            
+            .exam-res-btn {
+                padding: 5px 6px;
+                font-size: 9px;
+            }
+            
+            .exam-res-btn iconify-icon {
+                font-size: 12px;
+            }
+            
+            .empty-state {
+                padding: 32px 16px;
+            }
+            
+            .empty-state iconify-icon {
+                font-size: 40px;
+            }
+            
+            .empty-state h4 {
+                font-size: 14px;
+            }
+            
+            .empty-state p {
+                font-size: 12px;
+            }
+            
+            .empty-cta {
+                padding: 10px 18px;
+                font-size: 12px;
+            }
+        }
+        
+        /* Mobile Small */
+        @media (max-width: 390px) {
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .section-badge {
+                font-size: 8px;
+            }
+            
+            .sidebar-title {
+                font-size: 12px;
+            }
+            
+            .exam-card {
+                padding: 10px;
+            }
+            
+            .exam-title {
+                font-size: 11px;
+            }
+            
+            .exam-meta {
+                gap: 4px;
+            }
+        }
+        
+        /* Mobile Very Small */
+        @media (max-width: 360px) {
+            .section-title {
+                font-size: 16px;
+            }
+            
+            .exam-card {
+                padding: 8px;
+            }
+            
+            .exam-badge {
+                font-size: 8px;
+                padding: 2px 5px;
+            }
+            
+            .exam-icon {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .exam-icon iconify-icon {
+                font-size: 14px;
+            }
+        }
+        
+        /* Landscape */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .main-container {
+                padding-top: 60px;
+            }
+            
+            .sidebar {
+                max-height: calc(100vh - 120px);
+            }
+            
+            .topic-list {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Safe Area Support */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .main-container {
+                padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            }
+            
+            .navbar {
+                padding-top: env(safe-area-inset-top);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="page-bg"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="page-wrapper">
+        <!-- =========================================
+             NAVBAR
+        ========================================= -->
+        <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <a href="../index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher • Think Better</span>
+                    </div>
+                </a>
+
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="../index.html">Trang chủ</a></li>
+                        <li><a href="../khoa-hoc-pages/index.html">Khóa học</a></li>
+                        <li><a href="../quy-doi-diem.html">Quy đổi điểm</a></li>
+                        <li><a href="index.html" class="active">Phòng luyện TSA</a></li>
+                        <li><a href="../phong-luyen-hsa/index.html">Phòng luyện HSA</a></li>
+                        <li><a href="../thi-thu/index.html">Thi thử</a></li>
+                        <li><a href="../dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <div class="nav-actions" id="navActions">
+                    <a href="../account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                    <a href="../account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <style>
+            .user-dropdown { position: relative; display: inline-block; }
+            .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+            .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+            .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+            .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+            .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+            @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+            .user-dropdown.open .user-dropdown-content { display: block; }
+            .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+            .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+            .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+            .dropdown-item:hover iconify-icon { color: #00D4FF; }
+            .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+            .dropdown-item.logout { color: #EF4444; }
+            .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+            .dropdown-item.logout iconify-icon { color: #EF4444; }
+            .dropdown-item.admin-only { color: #FACC15; }
+            .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+        </style>
+
+        <!-- Main Content -->
+        <main class="main-container">
+            <div class="container">
+                <!-- Section Header -->
+                <div class="section-header">
+                    <div class="section-badge">
+                        <iconify-icon icon="lucide:target"></iconify-icon>
+                        <span>Phòng luyện TSA</span>
+                    </div>
+                    <h1 class="section-title">
+                        <span class="section-title-gradient">Luyện thi đánh giá tư duy</span>
+                    </h1>
+                    <p class="section-desc">
+                        Chọn chuyên đề và bắt đầu luyện tập với hệ thống đề thi chuẩn cấu trúc
+                    </p>
+                </div>
+
+                <!-- Layout: Sidebar + Content -->
+                <div class="layout-grid">
+                    <!-- Sidebar: Topics -->
+                    <aside class="sidebar topic-sidebar">
+                        <div class="sidebar-card">
+                            <div class="sidebar-header">
+                                <div class="sidebar-icon">
+                                    <iconify-icon icon="lucide:book-open"></iconify-icon>
+                                </div>
+                                <div>
+                                    <h3 class="sidebar-title">13 Chuyên đề TSA</h3>
+                                    <p class="sidebar-subtitle">Chọn chuyên đề để luyện</p>
+                                </div>
+                            </div>
+
+                            <div class="topic-list" id="topicList">
+                                <!-- Render động bằng JS để luôn đồng bộ với 13 chuyên đề TSA + Đề thực chiến -->
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Main Content: Exams -->
+                    <div class="main-content">
+                        <div class="content-card">
+                            <div class="content-header">
+                                <div class="content-icon">
+                                    <iconify-icon icon="lucide:file-question"></iconify-icon>
+                                </div>
+                                <div>
+                                    <h3 class="content-title" id="selectedTopicTitle">Hàm số, đồ thị hàm số và đạo hàm</h3>
+                                    <p class="content-subtitle">Các đề thi available</p>
+                                </div>
+                                <button type="button" class="content-refresh-btn" id="contentRefreshBtn" title="Làm mới danh sách đề thi" aria-label="Làm mới">
+                                    <iconify-icon icon="lucide:refresh-cw"></iconify-icon>
+                                </button>
+                            </div>
+
+                            <div class="exam-grid" id="examGrid">
+                                <!-- Hiện đang cập nhật -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // =========================================
+        // TOPICS DATA — dùng TsaTopics làm nguồn chuẩn
+        // =========================================
+        const TOPIC_MAP = {};   // key -> { title, num }
+        if (typeof TsaTopics !== 'undefined') {
+            TsaTopics.TSA_TOPICS.forEach(t => { TOPIC_MAP[t.key] = { title: t.title, num: t.num }; });
+            // Chỉ thêm "Đề thực chiến" — "Đề thi thử" đã chuyển sang /thi-thu/ ở navbar
+            TsaTopics.EXTRA_CATEGORIES
+                .filter(c => c.key !== 'khung-de')
+                .forEach(c => { TOPIC_MAP[c.key] = { title: c.title, num: 0, extra: true, badge: c.badge, desc: c.desc }; });
+        } else {
+            // Fallback nếu tsa-topics.js chưa load
+            const fallback = {
+                'bat-pt':'Bất phương trình và quy hoạch tuyến tính','thong-ke':'Thống kê','so-hoc':'Số học',
+                'hh-phang':'Hình học phẳng và 3 đường conic','gioi-han':'Giới hạn và tính liên tục của hàm số',
+                'cap-so':'Cấp số, dãy số và hệ thức truy hồi','logarit':'Hàm số logarit, hàm lũy thừa và hàm số mũ',
+                'luong-giac':'Phương trình lượng giác','to-hop':'Tổ hợp – Xác suất cổ điển – Xác suất có điều kiện',
+                'ham-so':'Hàm số, đồ thị hàm số và đạo hàm','nguyen-ham':'Nguyên hàm & Tích phân',
+                'vector':'Vector & Hình học không gian có tọa độ','hh-khong-gian':'Hình học không gian thuần túy',
+                'thuc-chien':'Đề thực chiến'
+            };
+            Object.keys(fallback).forEach((k, i) => { TOPIC_MAP[k] = { title: fallback[k], num: i + 1, extra: k === 'thuc-chien' }; });
+        }
+
+        const TOPIC_KEYS = Object.keys(TOPIC_MAP);
+
+        // =========================================
+        // RENDER SIDEBAR — 13 chuyên đề + Đề thực chiến
+        // =========================================
+        let _currentTopicKey = null; // Sẽ set sau khi TOPIC_KEYS đã có dữ liệu
+
+        function getDefaultTopicKey() {
+            // Luôn lấy topic đầu tiên từ TOPIC_KEYS (an toàn hơn hardcode)
+            return TOPIC_KEYS[0] || 'bat-pt';
+        }
+
+        // =========================================
+        // HELPER: Kiểm tra quyền truy cập video/bài tập
+        // Theo yêu cầu: 
+        // - Nếu hệ thống chưa cài role HSA/TSA cho ai → tất cả đều xem được
+        // - Nếu đã cài role HSA/TSA cho user → CHỈ user có role mới xem được
+        // - Người không có role → không xem được
+        // =========================================
+        function canAccessTSAResources() {
+            return checkHasAnyPackageRole('TSA').then(hasPackageRoles => {
+                if (!hasPackageRoles) return true; // Chưa cài role → mở cho tất cả
+
+                // Đã cài role → chỉ user có quyền TSA mới xem được (system roles cũng được)
+                const user = RoleSystem ? RoleSystem.getCurrentUser() : null;
+                if (!user) return false;
+                return RoleSystem.can(user, 'canAccessTSA');
+            });
+        }
+
+        // Cache kết quả kiểm tra (để không gọi Firebase nhiều lần)
+        let _hasPackageRolesCache = null;
+        let _hasPackageRolesCacheTime = 0;
+        const PACKAGE_ROLE_CACHE_TTL = 60000; // 1 phút
+
+        async function checkHasAnyPackageRole(targetRole) {
+            const now = Date.now();
+            if (_hasPackageRolesCache !== null && (now - _hasPackageRolesCacheTime) < PACKAGE_ROLE_CACHE_TTL) {
+                return _hasPackageRolesCache;
+            }
+
+            try {
+                if (typeof firebase === 'undefined' || !firebase.database) {
+                    _hasPackageRolesCache = false;
+                    _hasPackageRolesCacheTime = now;
+                    return false;
+                }
+
+                const snapshot = await firebase.database().ref('users').orderByChild('role').once('value');
+                const users = snapshot.val() || {};
+                let found = false;
+
+                for (const uid in users) {
+                    const user = users[uid];
+                    const roles = user.roles || (user.role ? [user.role] : []);
+                    // Check cả role đơn và trong mảng roles
+                    if (roles.includes(targetRole) || roles.includes('HSA') || roles.includes('TSA') ||
+                        roles.includes('admin') || roles.includes('owner') || roles.includes('qtv')) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                _hasPackageRolesCache = found;
+                _hasPackageRolesCacheTime = now;
+                return found;
+            } catch (e) {
+                console.warn('[TSA] Error checking package roles:', e);
+                _hasPackageRolesCache = false;
+                _hasPackageRolesCacheTime = now;
+                return false;
+            }
+        }
+
+        // =========================================
+        // HELPERS: Tài liệu đính kèm (video + file)
+        // =========================================
+
+        /**
+         * Parse URL video → { kind, src, label, externalUrl }
+         * Hỗ trợ:
+         *   - MP4 / WebM / OGG / MOV / M4V          → kind: 'file'   (render <video>)
+         *   - Google Drive                          → kind: 'drive'  (render <iframe>)
+         *   - Vimeo                                 → kind: 'vimeo'  (render <iframe>)
+         *   - YouTube                               → kind: 'youtube' (render <iframe>)
+         *
+         * YouTube được nhận diện nếu URL chứa một trong:
+         *   - youtube.com/embed/
+         *   - www.youtube.com/embed/
+         *   - youtube-nocookie.com/embed/
+         *   - youtu.be/
+         *   - youtube.com/watch?v=
+         *   - youtube.com/shorts/
+         *   - hoặc nguyên thẻ <iframe src="https://www.youtube.com/...">...</iframe>
+         *   → LUÔN trả về { kind: 'youtube', src: embedUrl } (KHÔNG BAO GIỜ trả 'file').
+         */
+        function parseVideoSource(rawUrl) {
+            const url = String(rawUrl || '').trim();
+            const empty = { kind: 'none', src: '', label: 'Video', externalUrl: '' };
+
+            // Debug log (giúp admin / dev kiểm tra nhanh khi video lỗi)
+            try { console.log('Raw Video:', rawUrl); } catch (e) {}
+
+            if (!url) return empty;
+
+            // ============================================================
+            // BƯỚC 0: Nếu admin paste nguyên thẻ <iframe> → trích src
+            // ============================================================
+            let normalizedUrl = url;
+            try {
+                if (/<\s*iframe[\s\S]*?>/i.test(normalizedUrl)) {
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = normalizedUrl;
+                    const iframeEl = wrapper.querySelector('iframe');
+                    if (iframeEl) {
+                        const src = iframeEl.getAttribute('src') || '';
+                        if (src) normalizedUrl = String(src).trim();
+                    }
+                }
+            } catch (e) { /* ignore */ }
+
+            // Decode HTML entity phổ biến (&amp; &#x2F;...) phòng trường hợp bị encode nhiều lần
+            try {
+                normalizedUrl = normalizedUrl
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#x2F;/gi, '/')
+                    .replace(/&#x2f;/gi, '/')
+                    .replace(/&#47;/g, '/')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'")
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>');
+            } catch (e) { /* ignore */ }
+
+            try { console.log('Normalized:', normalizedUrl); } catch (e) {}
+
+            // ============================================================
+            // BƯỚC 1: File video trực tiếp (.mp4, .webm, .ogg, .mov, .m4v)
+            // ============================================================
+            if (/\.(mp4|webm|ogv|ogg|m4v|mov)(\?|#|$)/i.test(normalizedUrl)) {
+                return {
+                    kind: 'file',
+                    src: normalizedUrl,
+                    label: 'Video',
+                    externalUrl: normalizedUrl
+                };
+            }
+
+            let u;
+            try {
+                u = new URL(normalizedUrl);
+            } catch (e) {
+                // Không phải URL hợp lệ → thử xem có phải ID thuần (11 ký tự) không
+                if (/^[A-Za-z0-9_-]{11}$/.test(normalizedUrl)) {
+                    let origin = '';
+                    try { origin = (typeof location !== 'undefined' && location.origin) ? location.origin : ''; } catch (e2) {}
+                    const isLocalFile = !origin || origin === 'null' || /^file:/i.test(origin);
+                    const ytEmbedHost = isLocalFile
+                        ? 'https://www.youtube-nocookie.com'
+                        : 'https://www.youtube.com';
+                    try { console.log('Detected Type: youtube (raw id)'); } catch (e) {}
+                    return {
+                        kind: 'youtube',
+                        src: ytEmbedHost + '/embed/' + normalizedUrl + '?autoplay=1&playsinline=1&rel=0&modestbranding=1',
+                        label: 'YouTube',
+                        externalUrl: 'https://www.youtube.com/watch?v=' + normalizedUrl
+                    };
+                }
+                try { console.log('Detected Type: invalid-url'); } catch (e) {}
+                return empty;
+            }
+            const host = u.hostname.replace(/^www\./, '').toLowerCase();
+
+            // ============================================================
+            // BƯỚC 2: Google Drive
+            //   https://drive.google.com/file/d/FILE_ID/view
+            //   https://drive.google.com/uc?id=FILE_ID&export=download
+            //   https://drive.google.com/file/d/FILE_ID/preview
+            // ============================================================
+            if (host === 'drive.google.com' || host === 'docs.google.com') {
+                let fileId = '';
+                const m1 = u.pathname.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                if (m1) fileId = m1[1];
+                if (!fileId) fileId = u.searchParams.get('id') || '';
+                if (fileId) {
+                    return {
+                        kind: 'drive',
+                        src: 'https://drive.google.com/file/d/' + fileId + '/preview',
+                        label: 'Drive',
+                        externalUrl: 'https://drive.google.com/file/d/' + fileId + '/view'
+                    };
+                }
+            }
+
+            // ============================================================
+            // BƯỚC 3: Firebase Storage / Google Cloud Storage
+            // ============================================================
+            if (host === 'firebasestorage.googleapis.com' ||
+                host === 'storage.googleapis.com' ||
+                host === 'firebasestorage.app' ||
+                /\.(mp4|webm|ogv|ogg|m4v|mov)(\?|#|$)/i.test(u.pathname)) {
+                return {
+                    kind: 'file',
+                    src: normalizedUrl,
+                    label: 'Video',
+                    externalUrl: normalizedUrl
+                };
+            }
+
+            // ============================================================
+            // BƯỚC 4: Vimeo
+            //   https://vimeo.com/123456789
+            //   https://player.vimeo.com/video/123456789
+            // ============================================================
+            if (host === 'vimeo.com' || host === 'player.vimeo.com') {
+                let vid = '';
+                if (host === 'player.vimeo.com') {
+                    const m = u.pathname.match(/\/video\/(\d+)/);
+                    if (m) vid = m[1];
+                } else {
+                    const parts = u.pathname.split('/').filter(Boolean);
+                    if (parts[0] && /^\d+$/.test(parts[0])) vid = parts[0];
+                }
+                if (vid) {
+                    return {
+                        kind: 'vimeo',
+                        src: 'https://player.vimeo.com/video/' + vid + '?autoplay=1&title=0&byline=0&portrait=0',
+                        label: 'Vimeo',
+                        externalUrl: 'https://vimeo.com/' + vid
+                    };
+                }
+            }
+
+            // ============================================================
+            // BƯỚC 5: YouTube — CHẤP NHẬN MỌI FORMAT PHỔ BIẾN
+            //   - youtube.com/embed/ID
+            //   - www.youtube.com/embed/ID
+            //   - youtube-nocookie.com/embed/ID
+            //   - youtu.be/ID
+            //   - youtube.com/watch?v=ID
+            //   - youtube.com/shorts/ID
+            // ============================================================
+            try {
+                let videoId = '';
+                const pathname = u.pathname || '';
+
+                // 5a) youtu.be/<ID>
+                if (host === 'youtu.be') {
+                    const parts = pathname.split('/').filter(Boolean);
+                    if (parts[0]) videoId = parts[0];
+                }
+
+                // 5b) youtube.com / youtube-nocookie.com (mọi path)
+                if (!videoId && (host === 'youtube.com' || host === 'youtube-nocookie.com' || host === 'm.youtube.com')) {
+                    // /embed/ID
+                    let m = pathname.match(/\/embed\/([A-Za-z0-9_-]{11})/);
+                    if (m) videoId = m[1];
+
+                    // /watch?v=ID  (có thể kèm &list= &t= …)
+                    if (!videoId) {
+                        const v = u.searchParams.get('v');
+                        if (v && /^[A-Za-z0-9_-]{11}$/.test(v)) videoId = v;
+                    }
+
+                    // /shorts/ID
+                    if (!videoId) {
+                        m = pathname.match(/\/shorts\/([A-Za-z0-9_-]{11})/);
+                        if (m) videoId = m[1];
+                    }
+
+                    // /live/ID (một số link live dùng format này)
+                    if (!videoId) {
+                        m = pathname.match(/\/live\/([A-Za-z0-9_-]{11})/);
+                        if (m) videoId = m[1];
+                    }
+
+                    // Fallback: lấy segment cuối của path nếu nó là ID hợp lệ
+                    if (!videoId) {
+                        const parts = pathname.split('/').filter(Boolean);
+                        const last = parts[parts.length - 1] || '';
+                        if (/^[A-Za-z0-9_-]{11}$/.test(last)) videoId = last;
+                    }
+                }
+
+                // 5c) Nếu URL là ID thuần (11 ký tự) → vẫn nhận
+                if (!videoId && /^[A-Za-z0-9_-]{11}$/.test(normalizedUrl)) {
+                    videoId = normalizedUrl;
+                }
+
+                if (videoId) {
+                    // Detect origin hợp lệ để chống Error 153
+                    let origin = '';
+                    try { origin = (typeof location !== 'undefined' && location.origin) ? location.origin : ''; } catch (e) {}
+                    const isLocalFile = !origin || origin === 'null' || /^file:/i.test(origin);
+
+                    // Bắt buộc dùng youtube-nocookie khi mở qua file://
+                    const ytEmbedHost = isLocalFile
+                        ? 'https://www.youtube-nocookie.com'
+                        : 'https://www.youtube.com';
+
+                    // Build embed URL — giữ nguyên các query param hữu ích (start, t, list…) nếu có
+                    const embedBase = ytEmbedHost + '/embed/' + videoId;
+                    let embedUrl;
+                    try {
+                        const u3 = new URL(embedBase);
+                        // Copy một số param phổ biến từ URL gốc
+                        const paramsToKeep = ['start', 't', 'list', 'index', 'controls', 'rel'];
+                        paramsToKeep.forEach(k => {
+                            const v = u.searchParams.get(k);
+                            if (v) u3.searchParams.set(k, v);
+                        });
+                        u3.searchParams.set('autoplay', '1');
+                        u3.searchParams.set('playsinline', '1');
+                        u3.searchParams.set('rel', '0');
+                        u3.searchParams.set('modestbranding', '1');
+                        if (!isLocalFile) {
+                            u3.searchParams.set('enablejsapi', '1');
+                            u3.searchParams.set('origin', origin);
+                        }
+                        embedUrl = u3.toString();
+                    } catch (e) {
+                        embedUrl = embedBase + '?autoplay=1&playsinline=1&rel=0&modestbranding=1';
+                    }
+
+                    try { console.log('Detected Type: youtube'); } catch (e) {}
+                    return {
+                        kind: 'youtube',
+                        src: embedUrl,
+                        label: 'YouTube',
+                        externalUrl: 'https://www.youtube.com/watch?v=' + videoId
+                    };
+                }
+            } catch (e) { /* not YouTube */ }
+
+            // ============================================================
+            // BƯỚC 6: Không parse được → thử trực tiếp như file (một số CDN không có extension)
+            // ============================================================
+            try { console.log('Detected Type: file (fallback)'); } catch (e) {}
+            if (/^https?:\/\//i.test(normalizedUrl)) {
+                return { kind: 'file', src: normalizedUrl, label: 'Video', externalUrl: normalizedUrl };
+            }
+            return empty;
+        }
+
+        function extractFilenameFromUrl(url) {
+            if (!url) return '';
+            try {
+                const u = new URL(url);
+                const p = u.pathname.split('/').filter(Boolean);
+                const last = p[p.length - 1] || '';
+                return decodeURIComponent(last.split('?')[0].split('#')[0]) || '';
+            } catch (e) { return ''; }
+        }
+
+        // =========================================
+        // MODAL: Xem video chữa bài (dùng chung cho exam card)
+        // =========================================
+        let _examVideoEscBound = false;
+        function openExamVideoModal(videoUrl) {
+            const source = parseVideoSource(videoUrl);
+            if (!source || source.kind === 'none') return;
+
+            // Debug log
+            try {
+                console.log('Using Player:', source.kind === 'youtube' ? 'iframe' : (source.kind === 'file' ? 'html5' : 'iframe'));
+            } catch (e) {}
+
+            // === Chặn lỗi 153 NGAY TỪ ĐẦU khi mở qua file:// ===
+            // YouTube KHÔNG chấp nhận Referer rỗng (file://, origin="null") cho dù là nocookie
+            // → Phải dùng http(s):// để browser tự gửi Referer hợp lệ
+            const _openOrigin = (() => { try { return location.origin; } catch(e) { return ''; } })();
+            const _isLocalFile = !_openOrigin || _openOrigin === 'null' || /^file:/i.test(_openOrigin);
+            if (_isLocalFile && source.kind === 'youtube') {
+                // Tạo overlay riêng hiển thị hướng dẫn, không load iframe (vì chắc chắn sẽ Error 153)
+                let localOverlay = document.getElementById('examCardLocalFileOverlay');
+                if (!localOverlay) {
+                    localOverlay = document.createElement('div');
+                    localOverlay.id = 'examCardLocalFileOverlay';
+                    localOverlay.className = 'exam-card-video-overlay';
+                    localOverlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;';
+                    localOverlay.innerHTML = `
+                        <div style="background:#1E293B;max-width:560px;width:100%;border-radius:14px;padding:24px;color:#fff;box-shadow:0 25px 60px rgba(0,0,0,0.6);">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                                <iconify-icon icon="lucide:info" style="color:#60A5FA;font-size:24px;"></iconify-icon>
+                                <h3 style="margin:0;font-size:16px;">Cần mở qua localhost để xem video YouTube</h3>
+                            </div>
+                            <p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:#CBD5E1;">
+                                YouTube từ chối phát video khi mở trực tiếp bằng <code style="background:#0F172A;padding:2px 6px;border-radius:4px;color:#FBBF24;">file://</code>
+                                (lỗi 153 - thiếu Referer).
+                            </p>
+                            <p style="margin:0 0 14px;font-size:13px;line-height:1.6;color:#CBD5E1;">
+                                <b>Cách khắc phục:</b> Khởi động server cục bộ rồi mở lại đường dẫn sau:
+                            </p>
+                            <div style="display:flex;gap:8px;margin-bottom:14px;">
+                                <input type="text" readonly value="http://localhost:8080/phong-luyen-tsa/index.html" id="examCardLocalhostUrl"
+                                    style="flex:1;background:#0F172A;border:1px solid #334155;border-radius:8px;padding:10px 12px;color:#A7F3D0;font-family:monospace;font-size:12px;">
+                                <button type="button" onclick="(function(btn){var i=document.getElementById('examCardLocalhostUrl');i.select();try{document.execCommand('copy');btn.textContent='Đã copy ✓';setTimeout(function(){btn.innerHTML='<iconify-icon icon=\\'lucide:copy\\'></iconify-icon> Sao chép';},2000);}catch(e){btn.textContent='Lỗi copy';}}) (this)"
+                                    style="background:#2563EB;color:#fff;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600;font-size:12px;white-space:nowrap;display:flex;align-items:center;gap:6px;">
+                                    <iconify-icon icon="lucide:copy"></iconify-icon> Sao chép
+                                </button>
+                            </div>
+                            <details style="margin-bottom:16px;background:#0F172A;border-radius:8px;padding:10px 12px;font-size:12px;color:#94A3B8;">
+                                <summary style="cursor:pointer;color:#60A5FA;font-weight:600;">📖 Cách khởi động server (1 lần)</summary>
+                                <div style="margin-top:10px;line-height:1.7;">
+                                    <b>Cách 1 (khuyến nghị):</b> Click đúp file <code style="color:#FBBF24;">start.bat</code> ở thư mục gốc SkyEdu-main.<br>
+                                    <b>Cách 2:</b> Mở PowerShell tại thư mục SkyEdu-main, chạy:<br>
+                                    <code style="display:block;margin:6px 0;padding:6px 10px;background:#020617;color:#A7F3D0;border-radius:4px;">python -m http.server 8080</code>
+                                    Sau đó mở link ở trên.<br>
+                                    <b>Cách 3 (Node.js):</b><br>
+                                    <code style="display:block;margin:6px 0;padding:6px 10px;background:#020617;color:#A7F3D0;border-radius:4px;">npx serve -p 8080</code>
+                                </div>
+                            </details>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                                <a href="${(source.externalUrl || '').replace(/"/g, '&quot;')}" target="_blank" rel="noopener"
+                                    style="flex:1;min-width:140px;background:#DC2626;color:#fff;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600;font-size:13px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;">
+                                    <iconify-icon icon="lucide:external-link"></iconify-icon> Mở trên YouTube
+                                </a>
+                                <button type="button" onclick="document.getElementById('examCardLocalFileOverlay').remove();document.body.style.overflow='';"
+                                    style="flex:1;min-width:140px;background:#475569;color:#fff;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600;font-size:13px;">
+                                    Đóng
+                                </button>
+                            </div>
+                        </div>`;
+                    document.body.appendChild(localOverlay);
+                    document.body.style.overflow = 'hidden';
+                    localOverlay.addEventListener('click', function (e) {
+                        if (e.target === localOverlay) {
+                            localOverlay.remove();
+                            document.body.style.overflow = '';
+                        }
+                    });
+                    if (!_examVideoEscBound) {
+                        document.addEventListener('keydown', function escHandler(e) {
+                            if (e.key === 'Escape') {
+                                const ov = document.getElementById('examCardLocalFileOverlay');
+                                if (ov) { ov.remove(); document.body.style.overflow = ''; }
+                            }
+                        });
+                        _examVideoEscBound = true;
+                    }
+                    if (window.iconify && typeof window.iconify.replace === 'function') {
+                        try { window.iconify.replace(localOverlay); } catch(e) {}
+                    }
+                }
+                return; // Không load iframe
+            }
+
+            let overlay = document.getElementById('examCardVideoOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'examCardVideoOverlay';
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.25s ease-out;';
+                overlay.innerHTML = `
+                    <div style="width:95vw;max-width:1100px;background:var(--card-bg,#0F172A);border-radius:16px;border:1px solid rgba(255,68,68,0.3);overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.6);">
+                        <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(15,23,42,0.7);border-bottom:1px solid rgba(148,163,184,0.15);color:#fff;font-size:14px;font-weight:600;">
+                            <iconify-icon id="examCardVideoSourceIcon" icon="lucide:play-circle" style="font-size:18px;color:#FF6B6B;"></iconify-icon>
+                            <span id="examCardVideoSourceLabel">Video chữa bài</span>
+                            <a id="examCardVideoOpenSource" href="#" target="_blank" rel="noopener"
+                                style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:rgba(255,68,68,0.18);border:1px solid rgba(255,68,68,0.35);color:#FF8888;font-size:12px;font-weight:600;text-decoration:none;">
+                                <iconify-icon icon="lucide:external-link" style="font-size:13px;"></iconify-icon>
+                                <span id="examCardVideoOpenSourceLabel">Mở rộng</span>
+                            </a>
+                            <button id="examCardVideoClose" aria-label="Đóng" style="width:32px;height:32px;border-radius:8px;background:rgba(148,163,184,0.1);border:0;color:#fff;cursor:pointer;font-size:18px;line-height:1;">×</button>
+                        </div>
+                        <div id="examCardVideoBody" style="position:relative;padding-bottom:56.25%;height:0;background:#000;">
+                            <video id="examCardVideoPlayer" controls playsinline preload="metadata"
+                                style="display:none;position:absolute;inset:0;width:100%;height:100%;background:#000;"></video>
+                            <iframe id="examCardVideoFrame"
+                                type="text/html"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                loading="lazy"
+                                allowfullscreen
+                                style="display:none;position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+                            <div id="examCardVideoError" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#FFB4B4;text-align:center;padding:24px;">
+                                <iconify-icon icon="lucide:alert-triangle" style="font-size:42px;"></iconify-icon>
+                                <div style="font-size:14px;font-weight:600;">Không phát được video</div>
+                                <div class="video-error-msg" style="font-size:12px;color:#94A3B8;max-width:520px;">Có thể video đã bị xoá, đường dẫn sai hoặc trình duyệt chưa hỗ trợ định dạng.<br/>Bấm <b>Mở rộng</b> ở trên để xem trực tiếp.</div>
+                            </div>
+                        </div>
+                    </div>`;
+                document.body.appendChild(overlay);
+
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) closeExamVideoModal();
+                });
+                document.getElementById('examCardVideoClose').addEventListener('click', closeExamVideoModal);
+
+                if (!_examVideoEscBound) {
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape') closeExamVideoModal();
+                    });
+                    _examVideoEscBound = true;
+                }
+            }
+
+            const player = document.getElementById('examCardVideoPlayer');
+            const frame  = document.getElementById('examCardVideoFrame');
+            const errBox = document.getElementById('examCardVideoError');
+            const openSrc = document.getElementById('examCardVideoOpenSource');
+            const openSrcLabel = document.getElementById('examCardVideoOpenSourceLabel');
+            const sourceIcon = document.getElementById('examCardVideoSourceIcon');
+            const sourceLabel = document.getElementById('examCardVideoSourceLabel');
+
+            // Reset
+            errBox.style.display = 'none';
+            errBox.removeAttribute('data-showed');
+            player.style.display = 'none';
+            player.pause && player.pause();
+            player.removeAttribute('src');
+            try { player.load && player.load(); } catch (e) {}
+            frame.style.display = 'none';
+            frame.removeAttribute('src');
+
+            // Cập nhật UI header theo source
+            const labelMap = {
+                file:    { icon: 'lucide:play-circle',            btn: 'Mở tab mới' },
+                drive:   { icon: 'logos:google-drive',            btn: 'Mở trên Drive' },
+                vimeo:   { icon: 'logos:vimeo-icon',              btn: 'Mở trên Vimeo' },
+                youtube: { icon: 'logos:youtube-icon',            btn: 'Mở trên YouTube' },
+            };
+            const ui = labelMap[source.kind] || labelMap.file;
+            sourceIcon.setAttribute('icon', ui.icon);
+            openSrcLabel.textContent = ui.btn;
+
+            // Set link "Mở rộng" (luôn hiển thị)
+            if (source.externalUrl) {
+                try { openSrc.href = source.externalUrl; } catch (e) { openSrc.href = source.src; }
+                openSrc.style.display = 'inline-flex';
+            } else {
+                openSrc.style.display = 'none';
+            }
+
+            if (source.kind === 'file') {
+                // HTML5 <video> — chạy được với MP4/WebM/Ogg, không bị embed restriction
+                player.src = source.src;
+                player.style.display = 'block';
+                player.onerror = function () { showEmbedError(); };
+                // Add source child elements for codec fallback
+                while (player.firstChild) player.removeChild(player.firstChild);
+                const s = document.createElement('source');
+                s.src = source.src;
+                // Best-effort MIME từ extension
+                if (/\.webm/i.test(source.src)) s.type = 'video/webm';
+                else if (/\.ogv|\.ogg/i.test(source.src)) s.type = 'video/ogg';
+                else if (/\.mov/i.test(source.src)) s.type = 'video/quicktime';
+                else s.type = 'video/mp4';
+                player.appendChild(s);
+                player.load();
+                // Try to autoplay (muted để pass policy)
+                try { player.muted = true; player.play(); } catch (e) {}
+            } else {
+                // iframe cho Drive / Vimeo / YouTube
+                frame.src = source.src;
+                frame.style.display = 'block';
+                frame.onerror = function () { showEmbedError(); };
+
+                // Detect lỗi embed qua postMessage (chỉ YouTube thực sự postMessage khi enablejsapi=1)
+                const ytMessageHandler = function (event) {
+                    try {
+                        if (!event || !event.data) return;
+                        if (event.origin !== 'https://www.youtube.com' && event.origin !== 'https://www.youtube-nocookie.com') return;
+                        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                        if (!data) return;
+                        if (data.event === 'info' || data.event === 'error') {
+                            const info = data.info || {};
+                            const reason = info.reason || '';
+                            // Error 153 / 150 / 101 / 5 → show error
+                            if (reason === 'Error 153' || reason === 'Error 150' || reason === 'Error 101' || reason === 'Error 5') {
+                                showEmbedError(reason); return;
+                            }
+                            if (info.playabilityStatus) {
+                                const status = info.playabilityStatus;
+                                if (status.status === 'ERROR' || status.errorScreen !== undefined || /Error\s+(101|150|153|5)\b/.test(status.reason || '')) {
+                                    showEmbedError((status.reason || '').replace(/^Error\s+/, ''));
+                                }
+                            }
+                            if (info.playerState === 100) showEmbedError();
+                        }
+                    } catch (e) { /* ignore */ }
+                };
+                window.addEventListener('message', ytMessageHandler);
+
+                let _timedOut = false;
+                const t = setTimeout(() => { _timedOut = true; showEmbedError(); }, 8000);
+                frame.onload = function () { if (!_timedOut) clearTimeout(t); };
+
+                const cleanup = () => {
+                    window.removeEventListener('message', ytMessageHandler);
+                    clearTimeout(t);
+                };
+                frame._cleanupMsgHandler = cleanup;
+            }
+
+            function showEmbedError(code) {
+                if (errBox.dataset.showed) return;
+                errBox.dataset.showed = '1';
+                const msgEl = errBox.querySelector('.video-error-msg');
+                if (msgEl && code) {
+                    msgEl.textContent = 'YouTube báo lỗi ' + code + '. Bấm "Mở trên YouTube" ở trên để xem trực tiếp.';
+                }
+                errBox.style.display = 'flex';
+            }
+
+            document.body.style.overflow = 'hidden';
+
+            // Refresh iconify nếu có
+            if (window.iconify && typeof window.iconify.replace === 'function') {
+                try { window.iconify.replace(overlay); } catch (e) {}
+            }
+        }
+        function closeExamVideoModal() {
+            const overlay = document.getElementById('examCardVideoOverlay');
+            if (!overlay) return;
+            const player = document.getElementById('examCardVideoPlayer');
+            const frame  = document.getElementById('examCardVideoFrame');
+            if (player) { try { player.pause(); } catch (e) {} player.removeAttribute('src'); }
+            if (frame) {
+                if (typeof frame._cleanupMsgHandler === 'function') {
+                    try { frame._cleanupMsgHandler(); } catch (e) {}
+                }
+                frame.src = '';
+            }
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+            // Xóa hẳn để reset state
+            overlay.parentNode && overlay.parentNode.removeChild(overlay);
+        }
+
+        // Backwards-compat: code cũ gọi openExamVideoModal(ytId, originalUrl) vẫn hoạt động
+        // (gộp 2 tham số thành URL, parser sẽ tự detect).
+        window.openExamVideoModalCompat = function (ytIdOrUrl, originalUrl) {
+            if (originalUrl && originalUrl.indexOf('http') === 0) return openExamVideoModal(originalUrl);
+            if (ytIdOrUrl) return openExamVideoModal(ytIdOrUrl);
+            return null;
+        };
+
+        // Expose handler toàn cục cho nút "Video chữa" gọi bằng inline onclick.
+        window.__openExamVideoClick = function(e, ...args) {
+            try {
+                if (e && typeof e.stopPropagation === 'function') {
+                    e.stopPropagation();
+                    e.stopImmediatePropagation && e.stopImmediatePropagation();
+                }
+                if (e && typeof e.preventDefault === 'function') e.preventDefault();
+            } catch (err) { /* ignore */ }
+            // Hỗ trợ cả 2 chuẩn gọi: (event, ytId) (cũ) hoặc (event, videoUrl) (mới)
+            try {
+                const url = args[1] || args[0] || '';
+                openExamVideoModal(url);
+            } catch (err) { console.error('[video-modal]', err); }
+            return false;
+        };
+        function renderSidebar() {
+            const list = document.getElementById('topicList');
+            if (!list) return;
+            list.innerHTML = TOPIC_KEYS.map((key, idx) => {
+                const meta = TOPIC_MAP[key];
+                const numLabel = meta.extra ? (meta.badge || '🔥') : meta.num;
+                const text = meta.title + (meta.extra ? '' : '');
+                return `<div class="topic-item ${idx === 0 ? 'active' : ''}" data-topic="${key}">
+                    <span class="topic-number">${numLabel}</span>
+                    <span class="topic-text">${text}</span>
+                </div>`;
+            }).join('');
+            // bind lại sự kiện
+            list.querySelectorAll('.topic-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    setActiveTopic(this.dataset.topic);
+                });
+            });
+        }
+
+        function setActiveTopic(topicKey) {
+            if (!TOPIC_MAP[topicKey]) return;
+            _currentTopicKey = topicKey;
+            const list = document.getElementById('topicList');
+            if (list) {
+                list.querySelectorAll('.topic-item').forEach(i => {
+                    i.classList.toggle('active', i.dataset.topic === topicKey);
+                });
+            }
+            renderExams(topicKey);
+        }
+
+        // =========================================
+        // RENDER EXAMS — lấy đề thi từ ExamBuilder, lọc theo chuyên đề
+        // =========================================
+        function getAllExamsMerged() {
+            // Hợp nhất exams từ nhiều nguồn (giống exam.html): exams + sky_exams + phongluyen_exams
+            const out = [];
+            const seen = new Set();
+            const tryPush = (arr, src) => {
+                if (!Array.isArray(arr)) return;
+                arr.forEach(e => { if (e && e.id && !seen.has(e.id)) { seen.add(e.id); out.push(Object.assign({}, e, { _src: src })); } });
+            };
+            try {
+                const a = JSON.parse(localStorage.getItem('exams') || '[]'); tryPush(a, 'exams');
+            } catch (e) {}
+            try {
+                const a = JSON.parse(localStorage.getItem('sky_exams') || '[]'); tryPush(a, 'sky_exams');
+            } catch (e) {}
+            try {
+                const a = JSON.parse(localStorage.getItem('phongluyen_exams') || '[]'); tryPush(a, 'phongluyen_exams');
+            } catch (e) {}
+            return out;
+        }
+
+        function renderExams(topicId) {
+            const topic = TOPIC_MAP[topicId];
+            const examGrid = document.getElementById('examGrid');
+            const titleEl = document.getElementById('selectedTopicTitle');
+            const subtitleEl = document.querySelector('.content-subtitle');
+
+            // Nếu topic chưa load (TsaTopics chưa kịp load) → hiển thị loading state thay vì trắng tinh
+            if (!topic) {
+                examGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <iconify-icon icon="lucide:loader-2" style="animation: spin 1s linear infinite;"></iconify-icon>
+                        <h4>Đang tải danh sách đề thi...</h4>
+                        <p>Vui lòng chờ trong giây lát.</p>
+                    </div>
+                    <style>@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>`;
+                return;
+            }
+
+            titleEl.textContent = topic.title;
+            if (subtitleEl) subtitleEl.textContent = topic.extra ? 'Đề tổng hợp mô phỏng kì thi thật' : 'Các đề thi đang có';
+
+            const all = getAllExamsMerged();
+            const filtered = all
+                .filter(e => (e.type || 'tsa') === 'tsa')
+                .filter(e => (e.category || 'thuc-chien') === topicId);
+
+            if (filtered.length === 0) {
+                examGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <iconify-icon icon="lucide:inbox"></iconify-icon>
+                        <h4>Chưa có đề thi nào</h4>
+                        <p>Vui lòng liên hệ admin để bổ sung đề cho chuyên đề này.</p>
+                    </div>`;
+                return;
+            }
+
+            // Check quyền truy cập tài liệu trước khi render
+            canAccessTSAResources().then(hasAccess => {
+                renderExamsWithAccess(topicId, hasAccess);
+            });
+        }
+
+        function renderExamsWithAccess(topicId, hasAccess) {
+            const topic = TOPIC_MAP[topicId];
+            const examGrid = document.getElementById('examGrid');
+            const titleEl = document.getElementById('selectedTopicTitle');
+            const subtitleEl = document.querySelector('.content-subtitle');
+
+            if (!topic) { examGrid.innerHTML = ''; return; }
+            titleEl.textContent = topic.title;
+            if (subtitleEl) subtitleEl.textContent = topic.extra ? 'Đề tổng hợp mô phỏng kì thi thật' : 'Các đề thi đang có';
+
+            const all = getAllExamsMerged();
+            const filtered = all
+                .filter(e => (e.type || 'tsa') === 'tsa')
+                .filter(e => (e.category || 'thuc-chien') === topicId);
+
+            if (filtered.length === 0) {
+                examGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <iconify-icon icon="lucide:inbox"></iconify-icon>
+                        <h4>Chưa có đề thi nào</h4>
+                        <p>Vui lòng liên hệ admin để bổ sung đề cho chuyên đề này.</p>
+                    </div>`;
+                return;
+            }
+
+            examGrid.innerHTML = filtered.map(exam => {
+                const type = (exam.type || 'tsa').toUpperCase();
+                const lvl = inferLevel(exam);
+                const lvlBadge = lvl ? `<span class="exam-badge level ${lvl.cls}">${lvl.label}</span>` : '';
+                const safeId = escapeHtml(exam.id || '');
+
+                // === Kiểm tra quyền truy cập tài liệu (video/bài tập/đáp án) ===
+                const safeVideoUrl = escapeHtml(exam.videoUrl || '');
+                const hasVideo = hasAccess && !!(exam.videoUrl && exam.videoUrl.trim());
+                const hasExercise = hasAccess && !!(exam.exerciseFileUrl && exam.exerciseFileUrl.trim());
+                const hasAnswer = hasAccess && !!(exam.answerFileUrl && exam.answerFileUrl.trim());
+                const hasAnyResource = hasVideo || hasExercise || hasAnswer;
+
+                // Icon theo loại source (mp4/file → play-circle; drive/vimeo/youtube → icon tương ứng)
+                const videoSrc = parseVideoSource(exam.videoUrl || '');
+                const videoIcon = ({
+                    file:    'lucide:play-circle',
+                    drive:   'logos:google-drive',
+                    vimeo:   'logos:vimeo-icon',
+                    youtube: 'logos:youtube-icon'
+                })[videoSrc.kind] || 'lucide:play-circle';
+                const videoTooltip = ({
+                    file:    'Xem video chữa bài (file MP4/WebM)',
+                    drive:   'Xem video chữa bài trên Google Drive',
+                    vimeo:   'Xem video chữa bài trên Vimeo',
+                    youtube: 'Xem video chữa bài trên YouTube'
+                })[videoSrc.kind] || 'Xem video chữa bài';
+
+                const safeExerciseUrl = escapeHtml(exam.exerciseFileUrl || '');
+                const exerciseName = escapeHtml((exam.exerciseFileName || extractFilenameFromUrl(exam.exerciseFileUrl) || 'Tải file bài tập'));
+                const safeAnswerUrl = escapeHtml(exam.answerFileUrl || '');
+                const answerName = escapeHtml((exam.answerFileName || extractFilenameFromUrl(exam.answerFileUrl) || 'Tải đáp án'));
+
+                // === Tài liệu đính kèm: render 3 nút nhỏ ngay dưới "Vào thi ngay" nếu có quyền ===
+                const resourceButtonsHtml = hasAnyResource ? `
+                    <div class="exam-resources" style="margin-top: 12px;">
+                        ${hasVideo ? `
+                        <button type="button" class="exam-res-btn video"
+                            data-action="watch-video"
+                            data-yt-url="${safeVideoUrl}"
+                            onclick="window.__openExamVideoClick && window.__openExamVideoClick(event, '${safeVideoUrl}');"
+                            title="${videoTooltip}">
+                            <iconify-icon icon="${videoIcon}"></iconify-icon>
+                            <span>Video chữa</span>
+                        </button>` : ''}
+                        ${hasExercise ? `
+                        <a class="exam-res-btn exercise"
+                            data-action="download-exercise"
+                            onclick="event.stopPropagation();"
+                            href="${safeExerciseUrl}" target="_blank" rel="noopener"
+                            title="${exerciseName}">
+                            <iconify-icon icon="lucide:download"></iconify-icon>
+                            <span>Tải bài tập</span>
+                        </a>` : ''}
+                        ${hasAnswer ? `
+                        <a class="exam-res-btn answer"
+                            data-action="download-answer"
+                            onclick="event.stopPropagation();"
+                            href="${safeAnswerUrl}" target="_blank" rel="noopener"
+                            title="${answerName}">
+                            <iconify-icon icon="lucide:file-check-2"></iconify-icon>
+                            <span>Tải đáp án</span>
+                        </a>` : ''}
+                    </div>` : '';
+
+                return `
+                <div class="exam-card" data-exam-id="${safeId}" data-exam-type="${exam.type || 'tsa'}">
+                    <div class="exam-card-header">
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <span class="exam-badge tsa">${type}</span>
+                            ${lvlBadge}
+                        </div>
+                        <div class="exam-icon"><iconify-icon icon="lucide:file-text"></iconify-icon></div>
+                    </div>
+                    <div class="exam-content">
+                        <h3 class="exam-title">${escapeHtml(exam.name || 'Đề thi')}</h3>
+                        <div class="exam-meta">
+                            <div class="exam-meta-item"><iconify-icon icon="lucide:hash"></iconify-icon> ${escapeHtml(exam.code || '')}</div>
+                            <div class="exam-meta-item"><iconify-icon icon="lucide:list-checks"></iconify-icon> ${(exam.questions || []).length} câu</div>
+                            <div class="exam-meta-item"><iconify-icon icon="lucide:clock"></iconify-icon> ${exam.timeMinutes || 150} phút</div>
+                        </div>
+                    </div>
+                    <div class="exam-footer">
+                        <button type="button" class="exam-start" data-action="start-exam" data-exam-id="${safeId}" data-exam-type="${exam.type || 'tsa'}">
+                            <iconify-icon icon="lucide:play"></iconify-icon> Vào thi ngay
+                        </button>
+                        <div class="exam-stats">
+                            <div class="exam-stat">
+                                <iconify-icon icon="lucide:target"></iconify-icon>
+                                <span class="exam-stat-value">${exam.totalPoints || (exam.questions || []).length}</span> điểm
+                            </div>
+                            ${exam.attempts > 0 ? `
+                            <div class="exam-stat">
+                                <iconify-icon icon="lucide:rotate-ccw"></iconify-icon>
+                                <span class="exam-stat-value">${exam.attempts}</span> lượt
+                            </div>
+                            ` : `
+                            <div class="exam-stat">
+                                <iconify-icon icon="lucide:repeat"></iconify-icon>
+                                Không giới hạn
+                            </div>
+                            `}
+                        </div>
+                        ${resourceButtonsHtml}
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Gắn event delegation: click vào nút HOẶC vào thân card → vào thi
+            bindExamGridEvents();
+        }
+
+        /** Gắn click event cho examGrid (event delegation — chỉ cho nút "Vào thi ngay" + thân card).
+         *  Các nút "Video chữa" / "Tải bài tập" / "Tải đáp án" dùng inline onclick riêng
+         *  (xem __openExamVideoClick + onclick trên <a download>) để đảm bảo 100% không bubble xuống đây. */
+        function bindExamGridEvents() {
+            const examGrid = document.getElementById('examGrid');
+            if (!examGrid || examGrid.__bound) return;
+            examGrid.__bound = true;
+            examGrid.addEventListener('click', function(e) {
+                // Phòng hờ: nếu click chạm bất kỳ resource button nào (dù inline đã stop),
+                // vẫn dừng tại đây, không cho vào thi.
+                if (e.target.closest('.exam-res-btn')) {
+                    e.stopPropagation();
+                    return;
+                }
+
+                // Click nút "Vào thi ngay"
+                const startBtn = e.target.closest('[data-action="start-exam"]');
+                if (startBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const examId = startBtn.getAttribute('data-exam-id');
+                    const examType = startBtn.getAttribute('data-exam-type') || 'tsa';
+                    if (examId) startExamById(examId, examType);
+                    return;
+                }
+
+                // Click thân card (ngoài nút) → vào thi
+                const card = e.target.closest('.exam-card');
+                if (card) {
+                    const examId = card.getAttribute('data-exam-id');
+                    const examType = card.getAttribute('data-exam-type') || 'tsa';
+                    if (examId) startExamById(examId, examType);
+                }
+            });
+        }
+
+        /** Suy level từ số câu / điểm để gắn badge màu */
+        function inferLevel(exam) {
+            const n = (exam.questions || []).length;
+            if (n === 0) return null;
+            if (n <= 15) return { label: 'Dễ', cls: 'easy' };
+            if (n <= 35) return { label: 'TB', cls: 'medium' };
+            return { label: 'Khó', cls: 'hard' };
+        }
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+                { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+            ));
+        }
+
+        // =========================================
+        // START EXAM — chuyển sang exam.html?examId=...
+        // =========================================
+        function startExamById(examId, examType) {
+            const params = new URLSearchParams({ examId });
+            if (examType) params.set('type', examType);
+            window.location.href = 'exam.html?' + params.toString();
+        }
+
+        // =========================================
+        // ROLE GUARD: Chỉ cho phép user có role TSA vào phòng luyện TSA
+        // =========================================
+        function checkTSARoleAccess() {
+            const user = RoleSystem ? RoleSystem.getCurrentUser() : null;
+            if (!user) return false;
+            const userRoles = Array.isArray(user.roles) ? user.roles : (user.role ? [user.role] : []);
+            const allowedRoles = ['TSA', 'admin', 'owner', 'qtv'];
+            return userRoles.some(r => allowedRoles.includes(r));
+        }
+
+        function showTSARoleBlocked(message) {
+            // Xóa nội dung cũ của trang
+            document.body.innerHTML = '';
+            document.body.style.margin = '0';
+            document.body.style.padding = '0';
+            document.body.style.minHeight = '100vh';
+            document.body.style.display = 'flex';
+            document.body.style.alignItems = 'center';
+            document.body.style.justifyContent = 'center';
+            document.body.style.background = '#070D1F';
+            
+            document.body.innerHTML = `
+                <div style="max-width:520px;width:90%;text-align:center;background:rgba(255,255,255,0.05);border-radius:20px;padding:48px 40px;border:1px solid rgba(255,255,255,0.1);">
+                    <div style="font-size:72px;margin-bottom:20px;">🔒</div>
+                    <h1 style="font-size:24px;font-weight:800;margin:0 0 16px;color:#fff;">Phòng luyện TSA</h1>
+                    <p style="color:#94A3B8;line-height:1.7;margin:0 0 24px;font-size:15px;">${message}</p>
+                    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                        <a href="../index.html" style="padding:12px 24px;background:linear-gradient(135deg, #00D4FF, #3B82F6);color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Về trang chủ</a>
+                        <a href="../account/dang-nhap.html" style="padding:12px 24px;background:rgba(255,255,255,0.1);color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Đăng nhập</a>
+                    </div>
+                </div>`;
+        }
+
+        // =========================================
+        // INIT
+        // =========================================
+
+        // Kiểm tra role trước khi render
+        (function initWithRoleGuard() {
+            if (!checkTSARoleAccess()) {
+                const msg = 'Bạn cần có <b>quyền TSA</b> để truy cập Phòng luyện TSA.<br>Vui lòng liên hệ Admin để được kích hoạt.';
+                showTSARoleBlocked(msg);
+                return;
+            }
+
+            // Đã pass role guard → render bình thường
+            renderSidebar();
+
+            // Cập nhật nav auth state ngay lập tức (chỉ phụ thuộc localStorage)
+            // — tránh flash "Đăng nhập/Đăng ký" khi user đã đăng nhập.
+            if (typeof updateNavAuthState === 'function') updateNavAuthState();
+
+            // Đồng bộ exams từ Firebase (nếu có) trước khi render
+            syncFirebaseExams().finally(() => {
+                setActiveTopic(getDefaultTopicKey());
+                if (typeof updateNavAuthState === 'function') updateNavAuthState();
+            });
+        })();
+
+        // =========================================
+        // AUTO-REFRESH: lắng nghe thay đổi từ tab khác (admin tạo/sửa/xoá đề)
+        // + khi focus tab / trang visible lại → re-render danh sách
+        // =========================================
+        const EXAM_STORAGE_KEYS = new Set(['exams', 'sky_exams', 'phongluyen_exams']);
+        function refreshExamListIfChanged() {
+            if (_currentTopicKey && typeof renderExams === 'function') {
+                renderExams(_currentTopicKey);
+            }
+        }
+        // Tab khác sửa localStorage → trigger event "storage" ở tab này
+        window.addEventListener('storage', (e) => {
+            if (e.key && EXAM_STORAGE_KEYS.has(e.key)) {
+                console.log('[phong-luyen] exams changed in other tab → refreshing');
+                refreshExamListIfChanged();
+            }
+        });
+        // Quay lại tab / focus vào trang → re-render (cover trường hợp cùng tab admin edit xong back lại)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) refreshExamListIfChanged();
+        });
+        window.addEventListener('focus', refreshExamListIfChanged);
+
+        // Nút refresh thủ công (cạnh tiêu đề chuyên đề)
+        const refreshBtn = document.getElementById('contentRefreshBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', async () => {
+                refreshBtn.classList.add('spinning');
+                try {
+                    // Đồng bộ lại từ Firebase (nếu có), rồi re-render
+                    if (typeof syncFirebaseExams === 'function') {
+                        await syncFirebaseExams();
+                    }
+                    refreshExamListIfChanged();
+                } finally {
+                    setTimeout(() => refreshBtn.classList.remove('spinning'), 800);
+                }
+            });
+        }
+
+        // =========================================
+        // USER AUTH STATE — hiển thị user dropdown khi đã đăng nhập
+        // =========================================
+        function updateNavAuthState() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const navActions = document.getElementById('navActions');
+            if (!navActions) return;
+
+            if (currentUser) {
+                const isAdmin = (typeof RoleSystem !== 'undefined')
+                    ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                    : (currentUser.role === 'admin' || currentUser.role === 'owner' || currentUser.role === 'qtv');
+                navActions.innerHTML = `
+                    <div class="user-dropdown user-card-static">
+                        <span class="user-dropdown-btn" aria-label="Thông tin tài khoản">
+                            <iconify-icon icon="lucide:user"></iconify-icon>
+                            ${currentUser.fullname || currentUser.username}
+                        </span>
+                    </div>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+                        <span></span><span></span><span></span>
+                    </button>
+                `;
+            } else {
+                // User chưa đăng nhập → hiện nút Đăng nhập / Đăng ký
+                // (mặc định đã ẩn trong HTML để tránh flash khi user đã đăng nhập)
+                const loginBtn = document.getElementById('navLoginBtn');
+                const registerBtn = document.getElementById('navRegisterBtn');
+                if (loginBtn) loginBtn.style.display = '';
+                if (registerBtn) registerBtn.style.display = '';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                const p = firebase.auth().signOut().catch(function(e){ console.warn('Firebase signOut error:', e); });
+                p.then(function(){ window.location.href = '../account/dang-nhap.html'; });
+            } else {
+                window.location.href = '../account/dang-nhap.html';
+            }
+        }
+
+        /**
+         * Đồng bộ exams từ Firebase 'phongluyen_exams/' + 'exams/' về localStorage['exams'].
+         * Nếu không có Firebase (offline / dev) thì bỏ qua, không lỗi.
+         */
+        function syncFirebaseExams() {
+            return new Promise((resolve) => {
+                try {
+                    if (typeof firebase === 'undefined' || !firebase.database) { resolve(); return; }
+                    const db = firebase.database();
+                    if (!db) { resolve(); return; }
+
+                    const promises = [];
+                    ['phongluyen_exams', 'exams'].forEach(path => {
+                        try {
+                            promises.push(db.ref(path).once('value'));
+                        } catch (e) { /* ignore */ }
+                    });
+                    Promise.all(promises).then(results => {
+                        try {
+                            const merged = [];
+                            const seen = new Set();
+                            const localRaw = localStorage.getItem('exams');
+                            const localArr = localRaw ? JSON.parse(localRaw) : [];
+                            localArr.forEach(e => { if (e && e.id && !seen.has(e.id)) { seen.add(e.id); merged.push(e); } });
+                            results.forEach(snap => {
+                                const obj = snap.val() || {};
+                                Object.values(obj).forEach(e => {
+                                    if (e && e.id && !seen.has(e.id)) { seen.add(e.id); merged.push(e); }
+                                });
+                            });
+                            if (merged.length > localArr.length) {
+                                localStorage.setItem('exams', JSON.stringify(merged));
+                            }
+                        } catch (e) { console.warn('[TSA room] Firebase sync error:', e); }
+                        resolve();
+                    }).catch(() => resolve());
+                } catch (e) { resolve(); }
+            });
+        }
+
+        // Dropdown toggle on click
+        document.addEventListener('click', function(e) {
+            const noNavLink = e.target.closest('a[data-no-nav]');
+            if (noNavLink) { e.preventDefault(); return; }
+
+            // Mobile menu
+            const mobileBtn = e.target.closest('#mobileMenuBtn');
+            const navCenter = document.querySelector('.nav-center');
+            if (mobileBtn && navCenter) {
+                navCenter.classList.toggle('active');
+                mobileBtn.classList.toggle('active');
+            }
+        });
+
+        // Listen for events
+        window.addEventListener('userLogin', updateNavAuthState);
+        window.addEventListener('userLogout', updateNavAuthState);
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                updateNavAuthState();
+            }
+        });
+
+        window.addEventListener('themeChange', updateNavAuthState);
+
+        // =========================================
+        // NAVBAR SCROLL EFFECT
+        // =========================================
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+        });
+
+    </script>
+    </body>
+</html>

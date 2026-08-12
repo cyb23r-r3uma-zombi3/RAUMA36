@@ -1,0 +1,166 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "users": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+      ".indexOn": ["username", "email", "role", "createdAt", "banned"],
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+        "username": { ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 50 && newData.val().matches(/^[a-z0-9_]+$/)" },
+        "email": { ".validate": "newData.isString() && newData.val().length <= 255" },
+        "fullname": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 200" },
+        "role": { ".validate": "newData.isString() && (newData.val() === 'user' || newData.val() === 'admin' || newData.val() === 'owner' || newData.val() === 'qtv' || newData.val() === 'moderator' || newData.val() === 'HSA' || newData.val() === 'TSA')" },
+        "isAdmin": { ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')" },
+        "roles": { ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')" },
+        "banned": { ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')", ".validate": "newData.isBoolean()" },
+        "sessionExpiresAt": { ".validate": "(newData.isNumber() && newData.val() <= now + 86400000) || newData.val() === null" },
+        "$other": { ".validate": "true" }
+      }
+    },
+
+    "registrations": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner' || root.child('users').child(auth.uid).child('role').val() === 'qtv')",
+      ".indexOn": ["status", "code", "createdAt", "userId", "gmail"],
+      "$regId": {
+        "gmail": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().matches(/^[^@]+@[^@]+\\.[^@]+$/)" },
+        "name": { ".validate": "newData.isString() && newData.val().length > 1 && newData.val().length < 200" },
+        "code": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 50" },
+        "status": { ".validate": "newData.isString() && (newData.val() === 'pending' || newData.val() === 'completed' || newData.val() === 'rejected')" },
+        "price": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "userId": { ".validate": "newData.isString() || newData.val() === null" },
+        "createdAt": { ".validate": "newData.isNumber() && newData.val() <= now" },
+        "$other": { ".validate": "true" }
+      }
+    },
+    
+    "examResults": {
+      ".read": "auth != null",
+      ".indexOn": ["examId", "submittedAt", "uid"],
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid",
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+        "$resultId": {
+          ".validate": "newData.hasChildren(['examId', 'score', 'total', 'submittedAt', 'validated']) && newData.child('validated').val() === true && newData.child('score').val() >= 0 && newData.child('total').val() > 0",
+          "$other": { ".validate": "true" }
+        }
+      }
+    },
+    
+    "leaderboard": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    
+    "leaderboardByExam": {
+      ".read": "auth != null",
+      "$examId": {
+        "$uid": {
+          ".write": false,
+          "$other": { ".validate": "true" }
+        }
+      }
+    },
+    
+    "questionBank": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')"
+    },
+    
+    "exams": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner' || root.child('users').child(auth.uid).child('role').val() === 'qtv')"
+    },
+    
+    "phongluyen_exams": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')"
+    },
+    
+    "exam_blueprints": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')"
+    },
+    
+    "questionCategories": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')"
+    },
+    
+    "courses": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')"
+    },
+    
+    "userStats": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": false,
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+        "$other": { ".validate": "true" }
+      }
+    },
+    
+    "ipRecords": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+      ".write": false,
+      "$other": { ".validate": "true" }
+    },
+    
+    "enrollments": {
+      ".read": "auth != null",
+      "$enrollmentId": {
+        ".write": "auth != null && (data.child('userId').val() === auth.uid || newData.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+        "$other": { ".validate": "true" }
+      }
+    },
+    
+    "settings": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')"
+    },
+    
+    "auditLog": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+      "$entryId": {
+        "action": { ".validate": "newData.isString() && newData.val().length > 0" },
+        "actor": { ".validate": "newData.isString() && newData.val().length > 0" },
+        "timestamp": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": "true" }
+      }
+    },
+    
+    "notifications": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner' || root.child('users').child(auth.uid).child('role').val() === 'qtv')",
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'owner')",
+        "$notifId": {
+          "type": { ".validate": "newData.isString() && newData.val().length > 0" },
+          "title": { ".validate": "newData.isString() && newData.val().length > 0" },
+          "message": { ".validate": "newData.isString() && newData.val().length > 0" },
+          "actionUrl": { ".validate": "newData.isString() || newData.val() === null" },
+          "read": { ".validate": "newData.isBoolean()" },
+          "createdAt": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": "true" }
+        }
+      }
+    },
+    
+    "sessionTokens": {
+      ".read": "auth != null && $uid === auth.uid",
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid",
+        ".read": "auth != null && auth.uid === $uid",
+        "$tokenId": {
+          "$other": { ".validate": "true" }
+        }
+      }
+    }
+  }
+}

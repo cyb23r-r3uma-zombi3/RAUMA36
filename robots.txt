@@ -1,0 +1,9 @@
+# SKY EDU - Robots.txt
+User-agent: *
+Allow: /
+Disallow: /account/admin.html
+Disallow: /account/dang-ky.html
+Disallow: /data/
+
+# Sitemap
+Sitemap: /sitemap.xml

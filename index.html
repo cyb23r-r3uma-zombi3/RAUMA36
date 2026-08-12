@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SKY EDU - Độc lập tư duy Nâng tầm tri thức</title>
+    <meta name="description" content="SKY EDU - Nền tảng luyện thi TSA & HSA hàng đầu Việt Nam. Chinh phục kỳ thi đánh giá tư duy với công nghệ AI tiên tiến.">
+    <meta name="theme-color" content="#050B1A">
+    
+    <!-- FOUC Prevention: Apply theme synchronously before CSS loads -->
+    <script>
+    (function(){
+      function reveal(){
+        var h = document.documentElement;
+        var b = document.body;
+        if (h) h.style.visibility = 'visible';
+        if (b) b.classList.add('theme-ready');
+      }
+      function setBodyBg(bg, scheme){
+        try {
+          var b = document.body;
+          if (b) {
+            b.style.backgroundColor = bg;
+            b.style.colorScheme = scheme;
+          }
+        } catch(e) {}
+      }
+      try {
+        var t = localStorage.getItem('skyedu_theme') || 'dark';
+        var html = document.documentElement;
+        var bg, scheme, pageBg;
+        if (t === 'lightpremium') {
+          html.classList.add('light','light-premium-mode');
+          bg = '#FDF2F8'; scheme = 'light'; pageBg = '#FDF2F8';
+        } else {
+          html.classList.add('dark-mode');
+          bg = '#0D1117'; scheme = 'dark'; pageBg = '#050B1A';
+        }
+        html.style.backgroundColor = bg;
+        html.style.colorScheme = scheme;
+        // Wait for body to exist then set its bg immediately
+        var applyBody = function(){ setBodyBg(pageBg, scheme); };
+        if (document.body) applyBody();
+        else document.addEventListener('DOMContentLoaded', applyBody);
+        html.style.visibility = 'hidden';
+        // Re-apply body bg before reveal to ensure correct color
+        var wrappedReveal = function(){
+          applyBody();
+          reveal();
+        };
+        window.addEventListener('skyEduThemeApplied', wrappedReveal);
+        window.addEventListener('load', function(){ setTimeout(wrappedReveal, 80); });
+        setTimeout(wrappedReveal, 1200);
+      } catch(e) {}
+    })();
+    </script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      body { margin: 0; opacity: 0; transition: opacity 0.18s ease; }
+      body.theme-ready { opacity: 1; }
+    </style>
+    <script>
+      (function(){
+        function show(){
+          var b = document.body; if (b) b.classList.add('theme-ready');
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(show); });
+        });
+        window.addEventListener('load', show);
+        setTimeout(show, 800);
+      })();
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='45' fill='%2300BFFF'/%3E%3Cpath d='M30 150C60 150 90 130 120 90C135 70 150 45 165 15C135 30 105 45 90 60C60 90 30 120 30 150Z' fill='%233B82F6'/%3E%3Cpath d='M50 150C70 150 90 135 105 115C115 100 125 80 135 60C110 70 90 80 75 95C50 120 50 135 50 150Z' fill='white'/%3E%3C/svg%3E">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="assets/css/premium-style.css" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Premium CSS -->
+    <link rel="stylesheet" href="assets/css/premium-style.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+
+    <!-- Particles override (chống cache + chắc chắn hiển thị) -->
+    <style>
+        .hero .particles { position: absolute !important; inset: 0 !important; overflow: visible !important; pointer-events: none; z-index: 5 !important; }
+        .hero .particle {
+            position: absolute !important;
+            bottom: -40px !important;
+            width: 10px !important;
+            height: 10px !important;
+            background: #FFFFFF !important;
+            border-radius: 50% !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 12px rgba(255,255,255,1), 0 0 24px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.4) !important;
+            animation: home-particle-rise linear infinite !important;
+            will-change: transform, opacity !important;
+        }
+        @keyframes home-particle-rise {
+            0%   { transform: translate3d(0, 0, 0) scale(0.3); opacity: 0; }
+            10%  { opacity: 1; }
+            50%  { transform: translate3d(0, -50vh, 0) scale(1); opacity: 1; }
+            90%  { opacity: 0.8; }
+            100% { transform: translate3d(0, -110vh, 0) scale(0.2); opacity: 0; }
+        }
+        body.light .hero .particle { box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 24px rgba(255,255,255,0.6) !important; }
+        body.light .hero .particles { opacity: 1 !important; }
+    </style>
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+<!-- Priority 1.3: Add EventManager before other JS files -->
+<script src="assets/js/core/event-manager.js"></script>
+<!-- Priority 1.4: Add TimerManager before other JS files -->
+<script src="assets/js/core/timer-manager.js"></script>
+<!-- Priority 1.6: Add SaveQueue -->
+<script src="assets/js/core/save-queue.js"></script>
+<!-- Theme System -->
+<script src="assets/js/theme.js"></script>
+<!-- RoleSystem -->
+<script src="assets/js/core/role-system.js?v=1.0"></script>
+<script>
+(function(){
+    function applyRoleClasses(){
+        if (typeof RoleSystem === 'undefined') return;
+        const u = RoleSystem.getCurrentUser();
+        if (!u) return;
+        const roles = Array.isArray(u.roles) ? u.roles : (u.role ? [u.role] : []);
+        roles.forEach(r => { document.body.classList.add('role-' + String(r).toLowerCase()); });
+        // user chưa đăng nhập / không có gì thì thêm class locked
+        if (!RoleSystem.can(u, 'canAccessHSA') && !RoleSystem.can(u, 'canAccessTSA')) {
+            document.body.classList.add('role-none');
+        }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyRoleClasses); else applyRoleClasses();
+})();
+</script>
+</head>
+<body>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- =========================================
+         HEADER - Floating Glass Navigation
+    ========================================= -->
+    <header class="navbar" id="navbar">
+            <div class="navbar-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo-wrap">
+                    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                        <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">SKY EDU</span>
+                        <span class="logo-subtitle">Fly Higher • Think Better</span>
+                    </div>
+                </a>
+
+                <!-- Center Menu -->
+                <nav class="nav-center">
+                    <ul class="nav-links">
+                        <li><a href="index.html" class="active">Trang chủ</a></li>
+                        <li><a href="khoa-hoc-pages/index.html">Khóa học</a></li>
+                        <li><a href="quy-doi-diem.html">Quy đổi điểm</a></li>
+                        <li><a href="phong-luyen-tsa/index.html">Phòng luyện TSA</a></li>
+                        <li><a href="phong-luyen-hsa/index.html">Phòng luyện HSA</a></li>
+                        <li><a href="thi-thu/index.html">Thi thử</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="nav-actions" id="navActions">
+                    <a href="account/dang-nhap.html" class="btn-ghost">Đăng nhập</a>
+                    <a href="account/dang-ky.html" class="btn-primary-sm">Đăng ký</a>
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                .user-dropdown { position: relative; display: inline-block; }
+                .user-dropdown-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; color: #00D4FF; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+                .user-dropdown-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.4); }
+                .user-dropdown-btn iconify-icon { font-size: 18px; transition: transform 0.3s ease; }
+                .user-dropdown.open .user-dropdown-btn iconify-icon:last-child { transform: rotate(180deg); }
+                .user-dropdown-content { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 200px; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 1000; animation: dropdownFade 0.2s ease; }
+                @keyframes dropdownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+                .user-dropdown.open .user-dropdown-content { display: block; }
+                .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #E2E8F0; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s ease; }
+                .dropdown-item:hover { background: rgba(0, 212, 255, 0.15); color: #00D4FF; }
+                .dropdown-item iconify-icon { font-size: 16px; color: #94A3B8; }
+                .dropdown-item:hover iconify-icon { color: #00D4FF; }
+                .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 8px 0; }
+                .dropdown-item.logout { color: #EF4444; }
+                .dropdown-item.logout:hover { background: rgba(239, 68, 68, 0.15); }
+                .dropdown-item.admin-only { color: #FACC15; }
+                .dropdown-item.admin-only iconify-icon { color: #FACC15; }
+            </style>
+        </header>
+
+    <style>
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .user-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            color: #00D4FF;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .user-dropdown-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+        .user-dropdown-btn iconify-icon {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+        .user-dropdown.open .user-dropdown-btn iconify-icon:last-child {
+            transform: rotate(180deg);
+        }
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            min-width: 200px;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            animation: dropdownFade 0.2s ease;
+        }
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .user-dropdown.open .user-dropdown-content {
+            display: block;
+        }
+        .user-dropdown-content.show { display: block; }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            color: #E2E8F0;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background: rgba(0, 212, 255, 0.15);
+            color: #00D4FF;
+        }
+        .dropdown-item iconify-icon {
+            font-size: 16px;
+            color: #94A3B8;
+        }
+        .dropdown-item:hover iconify-icon {
+            color: #00D4FF;
+        }
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 8px 0;
+        }
+        .dropdown-item.logout {
+            color: #EF4444;
+        }
+        .dropdown-item.logout:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #EF4444;
+        }
+        .dropdown-item.logout iconify-icon {
+            color: #EF4444;
+        }
+        .dropdown-item.admin-only {
+            color: #FACC15;
+        }
+        .dropdown-item.admin-only iconify-icon {
+            color: #FACC15;
+        }
+    </style>
+
+    <!-- =========================================
+         HERO SECTION - With Airplane Background
+    ========================================= -->
+    <section class="hero" id="hero">
+        <!-- Background Image Layer -->
+        <div class="hero-bg">
+            <img src="assets/images/hero-bg.jpg" alt="" class="hero-bg-image" loading="eager">
+            <div class="hero-overlay"></div>
+        </div>
+
+        <!-- Aurora Effects -->
+        <div class="aurora">
+            <div class="aurora-light aurora-light-1"></div>
+            <div class="aurora-light aurora-light-2"></div>
+            <div class="aurora-light aurora-light-3"></div>
+        </div>
+
+        <!-- Particles -->
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="container hero-layout">
+            <!-- LEFT: Content -->
+            <div class="hero-content">
+                <!-- Badge -->
+                <div class="hero-badge fade-up">
+                    <span class="hero-badge-dot"></span>
+                    NỀN TẢNG LUYỆN TSA & HSA HÀNG ĐẦU
+                </div>
+
+                <!-- Headline -->
+                <h1 class="hero-title fade-up stagger-1">
+                    <span class="hero-title-line">ĐỘC LẬP TƯ DUY</span>
+                    <span class="hero-title-line hero-title-accent">NÂNG TẦM TRI THỨC</span>
+                </h1>
+
+                <!-- Subheadline -->
+                <p class="hero-desc fade-up stagger-2">
+                    Nền tảng học tập hiện đại giúp học sinh chinh phục TSA, HSA và xây dựng tư duy học thuật toàn diện.
+                </p>
+
+                <!-- Buttons -->
+                <div class="hero-actions fade-up stagger-3">
+                    <a href="account/dang-ky.html" class="btn-hero-primary magnetic-btn">
+                        Bắt đầu miễn phí
+                        <iconify-icon icon="lucide:arrow-right" width="20" height="20"></iconify-icon>
+                    </a>
+                    <a href="khoa-hoc-pages/index.html" class="btn-hero-glass magnetic-btn">
+                        Khám phá khóa học
+                    </a>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="hero-features fade-up stagger-4">
+                    <div class="feature-card-mini">
+                        <div class="feature-icon-mini"><iconify-icon icon="lucide:target" width="28" height="28"></iconify-icon></div>
+                        <div class="feature-text-mini">
+                            <h4>TSA</h4>
+                            <p>Luyện đề chuẩn cấu trúc</p>
+                        </div>
+                    </div>
+                    <div class="feature-card-mini">
+                        <div class="feature-icon-mini"><iconify-icon icon="lucide:brain" width="28" height="28"></iconify-icon></div>
+                        <div class="feature-text-mini">
+                            <h4>HSA</h4>
+                            <p>Đánh giá năng lực toàn diện</p>
+                        </div>
+                    </div>
+                    <div class="feature-card-mini">
+                        <div class="feature-icon-mini"><iconify-icon icon="lucide:route" width="28" height="28"></iconify-icon></div>
+                        <div class="feature-text-mini">
+                            <h4>Lộ trình</h4>
+                            <p>Cá nhân hóa theo mục tiêu</p>
+                        </div>
+                    </div>
+                    <div class="feature-card-mini">
+                        <div class="feature-icon-mini"><iconify-icon icon="lucide:globe" width="28" height="28"></iconify-icon></div>
+                        <div class="feature-text-mini">
+                            <h4>Online</h4>
+                            <p>Học mọi lúc mọi nơi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Visual (Background Image Display) -->
+            <div class="hero-visual fade-up stagger-2">
+                <!-- The background image is already visible through the overlay -->
+                <!-- Adding subtle glow effects that complement the image -->
+                <div style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,191,255,0.3) 0%, transparent 70%); top: 20%; right: 10%; animation: aurora-float 8s ease-in-out infinite;"></div>
+                <div style="position: absolute; width: 250px; height: 250px; background: radial-gradient(circle, rgba(124,77,255,0.25) 0%, transparent 70%); bottom: 20%; left: 20%; animation: aurora-float 10s ease-in-out infinite reverse;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================
+         WHY SKY EDU SECTION
+    ========================================= -->
+    <section class="why-section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <div class="section-badge">
+                    <iconify-icon icon="ph:star-fill" width="16" height="16"></iconify-icon>
+                    TẠI SAO CHỌN CHÚNG TÔI
+                </div>
+                <h2 class="section-title">Vì sao học sinh<br>chọn SKY EDU?</h2>
+                <p class="section-desc">Chúng tôi mang đến trải nghiệm học tập vượt trội với công nghệ hiện đại nhất</p>
+            </div>
+
+            <div class="why-grid">
+                <div class="why-card fade-up stagger-1">
+                    <div class="why-icon">
+                        <iconify-icon icon="ph:lightning-fill" style="color: #00BFFF;"></iconify-icon>
+                    </div>
+                    <h3>Hệ thống AI phân tích điểm yếu</h3>
+                    <p>Trí tuệ nhân tạo giúp phân tích và đề xuất phương pháp cải thiện hiệu quả cho từng học sinh.</p>
+                </div>
+
+                <div class="why-card fade-up stagger-2">
+                    <div class="why-icon">
+                        <iconify-icon icon="ph:chart-line-up-fill" style="color: #7C4DFF;"></iconify-icon>
+                    </div>
+                    <h3>Báo cáo tiến độ chi tiết</h3>
+                    <p>Theo dõi sự tiến bộ qua các biểu đồ trực quan, giúp bạn luôn nắm rõ tình trạng học tập.</p>
+                </div>
+
+                <div class="why-card fade-up stagger-3">
+                    <div class="why-icon">
+                        <iconify-icon icon="ph:map-trifold-fill" style="color: #00BFFF;"></iconify-icon>
+                    </div>
+                    <h3>Lộ trình cá nhân hóa</h3>
+                    <p>Mỗi học sinh có lộ trình riêng phù hợp với năng lực và mục tiêu cá nhân.</p>
+                </div>
+
+                <div class="why-card fade-up stagger-4">
+                    <div class="why-icon">
+                        <iconify-icon icon="ph:trophy-fill" style="color: #FFD700;"></iconify-icon>
+                    </div>
+                    <h3>Bảng xếp hạng cạnh tranh</h3>
+                    <p>Cùng nhau thi đua với bảng xếp hạng hàng tuần, tạo động lực học tập mạnh mẽ.</p>
+                </div>
+
+                <div class="why-card fade-up stagger-5">
+                    <div class="why-icon">
+                        <iconify-icon icon="ph:books-fill" style="color: #7C4DFF;"></iconify-icon>
+                    </div>
+                    <h3>Kho đề thi cập nhật liên tục</h3>
+                    <p>Hàng nghìn câu hỏi chất lượng cao, cập nhật theo xu hướng ra đề thi mới nhất.</p>
+                </div>
+
+                <div class="why-card fade-up stagger-6">
+                    <div class="why-icon">
+                        <iconify-icon icon="ph:device-mobile-fill" style="color: #00BFFF;"></iconify-icon>
+                    </div>
+                    <h3>Học tập trên mọi thiết bị</h3>
+                    <p>Truy cập mọi lúc mọi nơi trên máy tính, tablet và điện thoại một cách dễ dàng.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================
+         ROADMAP SECTION
+    ========================================= -->
+    <section class="roadmap-preview-section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <div class="section-badge">
+                    <iconify-icon icon="lucide:compass" width="16" height="16"></iconify-icon>
+                    LỘ TRÌNH TSA 2027
+                </div>
+                <h2 class="section-title">Chinh phục TSA 2027</h2>
+                <p class="section-desc">Từ nền tảng kiến thức → Luyện đề chuyên sâu → Bứt phá điểm số</p>
+            </div>
+
+            <div class="roadmap-preview-timeline">
+                <!-- Stage 1 -->
+                <div class="roadmap-preview-stage" style="--stage-color: #10B981;">
+                    <div class="roadmap-preview-stage-header">
+                        <div class="roadmap-preview-stage-icon">
+                            <iconify-icon icon="lucide:rocket"></iconify-icon>
+                        </div>
+                        <div class="roadmap-preview-stage-info">
+                            <span class="roadmap-preview-stage-num">Chương 1</span>
+                            <h4>Nền tảng kiến thức</h4>
+                            <span class="roadmap-preview-stage-date">15/07/2026</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-preview-tasks">
+                        <span>13 chuyên đề Toán TSA</span>
+                        <span>Mỗi 3 ngày luyện 1 đề</span>
+                        <span>Xây dựng tư duy giải nhanh</span>
+                    </div>
+                </div>
+
+                <!-- Stage 2 -->
+                <div class="roadmap-preview-stage" style="--stage-color: #3B82F6;">
+                    <div class="roadmap-preview-stage-header">
+                        <div class="roadmap-preview-stage-icon">
+                            <iconify-icon icon="lucide:book"></iconify-icon>
+                        </div>
+                        <div class="roadmap-preview-stage-info">
+                            <span class="roadmap-preview-stage-num">Chương 2</span>
+                            <h4>Tăng tốc điểm số</h4>
+                            <span class="roadmap-preview-stage-date">24/08/2026</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-preview-tasks">
+                        <span>12 đề TSA mục tiêu 30 điểm</span>
+                        <span>Mỗi tuần 1 đề</span>
+                        <span>Phân tích lỗi sai</span>
+                    </div>
+                </div>
+
+                <!-- Stage 3 -->
+                <div class="roadmap-preview-stage" style="--stage-color: #F59E0B;">
+                    <div class="roadmap-preview-stage-header">
+                        <div class="roadmap-preview-stage-icon">
+                            <iconify-icon icon="lucide:flame"></iconify-icon>
+                        </div>
+                        <div class="roadmap-preview-stage-info">
+                            <span class="roadmap-preview-stage-num">Chương 3</span>
+                            <h4>Nâng cao năng lực</h4>
+                            <span class="roadmap-preview-stage-date">01/12/2026</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-preview-tasks">
+                        <span>5 đề nâng cao</span>
+                        <span>Các dạng khó TSA</span>
+                        <span>Hoàn thiện kỹ năng</span>
+                    </div>
+                </div>
+
+                <!-- Stage 4 -->
+                <div class="roadmap-preview-stage" style="--stage-color: #8B5CF6;">
+                    <div class="roadmap-preview-stage-header">
+                        <div class="roadmap-preview-stage-icon">
+                            <iconify-icon icon="lucide:trophy"></iconify-icon>
+                        </div>
+                        <div class="roadmap-preview-stage-info">
+                            <span class="roadmap-preview-stage-num">Chương 4</span>
+                            <h4>Về đích TSA</h4>
+                            <span class="roadmap-preview-stage-date">01/01/2027</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-preview-tasks">
+                        <span>5 đề mô phỏng kỳ thi thật</span>
+                        <span>Cân chỉnh chiến thuật làm bài</span>
+                    </div>
+                </div>
+
+                <!-- Stage 5 -->
+                <div class="roadmap-preview-stage" style="--stage-color: #EC4899;">
+                    <div class="roadmap-preview-stage-header">
+                        <div class="roadmap-preview-stage-icon">
+                            <iconify-icon icon="lucide:crown"></iconify-icon>
+                        </div>
+                        <div class="roadmap-preview-stage-info">
+                            <span class="roadmap-preview-stage-num">Chương 5</span>
+                            <h4>Bứt phá cuối cùng</h4>
+                            <span class="roadmap-preview-stage-date">01/02/2027</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-preview-tasks">
+                        <span>5 đề cơ bản + 3 đề nâng cao</span>
+                        <span>Ôn tập trước kỳ thi</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="roadmap-preview-footer fade-up">
+                <div class="roadmap-preview-stats">
+                    <div class="roadmap-preview-stat">
+                        <strong>13</strong>
+                        <span>Chuyên đề</span>
+                    </div>
+                    <div class="roadmap-preview-stat">
+                        <strong>30+</strong>
+                        <span>Đề luyện</span>
+                    </div>
+                    <div class="roadmap-preview-stat">
+                        <strong>x3</strong>
+                        <span>Làm lại mỗi đề</span>
+                    </div>
+                </div>
+                <a href="lo-trinh-tsa.html" class="roadmap-preview-cta">
+                    Xem lộ trình chi tiết
+                    <iconify-icon icon="lucide:arrow-right" width="20" height="20"></iconify-icon>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================
+         CTA SECTION
+    ========================================= -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-container fade-up">
+                <div class="cta-glow cta-glow-1"></div>
+                <div class="cta-glow cta-glow-2"></div>
+                <div class="cta-content">
+                    <h2 class="cta-title">Sẵn sàng cất cánh<br>cùng SKY EDU?</h2>
+                    <p class="cta-desc">Tham gia cùng đông đảo học sinh chinh phục TSA và HSA ngay hôm nay. Đăng ký miễn phí và bắt đầu hành trình của bạn!</p>
+                    <a href="account/dang-ky.html" class="btn-cta magnetic-btn">
+                        Đăng ký miễn phí
+                        <iconify-icon icon="lucide:rocket" width="22" height="22"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================
+         FOOTER
+    ========================================= -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Brand Column -->
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 26C12 26 18 22 22 16C24 13 26 9 28 4C23 6 19 8 16 10C10 14 6 20 6 26Z" fill="#38BDF8"/>
+                            <path d="M10 26C14 26 18 23 21 19C22.5 17 24 14 25 11C21 12 18 13.5 16 15C12 18 10 22 10 26Z" fill="#1677FF"/>
+                        </svg>
+                        <div>
+                            <div class="footer-logo-title">SKY EDU</div>
+                            <div class="footer-logo-subtitle">Fly Higher • Think Better</div>
+                        </div>
+                    </div>
+                    <p class="footer-desc">
+                        Nền tảng học tập hiện đại, đồng hành cùng thế hệ trẻ Việt Nam chinh phục kỳ thi đánh giá tư duy và năng lực.
+                    </p>
+                </div>
+
+                <!-- Courses Column -->
+                <div class="footer-column">
+                    <h4>Khóa học</h4>
+                    <a href="phong-luyen-tsa/index.html" data-requires-role="hsa-or-tsa">Luyện thi TSA</a>
+                    <a href="phong-luyen-hsa/index.html" data-requires-role="hsa-or-tsa">Luyện thi HSA</a>
+                    <a href="thi-thu/index.html">Thi thử</a>
+                    <a href="khoa-hoc-pages/index.html">Khóa học</a>
+                    <a href="quy-doi-diem.html">Quy đổi điểm</a>
+                </div>
+
+                <!-- Support Column -->
+                <div class="footer-column">
+                    <h4>Hỗ trợ</h4>
+                    <a href="#">Hướng dẫn sử dụng</a>
+                    <a href="#">Câu hỏi thường gặp</a>
+                    <a href="#">Liên hệ hỗ trợ</a>
+                    <a href="#">Chính sách bảo mật</a>
+                </div>
+
+                <!-- Contact Column -->
+                <div class="footer-column">
+                    <h4>Liên hệ</h4>
+                    <a href="#">Giới thiệu</a>
+                    <a href="#">Đội ngũ giảng viên</a>
+                    <a href="#">Tin tức</a>
+                    <a href="#">Tuyển dụng</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-meta">© 2026 SKY EDU</p>
+                <div class="footer-slogan" aria-label="Khẩu hiệu SKY EDU">
+                    <span class="slogan-line">Độc lập tư duy</span>
+                    <span class="slogan-line">Nâng tầm tri thức</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Điều khoản</a>
+                    <a href="#">Chính sách</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =========================================
+         SCRIPTS
+    ========================================= -->
+    <script>
+        // =========================================
+        // SCROLL ANIMATIONS - Intersection Observer
+        // =========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup Intersection Observer for fade animations
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // Counter animation for trust stats
+                        if (entry.target.querySelector('.trust-stat-value')) {
+                            animateCounters(entry.target);
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animated elements
+            document.querySelectorAll('.fade-up, .blur-in, .scale-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            // =========================================
+            // COUNTER ANIMATION
+            // =========================================
+            function animateCounters(container) {
+                const counters = container.querySelectorAll('.trust-stat-value[data-count]');
+                
+                counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-count'));
+                    const suffix = counter.getAttribute('data-suffix') || '';
+                    const duration = 2000;
+                    const step = target / (duration / 16);
+                    let current = 0;
+
+                    const updateCounter = () => {
+                        current += step;
+                        if (current < target) {
+                            if (target >= 1000) {
+                                counter.textContent = Math.floor(current).toLocaleString() + suffix;
+                            } else {
+                                counter.textContent = Math.floor(current) + suffix;
+                            }
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            if (target >= 1000) {
+                                counter.textContent = target.toLocaleString() + suffix;
+                            } else {
+                                counter.textContent = target + suffix;
+                            }
+                        }
+                    };
+
+                    updateCounter();
+                });
+            }
+
+            // =========================================
+            // NAVBAR SCROLL EFFECT
+            // =========================================
+            const navbar = document.getElementById('navbar');
+            let lastScroll = 0;
+
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+
+                if (currentScroll > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+
+                lastScroll = currentScroll;
+            });
+
+            // =========================================
+            // MAGNETIC BUTTON EFFECT
+            // =========================================
+            document.querySelectorAll('.magnetic-btn').forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translate(0, 0)';
+                });
+            });
+
+            // =========================================
+            // SMOOTH SCROLL
+            // =========================================
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // =========================================
+            // PARALLAX EFFECT (Subtle)
+            // =========================================
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.hero-bg-image');
+                if (hero && scrolled < window.innerHeight) {
+                    hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                }
+            });
+
+            // =========================================
+            // SCROLL PROGRESS BAR
+            // =========================================
+            const scrollProgress = document.getElementById('scrollProgress');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                
+                if (scrollProgress) {
+                    scrollProgress.style.width = scrollPercent + '%';
+                }
+            });
+
+            // =========================================
+            // MOBILE MENU TOGGLE
+            // =========================================
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navCenter = document.querySelector('.nav-center');
+
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    navCenter.classList.toggle('active');
+                    mobileMenuBtn.classList.toggle('active');
+                });
+            }
+
+            // User auth state
+            function updateNavAuthState() {
+                const currentUser = (typeof SessionSecurity !== 'undefined')
+                    ? SessionSecurity.getSession()
+                    : (() => { try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (e) { return null; } })();
+                const navActions = document.getElementById('navActions');
+
+                if (currentUser) {
+                const isAdmin = (typeof RoleSystem !== 'undefined')
+                    ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                    : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                    const isLight = window.Theme && window.Theme.currentTheme === 'lightpremium';
+                    const themeName = isLight ? 'Chế độ tối' : 'Chế độ sáng';
+                    const themeIcon = isLight ? 'lucide:moon' : 'lucide:sun';
+                    navActions.innerHTML = `
+                        <div class="user-dropdown">
+                            <button type="button" class="user-dropdown-btn" id="userDropdownBtn" aria-label="Mở menu tài khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${currentUser.fullname || currentUser.username}
+                                <iconify-icon icon="lucide:chevron-down" aria-hidden="true"></iconify-icon>
+                            </button>
+                            <div class="user-dropdown-content">
+                                <a href="dashboard.html" class="dropdown-item">
+                                    <iconify-icon icon="lucide:layout-dashboard" aria-hidden="true"></iconify-icon>
+                                    Dashboard
+                                </a>
+                                <a href="account/tai-khoan.html" class="dropdown-item">
+                                    <iconify-icon icon="lucide:user-circle" aria-hidden="true"></iconify-icon>
+                                    Hồ sơ cá nhân
+                                </a>
+                                <a href="account/doi-mat-khau.html" class="dropdown-item">
+                                    <iconify-icon icon="lucide:key" aria-hidden="true"></iconify-icon>
+                                    Đổi mật khẩu
+                                </a>
+                                <a href="#" id="themeToggle" class="dropdown-item" data-no-nav style="display: none;">
+                                    <iconify-icon icon="${themeIcon}" aria-hidden="true"></iconify-icon>
+                                    <span id="themeToggleLabel">${themeName}</span>
+                                </a>
+                                ${isAdmin ? `
+                                <a href="account/admin.html" class="dropdown-item admin-only">
+                                    <iconify-icon icon="lucide:shield" aria-hidden="true"></iconify-icon>
+                                    Admin Panel
+                                </a>
+                                ` : ''}
+                                <div class="dropdown-divider"></div>
+                                <a href="#" id="logoutBtn" class="dropdown-item logout" data-no-nav>
+                                    <iconify-icon icon="lucide:log-out" aria-hidden="true"></iconify-icon>
+                                    Đăng xuất
+                                </a>
+                            </div>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    `;
+
+                    // [REMOVED] Old theme toggle binding - handled by injected navbar script
+                    // [REMOVED] Old logout binding - handled by injected navbar script
+
+                    // Bind logout button
+                    const logoutBtn = document.getElementById('logoutBtn');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            logout();
+                        });
+                    }
+
+                    // Bind các dropdown-item khác để không navigate khi href="#"
+                    document.querySelectorAll('.user-dropdown .dropdown-item').forEach(item => {
+                        if (item.getAttribute('href') === '#') {
+                            item.addEventListener('click', (e) => {
+                                // themeBtn và logoutBtn đã preventDefault riêng
+                                if (item.id === 'themeToggle' || item.id === 'logoutBtn') return;
+                                e.preventDefault();
+                            });
+                        }
+                    });
+                }
+            }
+
+            function logout() {
+                // [PHASE 14] Phải AWAIT firebase.auth().signOut() để đảm bảo Firebase Auth state
+                // không còn cached. Nếu không có await, redirect có thể xảy ra trước khi
+                // signOut hoàn thành. next page load vẫn thấy user signed-in trong Firebase Auth.
+                // Không thể logout "nguyên tử" từ client-only, nhưng cần best-effort:
+                //  1. clear local session ngay
+                //  2. await signOut
+                //  3. redirect về login
+                localStorage.removeItem('currentUser');
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    const p = firebase.auth().signOut().catch(function(e){
+                        console.warn('Firebase signOut error:', e);
+                    });
+                    // Redirect sau khi signOut đã settle (best-effort, không block UI)
+                    p.then(function(){ window.location.href = 'account/dang-nhap.html'; });
+                } else {
+                    window.location.href = 'account/dang-nhap.html';
+                }
+            }
+
+            window.logout = logout;
+
+            // Dropdown toggle - DISABLED (handled by injected script below)
+            // [REMOVED] document.addEventListener('click', ...) - causes duplicate toggle with newer injected script
+
+            // Listen for theme changes (để update label/icon trong dropdown)
+            window.addEventListener('themeChange', () => {
+                const label = document.getElementById('themeToggleLabel');
+                const themeBtn = document.getElementById('themeToggle');
+                if (label && window.Theme) {
+                    label.textContent = window.Theme.currentTheme === 'lightpremium' ? 'Chế độ tối' : 'Chế độ sáng';
+                }
+                if (themeBtn && window.Theme) {
+                    const icon = themeBtn.querySelector('iconify-icon');
+                    if (icon) {
+                        icon.setAttribute('icon', window.Theme.currentTheme === 'lightpremium' ? 'lucide:moon' : 'lucide:sun');
+                    }
+                }
+            });
+
+            // Sync on load
+            updateNavAuthState();
+
+            // Listen for userLogin event từ các trang khác (khi đăng nhập thành công)
+            window.addEventListener('userLogin', function(e) {
+                updateNavAuthState();
+            });
+
+            // Export updateNavAuthState ra global để các trang khác có thể gọi
+            window.updateNavAuthState = updateNavAuthState;
+        });
+    </script>
+
+        <script>
+        (function() {
+            function getCurrentUser() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.getSession === 'function') {
+                    return SessionSecurity.getSession();
+                }
+                try {
+                    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function updateNavAuthState() {
+                const currentUser = getCurrentUser();
+                const navActions = document.getElementById('navActions');
+                if (!navActions) return;
+
+                if (currentUser) {
+                    const isAdmin = (typeof RoleSystem !== 'undefined')
+                        ? RoleSystem.hasAnyRole(currentUser, ['admin', 'owner', 'qtv'])
+                        : (['admin', 'owner', 'qtv'].includes(currentUser.role));
+                    const isLight = window.Theme && window.Theme.currentTheme === 'lightpremium';
+                    const themeName = isLight ? 'Chế độ tối' : 'Chế độ sÃ¡ng';
+                    const themeIcon = isLight ? 'lucide:moon' : 'lucide:sun';
+
+                    navActions.innerHTML = `
+                        <div class="user-dropdown">
+                            <button type="button" class="user-dropdown-btn" id="userDropdownBtn" aria-label="Mở menu tÃ i khoản">
+                                <iconify-icon icon="lucide:user" aria-hidden="true"></iconify-icon>
+                                ${escapeHtml(currentUser.fullname || currentUser.username || 'TÃ i khoản')}
+                                <iconify-icon icon="lucide:chevron-down" aria-hidden="true"></iconify-icon>
+                            </button>
+                            <div class="user-dropdown-content" id="userDropdownContent">
+                                <a href="dashboard.html" class="dropdown-item">
+                                    <iconify-icon icon="lucide:layout-dashboard" aria-hidden="true"></iconify-icon>
+                                    Dashboard
+                                </a>
+                                <a href="account/tai-khoan.html" class="dropdown-item">
+                                    <iconify-icon icon="lucide:user-circle" aria-hidden="true"></iconify-icon>
+                                    Hồ sơ cÃ¡ nhÃ¢n
+                                </a>
+                                <a href="account/doi-mat-khau.html" class="dropdown-item">
+                                    <iconify-icon icon="lucide:key" aria-hidden="true"></iconify-icon>
+                                    Đổi mật khẩu
+                                </a>
+                                <button type="button" id="navbarThemeToggle" class="dropdown-item" aria-pressed="${isLight ? 'true' : 'false'}">
+                                    <iconify-icon icon="${themeIcon}" aria-hidden="true"></iconify-icon>
+                                    <span id="navbarThemeLabel">${themeName}</span>
+                                </button>
+                                ${isAdmin ? `
+                                <a href="account/admin.html" class="dropdown-item admin-only">
+                                    <iconify-icon icon="lucide:shield" aria-hidden="true"></iconify-icon>
+                                    Admin Panel
+                                </a>
+                                ` : ''}
+                                <div class="dropdown-divider"></div>
+                                <button type="button" id="navbarLogout" class="dropdown-item logout">
+                                    <iconify-icon icon="lucide:log-out" aria-hidden="true"></iconify-icon>
+                                    Đăng xuất
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" title="Mở menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    `;
+
+                    const themeBtn = document.getElementById('navbarThemeToggle');
+                    if (themeBtn) {
+                        themeBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (window.Theme && typeof window.Theme.toggle === 'function') {
+                                window.Theme.toggle();
+                                const newThemeName = window.Theme.currentTheme === 'lightpremium' ? 'Chế độ tối' : 'Chế độ sÃ¡ng';
+                                const newThemeIcon = window.Theme.currentTheme === 'lightpremium' ? 'lucide:moon' : 'lucide:sun';
+                                const label = document.getElementById('navbarThemeLabel');
+                                const icon = themeBtn.querySelector('iconify-icon');
+                                if (label) label.textContent = newThemeName;
+                                if (icon) icon.setAttribute('icon', newThemeIcon);
+                            }
+                            const dropdown = document.querySelector('.user-dropdown');
+                            if (dropdown) dropdown.classList.remove('open');
+                        });
+                    }
+
+                    const logoutBtn = document.getElementById('navbarLogout');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            performLogout();
+                        });
+                    }
+                }
+            }
+
+            function performLogout() {
+                if (typeof SessionSecurity !== 'undefined' && typeof SessionSecurity.clearSession === 'function') {
+                    SessionSecurity.clearSession();
+                } else {
+                    localStorage.removeItem('currentUser');
+                }
+                try { localStorage.removeItem('sky_users'); sessionStorage.clear(); } catch(e) {}
+
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut().catch(function(e) { console.warn('signOut error:', e); })
+                        .finally(function() { window.location.href = 'account/dang-nhap.html'; });
+                } else {
+                    window.location.href = 'account/dang-nhap.html';
+                }
+            }
+
+            window.performLogout = performLogout;
+
+            document.addEventListener('click', function(e) {
+                const noNavLink = e.target.closest('a[data-no-nav]');
+                if (noNavLink) { e.preventDefault(); return; }
+
+                const dropdownBtn = e.target.closest('#userDropdownBtn');
+                const dropdown = document.querySelector('.user-dropdown');
+                if (dropdownBtn && dropdown) {
+                    dropdown.classList.toggle('open');
+                } else if (dropdown && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('open');
+                }
+
+                const mobileBtn = e.target.closest('#mobileMenuBtn');
+                const navCenter = document.querySelector('.nav-center');
+                if (mobileBtn && navCenter) {
+                    navCenter.classList.toggle('active');
+                    mobileBtn.classList.toggle('active');
+                }
+            });
+
+            updateNavAuthState();
+
+            window.addEventListener('userLogin', updateNavAuthState);
+            window.addEventListener('userLogout', updateNavAuthState);
+
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser' || e.key === 'skyedu_session') {
+                    updateNavAuthState();
+                }
+            });
+
+            window.addEventListener('themeChange', updateNavAuthState);
+
+            window.updateNavAuthState = updateNavAuthState;
+
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                window.addEventListener('scroll', () => {
+                    navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+                });
+            }
+        })();
+        </script>
+
+    <!-- ============================================================
+         FLOATING CONTACT BUTTONS
+         ============================================================ -->
+    <style>
+        .floating-contact-wrapper {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+            --fc-btn-size: 52px;
+        }
+
+        .floating-contact-btn {
+            position: relative;
+            width: var(--fc-btn-size);
+            height: var(--fc-btn-size);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25),
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            background: var(--fc-bg, #ffffff);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fcSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .floating-contact-btn:nth-child(1) { animation-delay: 0.1s; }
+        .floating-contact-btn:nth-child(2) { animation-delay: 0.2s; }
+        .floating-contact-btn:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fcSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-contact-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            animation: fcRotate 4s linear infinite;
+        }
+
+        @keyframes fcRotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .floating-contact-btn:hover {
+            transform: scale(1.12) translateY(0);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35),
+                        0 0 20px var(--fc-glow, rgba(0, 212, 255, 0.3));
+        }
+
+        .floating-contact-btn:hover::before {
+            opacity: 1;
+        }
+
+        .floating-contact-btn:active {
+            transform: scale(1.05) translateY(0);
+            transition-duration: 0.1s;
+        }
+
+        .floating-contact-btn svg,
+        .floating-contact-btn iconify-icon {
+            width: 28px;
+            height: 28px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .floating-contact-btn:hover svg,
+        .floating-contact-btn:hover iconify-icon {
+            transform: scale(1.1);
+        }
+
+        .floating-contact-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 var(--fc-glow, rgba(0, 212, 255, 0.4));
+            animation: fcPulse 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fcPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 var(--fc-glow, rgba(0, 212, 255, 0.4));
+            }
+            50% {
+                box-shadow: 0 0 0 8px var(--fc-glow, rgba(0, 212, 255, 0));
+            }
+        }
+
+        /* Zalo Button - Official Logo */
+        .fc-btn-zalo {
+            --fc-bg: transparent;
+            --fc-glow: rgba(0, 104, 255, 0.4);
+            background: #0068FF;
+            border: none;
+        }
+        .fc-btn-zalo img {
+            width: 32px;
+            height: 32px;
+            display: block;
+        }
+
+        /* Facebook Button */
+        .fc-btn-facebook {
+            --fc-bg: #1877F2;
+            --fc-glow: rgba(24, 119, 242, 0.4);
+        }
+        .fc-btn-facebook svg { fill: #ffffff; }
+
+        /* TikTok Button */
+        .fc-btn-tiktok {
+            --fc-bg: #000000;
+            --fc-glow: rgba(255, 0, 80, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .fc-btn-tiktok svg { fill: #ffffff; }
+
+        /* Tooltip */
+        .fc-tooltip {
+            position: absolute;
+            right: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%) translateX(8px);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease,
+                        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fc-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 6px solid transparent;
+            border-left-color: rgba(15, 23, 42, 0.95);
+        }
+
+        .floating-contact-btn:hover .fc-tooltip {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .fc-tooltip-icon {
+            font-size: 14px;
+        }
+
+        .light-premium-mode .fc-tooltip {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0F172A;
+            border-color: rgba(15, 23, 42, 0.1);
+        }
+        .light-premium-mode .fc-tooltip::after {
+            border-left-color: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (max-width: 640px) {
+            .floating-contact-wrapper {
+                bottom: 16px;
+                right: 16px;
+                gap: 10px;
+                --fc-btn-size: 48px;
+            }
+
+            .floating-contact-btn svg,
+            .floating-contact-btn iconify-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .fc-btn-zalo svg {
+                width: 26px;
+                height: 26px;
+            }
+
+            .fc-tooltip {
+                display: none;
+            }
+
+            .floating-contact-wrapper {
+                margin-bottom: 60px;
+            }
+        }
+    </style>
+
+    <!-- Floating Contact Buttons -->
+    <div class="floating-contact-wrapper">
+        <!-- Zalo Button - Official Logo -->
+        <a href="https://zalo.me/g/nz1wy5lpygbgecojnxus"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="floating-contact-btn fc-btn-zalo"
+           aria-label="Tham gia nhóm Zalo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" 
+                 alt="Zalo" 
+                 width="30" 
+                 height="30"
+                 style="display: block;">
+            <span class="fc-tooltip">
+                <span class="fc-tooltip-icon">&#x1F4AC;</span>
+                Tham gia nhóm Zalo
+            </span>
+        </a>
+
+        <!-- Facebook Button -->
+        <a href="https://www.facebook.com/profile.php?id=61590532648304"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="floating-contact-btn fc-btn-facebook"
+           aria-label="Fanpage SKY EDU">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            <span class="fc-tooltip">
+                <span class="fc-tooltip-icon">&#x1F4BD;</span>
+                Fanpage SKY EDU
+            </span>
+        </a>
+
+        <!-- TikTok Button -->
+        <a href="https://www.tiktok.com/@skyedu_tsa_hsa"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="floating-contact-btn fc-btn-tiktok"
+           aria-label="TikTok SKY EDU">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+            <span class="fc-tooltip">
+                <span class="fc-tooltip-icon">&#x1F3B5;</span>
+                TikTok SKY EDU
+            </span>
+        </a>
+    </div>
+
+    <script>
+        // DEBUG particles
+        (function(){
+            var ps = document.querySelectorAll('.hero .particle');
+            var host = document.querySelector('.hero .particles');
+            console.log('[PARTICLES DEBUG] host:', host, 'count:', ps.length);
+            if (host) {
+                var cs = getComputedStyle(host);
+                console.log('[PARTICLES DEBUG] host position:', cs.position, 'z-index:', cs.zIndex, 'overflow:', cs.overflow);
+            }
+            ps.forEach(function(p, i){
+                var s = getComputedStyle(p);
+                if (i < 3) {
+                    console.log('[PARTICLES DEBUG] p'+i+':',
+                        'pos=' + s.position,
+                        'bottom=' + s.bottom,
+                        'left=' + s.left,
+                        'width=' + s.width,
+                        'height=' + s.height,
+                        'bg=' + s.backgroundColor,
+                        'opacity=' + s.opacity,
+                        'animation=' + s.animationName,
+                        'display=' + s.display);
+                }
+            });
+            // Set explicit positions via JS (chống mọi cache CSS)
+            ps.forEach(function(p, i){
+                p.style.bottom = '-40px';
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "emulators": {
+    "database": {
+      "host": "127.0.0.1",
+      "port": 9700
+    },
+    "ui": {
+      "host": "127.0.0.1",
+      "port": 4700,
+      "enabled": false
+    },
+    "hub": {
+      "host": "127.0.0.1",
+      "port": 4701
+    },
+    "logging": {
+      "host": "127.0.0.1",
+      "port": 4702,
+      "enabled": false
+    }
+  }
+}
